@@ -1,5 +1,6 @@
 package com.example.eBook.domain.member.controller;
 
+import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.LoginForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
@@ -8,14 +9,13 @@ import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.global.util.mail.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -53,11 +53,33 @@ public class MemberController {
     }
 
     @GetMapping("/member/login")
-    public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error)  {
+    public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error) {
 
         model.addAttribute("error", error);
         model.addAttribute("errorMsg", "로그인이 실패했습니다.");
         model.addAttribute("loginForm", new LoginForm());
         return "member/login_member";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/member/modify/{memberId}")
+    public String showModifyForm(Model model, @PathVariable(value = "memberId") Long memberId) {
+
+        InfoModifyForm infoModifyForm = memberService.getInfoById(memberId);
+        model.addAttribute("infoModifyForm", infoModifyForm);
+        return "member/modify_info_member";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/member/modify/{memberId}")
+    public String modifyInfo(@Validated @ModelAttribute InfoModifyForm infoModifyForm,
+                             @PathVariable(value = "memberId") Long memberId, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "member/modify_info_member";
+        }
+
+        memberService.modifyInfo(memberId, infoModifyForm);
+        return "redirect:/";
     }
 }

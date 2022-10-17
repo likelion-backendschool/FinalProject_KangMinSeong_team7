@@ -1,5 +1,6 @@
 package com.example.eBook.global.mapper;
 
+import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
 import org.mapstruct.Mapper;
@@ -14,4 +15,6 @@ public interface MemberMapper {
     @Mapping(target="authLevel", constant = "3L")
     @Mapping(target="id", ignore = true)
     Member signupFormToEntity(SignupForm signupForm);
+
+    InfoModifyForm EntityToInfoModifyForm(Member member);
 }

@@ -1,9 +1,7 @@
 package com.example.eBook.domain.member.entity;
 
 import com.example.eBook.domain.base.BaseTimeEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -15,6 +13,8 @@ import java.util.Collection;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class Member extends BaseTimeEntity implements UserDetails {
 
@@ -67,5 +67,10 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void updateInfo(String email, String nickname) {
+        this.email = email;
+        this.nickname = nickname;
     }
 }
