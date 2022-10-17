@@ -1,5 +1,6 @@
 package com.example.eBook.domain.member.controller;
 
+import com.example.eBook.domain.member.dto.LoginForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.validator.SignFormValidator;
 import com.example.eBook.domain.member.service.MemberService;
@@ -12,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,10 +41,19 @@ public class MemberController {
             memberService.save(signupForm);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
-            bindingResult.rejectValue("username","duplicated", "이미 등록된 아이디입니다.");
+            bindingResult.rejectValue("username", "duplicated", "이미 등록된 아이디입니다.");
             return "member/new_member";
         }
 
         return "redirect:/member/login";
+    }
+
+    @GetMapping("/member/login")
+    public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error)  {
+
+        model.addAttribute("error", error);
+        model.addAttribute("errorMsg", "로그인이 실패했습니다.");
+        model.addAttribute("loginForm", new LoginForm());
+        return "member/login_member";
     }
 }
