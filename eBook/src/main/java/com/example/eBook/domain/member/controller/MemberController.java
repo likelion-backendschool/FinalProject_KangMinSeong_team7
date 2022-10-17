@@ -2,8 +2,10 @@ package com.example.eBook.domain.member.controller;
 
 import com.example.eBook.domain.member.dto.LoginForm;
 import com.example.eBook.domain.member.dto.SignupForm;
+import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.validator.SignFormValidator;
 import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.global.util.mail.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
@@ -21,6 +23,7 @@ public class MemberController {
 
     private final SignFormValidator signFormValidator;
     private final MemberService memberService;
+    private final MailService mailService;
 
     @GetMapping("/member/join")
     public String showSignupForm(Model model) {
@@ -38,7 +41,8 @@ public class MemberController {
         }
 
         try {
-            memberService.save(signupForm);
+            Member member = memberService.save(signupForm);
+            mailService.sendSingUpMail(member.getEmail());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.rejectValue("username", "duplicated", "이미 등록된 아이디입니다.");
