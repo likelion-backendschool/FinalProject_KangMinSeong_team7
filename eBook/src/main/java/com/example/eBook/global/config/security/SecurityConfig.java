@@ -29,8 +29,15 @@ public class SecurityConfig {
                 .failureHandler(authenticationFailureHandler)
 
                 .and()
+                .logout()
+                .logoutUrl("/member/logout")
+                .logoutSuccessUrl("/member/login")
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
+
+                .and()
                 .authorizeRequests()
-                .mvcMatchers("/","/css/**","/scripts/**","/plugin/**","/fonts/**").permitAll()
+                .mvcMatchers("/", "/error/**", "/js/**", "/css/**", "/image/**").permitAll()
                 .antMatchers("/member/join", "/member/login").permitAll()
                 .anyRequest().authenticated();
 
@@ -41,4 +48,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
