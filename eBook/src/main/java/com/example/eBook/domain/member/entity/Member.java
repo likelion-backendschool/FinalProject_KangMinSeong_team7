@@ -1,0 +1,71 @@
+package com.example.eBook.domain.member.entity;
+
+import com.example.eBook.domain.base.BaseTimeEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+public class Member extends BaseTimeEntity implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "member_id")
+    private Long id;
+
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(unique = true)
+    private String nickname;
+
+    @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
+    private Long authLevel;
+
+    private LocalDateTime lastLoginTime;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection <GrantedAuthority> collectors = new ArrayList<>();
+        collectors.add(() -> {
+            return "USER";
+        });
+        return collectors;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+}
