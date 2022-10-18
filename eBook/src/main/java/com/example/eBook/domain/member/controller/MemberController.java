@@ -17,6 +17,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
@@ -63,38 +65,38 @@ public class MemberController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/member/modify/{memberId}")
-    public String showModifyForm(Model model, @PathVariable(value = "memberId") Long memberId) {
+    @GetMapping("/member/modify")
+    public String showModifyForm(Model model, Principal principal) {
 
-        InfoModifyForm infoModifyForm = memberService.getInfoById(memberId);
+        InfoModifyForm infoModifyForm = memberService.getInfoByUsername(principal.getName());
         model.addAttribute("infoModifyForm", infoModifyForm);
         return "member/modify_info_member";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/member/modify/{memberId}")
+    @PostMapping("/member/modify")
     public String modifyInfo(@Validated @ModelAttribute InfoModifyForm infoModifyForm, BindingResult bindingResult,
-                             @PathVariable(value = "memberId") Long memberId) {
+                             Principal principal) {
 
         if (bindingResult.hasErrors()) {
             return "member/modify_info_member";
         }
 
-        memberService.modifyInfo(memberId, infoModifyForm);
+        memberService.modifyInfo(principal.getName(), infoModifyForm);
         return "redirect:/";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/member/modifyPassword/{memberId}")
-    public String showModifyPasswordForm(@PathVariable(value = "memberId") Long memberId, Model model) {
+    @GetMapping("/member/modifyPassword")
+    public String showModifyPasswordForm(Model model) {
         model.addAttribute("pwdModifyForm", new PwdModifyForm());
         return "member/modify_pwd_member";
     }
 
     @PreAuthorize("isAuthenticated()")
-    @PostMapping("/member/modifyPassword/{memberId}")
+    @PostMapping("/member/modifyPassword")
     public String modifyPassword(@Validated @ModelAttribute PwdModifyForm pwdModifyForm, BindingResult bindingResult,
-                                 @PathVariable(value = "memberId") Long memberId) {
+                                 Principal principal) {
 
         pwdModifyFormValidator.validate(pwdModifyForm, bindingResult);
 
@@ -103,7 +105,7 @@ public class MemberController {
         }
 
         try {
-            memberService.modifyPwd(memberId, pwdModifyForm);
+            memberService.modifyPwd(principal.getName(), pwdModifyForm);
         } catch (PasswordNotSameException e) {
             bindingResult.rejectValue("oldPassword", "notSame", e.getMessage());
             return "member/modify_pwd_member";

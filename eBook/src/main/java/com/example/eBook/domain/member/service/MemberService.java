@@ -43,8 +43,8 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public InfoModifyForm getInfoById(Long memberId) {
-        return MemberMapper.INSTANCE.EntityToInfoModifyForm(memberRepository.findById(memberId).orElseThrow(
+    public InfoModifyForm getInfoByUsername(String username) {
+        return MemberMapper.INSTANCE.EntityToInfoModifyForm(memberRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("존재하지 않는 회원입니다.")
         ));
     }
@@ -54,15 +54,15 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
     }
 
-    public void modifyInfo(Long memberId, InfoModifyForm infoModifyForm) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
+    public void modifyInfo(String username, InfoModifyForm infoModifyForm) {
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
 
         member.updateInfo(infoModifyForm.getEmail(), infoModifyForm.getNickname());
     }
 
-    public void modifyPwd(Long memberId, PwdModifyForm pwdModifyForm) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
+    public void modifyPwd(String username, PwdModifyForm pwdModifyForm) {
+        Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
 
         if (!passwordEncoder.matches(pwdModifyForm.getOldPassword(), member.getPassword())) {
@@ -72,14 +72,9 @@ public class MemberService implements UserDetailsService {
         member.updatePassword(passwordEncoder.encode(pwdModifyForm.getPassword()));
     }
 
-    public Member findByUsernameAndEmail(String username, String email) {
-        return memberRepository.findByUsernameAndEmail(username, email).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 회원입니다.")
-        );
-    }
-
     public String IssueTemporaryPassword(String username, String email) {
-        Member member = findByUsernameAndEmail(username, email);
+        Member member = memberRepository.findByUsernameAndEmail(username, email).orElseThrow(
+                () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
 
         String temporaryPassword = getTemporaryPassword();
         member.updatePassword(passwordEncoder.encode(temporaryPassword));

@@ -38,9 +38,9 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .mvcMatchers("/", "/error/**", "/js/**", "/css/**", "/image/**").permitAll()
-                .antMatchers("/member/join", "/member/login").permitAll();
-//                .antMatchers("/member/**").hasRole("USER");
-//                .anyRequest().authenticated();
+                .antMatchers("/member/join", "/member/login", "/member/findPassword", "/member/findUsername").permitAll()
+                .antMatchers("/member/**").hasRole("USER")
+                .anyRequest().authenticated();
 
         return httpSecurity.build();
     }
