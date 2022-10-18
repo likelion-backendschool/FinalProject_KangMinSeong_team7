@@ -134,4 +134,28 @@ public class MemberController {
         }
         return "redirect:/member/login";
     }
+
+    @GetMapping("/member/findPassword")
+    public String showFindPasswordForm(Model model) {
+        model.addAttribute("passwordFindForm", new PasswordFindForm());
+        return "member/find_password_member";
+    }
+
+    @PostMapping("/member/findPassword")
+    public String findPassword(@Validated @ModelAttribute PasswordFindForm passwordFindForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "member/find_password_member";
+        }
+
+        try {
+            String temporaryPassword = memberService.IssueTemporaryPassword(passwordFindForm.getUsername(), passwordFindForm.getEmail());
+            mailService.sendTemporaryPassword(passwordFindForm.getEmail(), temporaryPassword);
+        } catch (UsernameNotFoundException e) {
+            bindingResult.reject("notFound", e.getMessage());
+            return "member/find_password_member";
+        }
+
+        return "redirect:/member/login";
+    }
 }

@@ -8,7 +8,7 @@
             <div th:if="${#fields.hasErrors('email')}" th:errorclass="field-error" th:errors="*{email}"></div>
         </div>
 
-        <button type="button" class="btn cancel float-end" onclick="location.href='/'">취소</button>
+        <button type="button" class="btn cancel float-end" onclick="location.href='/member/login'">취소</button>
         <button type="submit" class="btn modify float-end mx-3">찾기</button>
     </form>
 </div>

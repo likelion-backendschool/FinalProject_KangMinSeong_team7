@@ -28,4 +28,13 @@ public class MailService {
 
         javaMailSender.send(simpleMailMessage);
     }
+
+    public void sendTemporaryPassword(String toEmail, String password) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(toEmail);
+        simpleMailMessage.setSubject("eBook 홈페이지 임시 비밀번호 정보입니다.");
+        simpleMailMessage.setText(toEmail + "님의 임시 비밀번호는\n" + password + "\n입니다.");
+
+        javaMailSender.send(simpleMailMessage);
+    }
 }

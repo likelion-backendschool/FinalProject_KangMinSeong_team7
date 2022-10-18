@@ -13,6 +13,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Optional<Member> findByUsername(String username);
     Optional<Member> findByEmail(String email);
 
+    Optional<Member> findByUsernameAndEmail(String username, String email);
+
+
     @Transactional
     @Modifying
     @Query(value = "update member set last_login_time = NOW() where username = :username", nativeQuery = true)

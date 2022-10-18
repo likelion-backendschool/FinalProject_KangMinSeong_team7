@@ -16,6 +16,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -24,6 +26,8 @@ public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+
+    private final static Random random = new Random();
 
     public Member save(SignupForm signupForm) {
         Member member = MemberMapper.INSTANCE.signupFormToEntity(signupForm);
@@ -66,5 +70,31 @@ public class MemberService implements UserDetailsService {
         }
 
         member.updatePassword(passwordEncoder.encode(pwdModifyForm.getPassword()));
+    }
+
+    public Member findByUsernameAndEmail(String username, String email) {
+        return memberRepository.findByUsernameAndEmail(username, email).orElseThrow(
+                () -> new UsernameNotFoundException("존재하지 않는 회원입니다.")
+        );
+    }
+
+    public String IssueTemporaryPassword(String username, String email) {
+        Member member = findByUsernameAndEmail(username, email);
+
+        String temporaryPassword = getTemporaryPassword();
+        member.updatePassword(passwordEncoder.encode(temporaryPassword));
+        return temporaryPassword;
+    }
+
+    public String getTemporaryPassword() {
+        String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        int alphaNumLength = alphaNum.length();
+
+        StringBuffer temporaryPassword = new StringBuffer();
+        for (int i = 0; i < 15; i++) {
+            temporaryPassword.append(alphaNum.charAt(random.nextInt(alphaNumLength)));
+        }
+
+        return temporaryPassword.toString();
     }
 }
