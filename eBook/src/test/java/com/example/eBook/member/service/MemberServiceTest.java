@@ -72,7 +72,7 @@ class MemberServiceTest {
                 .build();
 
         Member savedMember = memberRepository.save(member);
-        memberService.modifyInfo(savedMember.getId(), new InfoModifyForm("1234@email.com", "12345"));
+        memberService.modifyInfo(savedMember.getUsername(), new InfoModifyForm("1234@email.com", "12345"));
 
         Member findMember = memberRepository.findById(savedMember.getId()).orElseThrow();
 
@@ -94,7 +94,7 @@ class MemberServiceTest {
 
 
         Member savedMember = memberRepository.save(member);
-        memberService.modifyPwd(savedMember.getId(), new PwdModifyForm("1234", "abcd", "abcd"));
+        memberService.modifyPwd(savedMember.getUsername(), new PwdModifyForm("1234", "abcd", "abcd"));
         assertThat(passwordEncoder.matches("abcd", savedMember.getPassword())).isTrue();
     }
 }
