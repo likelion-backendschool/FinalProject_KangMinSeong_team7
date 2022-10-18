@@ -1,9 +1,8 @@
-package com.example.eBook.member.mapper;
+package com.example.eBook.global.mapper;
 
 import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
-import com.example.eBook.global.mapper.MemberMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
