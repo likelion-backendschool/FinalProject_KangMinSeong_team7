@@ -32,6 +32,11 @@ public class PostService {
     private final PostHashTagService postHashTagService;
 
     @Transactional(readOnly = true)
+    public List<PostDto> findRecentTop100() {
+        return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findTop100ByOrderByCreateDateDesc());
+    }
+
+    @Transactional(readOnly = true)
     public List<PostDto> findAll() {
         return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findAll());
     }

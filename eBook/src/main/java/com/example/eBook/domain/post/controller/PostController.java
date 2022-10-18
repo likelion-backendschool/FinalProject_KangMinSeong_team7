@@ -25,7 +25,10 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/")
-    public String showRecentPost() {
+    public String showRecentPost(Model model) {
+        List<PostDto> postList = postService.findRecentTop100();
+
+        model.addAttribute("postList", postList);
         return "home/home";
     }
 
