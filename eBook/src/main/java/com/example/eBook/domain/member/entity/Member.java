@@ -44,8 +44,14 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection <GrantedAuthority> collectors = new ArrayList<>();
         collectors.add(() -> {
-            return "USER";
+            return "ROLE_USER";
         });
+
+        if (authLevel == 7) {
+            collectors.add(() -> {
+                return "ROLE_ADMIN";
+            });
+        }
         return collectors;
     }
 
