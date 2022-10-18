@@ -1,6 +1,7 @@
 package com.example.eBook.global.mapper;
 
 import com.example.eBook.domain.member.entity.Member;
+import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
@@ -55,6 +56,28 @@ class PostMapperTest {
         assertThat(post.getContentHtml()).isNull();
         assertThat(post.getContent()).isEqualTo(postWriteForm.getContent());
         assertThat(post.getSubject()).isEqualTo(postWriteForm.getSubject());
+    }
 
+    @Test
+    @DisplayName("entity_To_PostDetailDto_test")
+    public void entityToPostDetailDto() {
+        Member member = Member.builder()
+                .username("test_username")
+                .password("1234")
+                .email("test@email.com")
+                .nickname("test_nickname")
+                .authLevel(3L)
+                .build();
+
+        Post post = Post.builder()
+                .member(member).content("content1").subject("subject1").contentHtml("contentHtml1").build();
+
+        PostDetailDto postDetailDto = PostMapper.INSTANCE.entityToPostDetailDto(post);
+        assertThat(postDetailDto.getId()).isEqualTo(post.getId());
+        assertThat(postDetailDto.getSubject()).isEqualTo(post.getSubject());
+        assertThat(postDetailDto.getContent()).isEqualTo(post.getContent());
+        assertThat(postDetailDto.getWriter()).isEqualTo(post.getMember().getNickname());
+        assertThat(postDetailDto.getCreateDate()).isEqualTo(post.getCreateDate());
+        assertThat(postDetailDto.getUpdateDate()).isEqualTo(post.getUpdateDate());
     }
 }

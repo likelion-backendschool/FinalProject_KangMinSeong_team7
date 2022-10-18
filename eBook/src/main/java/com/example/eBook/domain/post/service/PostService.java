@@ -1,11 +1,14 @@
 package com.example.eBook.domain.post.service;
 
+import com.example.eBook.domain.mapping.postHashTag.entity.PostHashTag;
 import com.example.eBook.domain.mapping.postHashTag.service.PostHashTagService;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
+import com.example.eBook.domain.post.exception.PostNotFoundException;
 import com.example.eBook.domain.post.repository.PostRepository;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import com.example.eBook.domain.postKeyword.service.PostKeywordService;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -40,5 +44,18 @@ public class PostService {
 
         List<PostKeyword> postKeywords = postKeywordService.save(postWriteForm.getKeywords());
         postHashTagService.save(member, post, postKeywords);
+    }
+
+    public PostDetailDto getPostDetail(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
+
+        PostDetailDto postDetailDto = PostMapper.INSTANCE.entityToPostDetailDto(post);
+        postDetailDto.setPostKeywords(postHashTagService.findAllByPost(post)
+                .stream()
+                .map(PostHashTag::getPostKeyword)
+                .collect(Collectors.toList()));
+
+        return postDetailDto;
     }
 }

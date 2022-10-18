@@ -7,10 +7,13 @@ import com.example.eBook.domain.post.entity.Post;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostHashTagService {
 
@@ -25,5 +28,13 @@ public class PostHashTagService {
                     .postKeyword(postKeyword)
                     .build());
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostHashTag> findAllByPost(Post post) {
+        return postHashTagRepository.findAllWithPostKeyword()
+                .stream()
+                .filter(p -> p.getPost().equals(post))
+                .collect(Collectors.toList());
     }
 }

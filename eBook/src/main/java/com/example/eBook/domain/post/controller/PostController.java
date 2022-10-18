@@ -1,5 +1,6 @@
 package com.example.eBook.domain.post.controller;
 
+import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.service.PostService;
@@ -10,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
@@ -50,5 +52,13 @@ public class PostController {
 
         postService.save(principal.getName(), postWriteForm);
         return "redirect:/post/list";
+    }
+
+    @GetMapping("/post/{postId}")
+    public String showPostDetail(@PathVariable Long postId, Model model) {
+
+        PostDetailDto postDetailDto = postService.getPostDetail(postId);
+        model.addAttribute("postDetailDto", postDetailDto);
+        return "post/detail_post";
     }
 }

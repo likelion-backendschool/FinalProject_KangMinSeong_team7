@@ -1,5 +1,6 @@
 package com.example.eBook.global.mapper;
 
+import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
@@ -19,4 +20,7 @@ public interface PostMapper {
     List<PostDto> entitiesToPostDtos(List<Post> postList);
 
     Post postWriteFormToEntity(PostWriteForm postWriteForm);
+
+    @Mapping(target = "writer", source = "member.nickname")
+    PostDetailDto entityToPostDetailDto(Post post);
 }
