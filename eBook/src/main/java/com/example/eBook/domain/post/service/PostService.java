@@ -6,6 +6,7 @@ import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
+import com.example.eBook.domain.post.dto.PostModifyForm;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
 import com.example.eBook.domain.post.exception.PostNotFoundException;
@@ -57,5 +58,29 @@ public class PostService {
                 .collect(Collectors.toList()));
 
         return postDetailDto;
+    }
+
+    public PostModifyForm getPostModifyForm(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
+
+        PostModifyForm postModifyForm = PostMapper.INSTANCE.entityToPostModifyForm(post);
+
+        String postKeywordContents = postHashTagService.findAllByPost(post)
+                .stream()
+                .map(p -> p.getPostKeyword().getContent())
+                .collect(Collectors.joining(" "));
+
+        postModifyForm.setPostKeywordContents(postKeywordContents);
+        return postModifyForm;
+    }
+
+    public void modify(Long postId, PostModifyForm postModifyForm) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
+
+        post.updateSubjectAndContent(postModifyForm.getSubject(), postModifyForm.getContent());
+
+        postHashTagService.modify(post, postModifyForm.getPostKeywordContents());
     }
 }

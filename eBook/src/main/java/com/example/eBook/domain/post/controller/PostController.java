@@ -2,6 +2,7 @@ package com.example.eBook.domain.post.controller;
 
 import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
+import com.example.eBook.domain.post.dto.PostModifyForm;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +61,26 @@ public class PostController {
         PostDetailDto postDetailDto = postService.getPostDetail(postId);
         model.addAttribute("postDetailDto", postDetailDto);
         return "post/detail_post";
+    }
+
+    @GetMapping("/post/{postId}/modify")
+    public String showModifyForm(@PathVariable Long postId, Model model) {
+
+        PostModifyForm postModifyForm = postService.getPostModifyForm(postId);
+        model.addAttribute("postModifyForm", postModifyForm);
+
+        return "post/modify_post";
+    }
+
+    @PostMapping("/post/{postId}/modify")
+    public String modify(@PathVariable Long postId, @Validated @ModelAttribute PostModifyForm postModifyForm,
+                         BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "post/modify_post";
+        }
+
+        postService.modify(postId, postModifyForm);
+        return "redirect:/post/%s".formatted(postId);
     }
 }

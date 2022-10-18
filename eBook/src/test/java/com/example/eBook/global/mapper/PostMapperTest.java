@@ -3,6 +3,7 @@ package com.example.eBook.global.mapper;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
+import com.example.eBook.domain.post.dto.PostModifyForm;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
 import org.junit.jupiter.api.DisplayName;
@@ -79,5 +80,27 @@ class PostMapperTest {
         assertThat(postDetailDto.getWriter()).isEqualTo(post.getMember().getNickname());
         assertThat(postDetailDto.getCreateDate()).isEqualTo(post.getCreateDate());
         assertThat(postDetailDto.getUpdateDate()).isEqualTo(post.getUpdateDate());
+    }
+
+    @Test
+    @DisplayName("entity_To_PostModifyForm_test")
+    public void entityToPostModifyForm() {
+
+        Member member = Member.builder()
+                .username("test_username")
+                .password("1234")
+                .email("test@email.com")
+                .nickname("test_nickname")
+                .authLevel(3L)
+                .build();
+
+        Post post = Post.builder()
+                .member(member).content("content1").subject("subject1").contentHtml("contentHtml1").build();
+
+        PostModifyForm postModifyForm = PostMapper.INSTANCE.entityToPostModifyForm(post);
+        assertThat(postModifyForm.getSubject()).isEqualTo(post.getSubject());
+        assertThat(postModifyForm.getContent()).isEqualTo(post.getContent());
+        assertThat(postModifyForm.getPostKeywordContents()).isNull();
+
     }
 }

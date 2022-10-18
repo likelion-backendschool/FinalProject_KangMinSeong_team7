@@ -15,16 +15,17 @@ public class PostKeywordService {
 
     private final PostKeywordRepository postKeywordRepository;
 
-
     public List<PostKeyword> save(String keywords) {
         String[] keyword = keywords.split(" ");
         List<PostKeyword> postKeywords = new ArrayList<>();
         for (String kw : keyword) {
-            if (postKeywordRepository.findByContent(kw).isEmpty()) {
-                postKeywordRepository.save(PostKeyword.builder().content(kw).build());
+            if (!kw.isBlank()) {
+                if (postKeywordRepository.findByContent(kw).isEmpty()) {
+                    postKeywordRepository.save(PostKeyword.builder().content(kw).build());
+                }
+                postKeywords.add(postKeywordRepository.findByContent(kw).orElseThrow(
+                        () -> new PostKeywordNotFoundException("해당 해시태그가 존재하지 않습니다.")));
             }
-            postKeywords.add(postKeywordRepository.findByContent(kw).orElseThrow(
-                    () -> new PostKeywordNotFoundException("해당 해시태그가 존재하지 않습니다.")));
         }
         return postKeywords;
     }

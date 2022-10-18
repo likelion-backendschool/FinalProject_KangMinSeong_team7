@@ -5,6 +5,7 @@ import com.example.eBook.domain.mapping.postHashTag.repository.PostHashTagReposi
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.post.entity.Post;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
+import com.example.eBook.domain.postKeyword.service.PostKeywordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class PostHashTagService {
 
     private final PostHashTagRepository postHashTagRepository;
+    private final PostKeywordService postKeywordService;
 
     public void save(Member member, Post post, List<PostKeyword> postKeywords) {
 
@@ -36,5 +38,20 @@ public class PostHashTagService {
                 .stream()
                 .filter(p -> p.getPost().equals(post))
                 .collect(Collectors.toList());
+    }
+
+    public void modify(Post post, String postKeywordContents) {
+
+        postHashTagRepository.deleteAllByPostInQuery(post);
+
+        List<PostKeyword> postKeywords = postKeywordService.save(postKeywordContents);
+
+        for (PostKeyword postKeyword : postKeywords) {
+            postHashTagRepository.save(PostHashTag.builder()
+                    .member(post.getMember())
+                    .post(post)
+                    .postKeyword(postKeyword)
+                    .build());
+        }
     }
 }
