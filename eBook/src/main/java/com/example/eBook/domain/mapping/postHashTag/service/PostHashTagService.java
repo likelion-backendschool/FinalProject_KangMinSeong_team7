@@ -54,4 +54,8 @@ public class PostHashTagService {
                     .build());
         }
     }
+
+    public void delete(Post post) {
+        postHashTagRepository.deleteAllByPostInQuery(post);
+    }
 }

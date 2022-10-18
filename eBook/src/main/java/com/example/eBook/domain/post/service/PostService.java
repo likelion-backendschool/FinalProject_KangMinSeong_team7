@@ -47,6 +47,7 @@ public class PostService {
         postHashTagService.save(member, post, postKeywords);
     }
 
+    @Transactional(readOnly = true)
     public PostDetailDto getPostDetail(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
@@ -60,6 +61,7 @@ public class PostService {
         return postDetailDto;
     }
 
+    @Transactional(readOnly = true)
     public PostModifyForm getPostModifyForm(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
@@ -82,5 +84,13 @@ public class PostService {
         post.updateSubjectAndContent(postModifyForm.getSubject(), postModifyForm.getContent());
 
         postHashTagService.modify(post, postModifyForm.getPostKeywordContents());
+    }
+
+    public void delete(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(
+                () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
+
+        postRepository.delete(post);
+        postHashTagService.delete(post);
     }
 }

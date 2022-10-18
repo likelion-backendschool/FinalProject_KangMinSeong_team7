@@ -83,4 +83,11 @@ public class PostController {
         postService.modify(postId, postModifyForm);
         return "redirect:/post/%s".formatted(postId);
     }
+
+    @GetMapping("/post/{postId}/delete")
+    public String delete(@PathVariable Long postId) {
+
+        postService.delete(postId);
+        return "redirect:/post/list";
+    }
 }
