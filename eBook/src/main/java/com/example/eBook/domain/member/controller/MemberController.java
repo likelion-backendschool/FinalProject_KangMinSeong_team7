@@ -1,29 +1,32 @@
 package com.example.eBook.domain.member.controller;
 
+import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.LoginForm;
+import com.example.eBook.domain.member.dto.PwdModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
+import com.example.eBook.domain.member.exception.PasswordNotSameException;
+import com.example.eBook.domain.member.validator.PwdModifyFormValidator;
 import com.example.eBook.domain.member.validator.SignFormValidator;
 import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.global.util.mail.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final SignFormValidator signFormValidator;
     private final MemberService memberService;
     private final MailService mailService;
+    private final SignFormValidator signFormValidator;
+    private final PwdModifyFormValidator pwdModifyFormValidator;
 
     @GetMapping("/member/join")
     public String showSignupForm(Model model) {
@@ -53,11 +56,61 @@ public class MemberController {
     }
 
     @GetMapping("/member/login")
-    public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error)  {
+    public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error) {
 
         model.addAttribute("error", error);
         model.addAttribute("errorMsg", "로그인이 실패했습니다.");
         model.addAttribute("loginForm", new LoginForm());
         return "member/login_member";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/member/modify/{memberId}")
+    public String showModifyForm(Model model, @PathVariable(value = "memberId") Long memberId) {
+
+        InfoModifyForm infoModifyForm = memberService.getInfoById(memberId);
+        model.addAttribute("infoModifyForm", infoModifyForm);
+        return "member/modify_info_member";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/member/modify/{memberId}")
+    public String modifyInfo(@Validated @ModelAttribute InfoModifyForm infoModifyForm, BindingResult bindingResult,
+                             @PathVariable(value = "memberId") Long memberId) {
+
+        if (bindingResult.hasErrors()) {
+            return "member/modify_info_member";
+        }
+
+        memberService.modifyInfo(memberId, infoModifyForm);
+        return "redirect:/";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/member/modifyPassword/{memberId}")
+    public String showModifyPasswordForm(@PathVariable(value = "memberId") Long memberId, Model model) {
+        model.addAttribute("pwdModifyForm", new PwdModifyForm());
+        return "member/modify_pwd_member";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/member/modifyPassword/{memberId}")
+    public String modifyPassword(@Validated @ModelAttribute PwdModifyForm pwdModifyForm, BindingResult bindingResult,
+                                 @PathVariable(value = "memberId") Long memberId) {
+
+        pwdModifyFormValidator.validate(pwdModifyForm, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return "member/modify_pwd_member";
+        }
+
+        try {
+            memberService.modifyPwd(memberId, pwdModifyForm);
+        } catch (PasswordNotSameException e) {
+            bindingResult.rejectValue("oldPassword", "notSame", e.getMessage());
+            return "member/modify_pwd_member";
+        }
+
+        return "redirect:/";
     }
 }

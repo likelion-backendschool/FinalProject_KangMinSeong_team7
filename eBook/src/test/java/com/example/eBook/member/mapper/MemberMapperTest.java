@@ -1,15 +1,14 @@
 package com.example.eBook.member.mapper;
 
+import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.global.mapper.MemberMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.*;
 
-@SpringBootTest
 class MemberMapperTest {
 
     @Test
@@ -29,6 +28,22 @@ class MemberMapperTest {
         assertThat(member.getNickname()).isEqualTo(signupForm.getNickname());
         assertThat(member.getEmail()).isEqualTo(signupForm.getEmail());
         assertThat(member.getAuthLevel()).isEqualTo(3L);
+    }
 
+    @Test
+    @DisplayName("엔티티_To_InfoModifyForm_Mapper")
+    public void EntityToInfoModifyForm() {
+        Member member = Member.builder()
+                .username("test_username")
+                .password("1234")
+                .email("test@email.com")
+                .nickname("test_nickname")
+                .authLevel(3L)
+                .build();
+
+        InfoModifyForm infoModifyForm = MemberMapper.INSTANCE.EntityToInfoModifyForm(member);
+
+        assertThat(infoModifyForm.getNickname()).isEqualTo(member.getNickname());
+        assertThat(infoModifyForm.getEmail()).isEqualTo(member.getEmail());
     }
 }
