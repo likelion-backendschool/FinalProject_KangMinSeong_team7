@@ -8,12 +8,9 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class PostDto {
+public class RecentPostDto {
 
-    private Long id;
     private String subject;
     private String writer;
     private LocalDateTime createDate;
-    private LocalDateTime updateDate;
 }

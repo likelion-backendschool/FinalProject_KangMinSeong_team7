@@ -1,6 +1,7 @@
 package com.example.eBook.global.mapper;
 
 import com.example.eBook.domain.post.dto.PostDto;
+import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,4 +17,6 @@ public interface PostMapper {
     PostDto entityToPostDto(Post post);
 
     List<PostDto> entitiesToPostDtos(List<Post> postList);
+
+    Post postWriteFormToEntity(PostWriteForm postWriteForm);
 }

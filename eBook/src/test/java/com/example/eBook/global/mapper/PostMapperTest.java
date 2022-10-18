@@ -2,13 +2,15 @@ package com.example.eBook.global.mapper;
 
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.post.dto.PostDto;
+import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.entity.Post;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.*;
 
 class PostMapperTest {
 
@@ -32,12 +34,27 @@ class PostMapperTest {
 
         List<PostDto> postDtoList = PostMapper.INSTANCE.entitiesToPostDtos(posts);
 
-        Assertions.assertThat(postDtoList.get(0).getWriter()).isEqualTo(posts.get(0).getMember().getNickname());
-        Assertions.assertThat(postDtoList.get(0).getSubject()).isEqualTo(posts.get(0).getSubject());
-        Assertions.assertThat(postDtoList.get(0).getCreateDate()).isEqualTo(posts.get(0).getCreateDate());
-        Assertions.assertThat(postDtoList.get(0).getUpdateDate()).isEqualTo(posts.get(0).getUpdateDate());
+        assertThat(postDtoList.get(0).getWriter()).isEqualTo(posts.get(0).getMember().getNickname());
+        assertThat(postDtoList.get(0).getSubject()).isEqualTo(posts.get(0).getSubject());
+        assertThat(postDtoList.get(0).getCreateDate()).isEqualTo(posts.get(0).getCreateDate());
+        assertThat(postDtoList.get(0).getUpdateDate()).isEqualTo(posts.get(0).getUpdateDate());
 
-        Assertions.assertThat(postDtoList.get(1).getWriter()).isEqualTo(posts.get(1).getMember().getNickname());
+        assertThat(postDtoList.get(1).getWriter()).isEqualTo(posts.get(1).getMember().getNickname());
     }
 
+    @Test
+    @DisplayName("postWriteForm_To_Entity_test")
+    public void postWriteFormToEntity() {
+
+        PostWriteForm postWriteForm = PostWriteForm.builder()
+                .subject("subject1").content("content1").keywords("#자바 #스프링").build();
+
+        Post post = PostMapper.INSTANCE.postWriteFormToEntity(postWriteForm);
+
+        assertThat(post.getMember()).isNull();
+        assertThat(post.getContentHtml()).isNull();
+        assertThat(post.getContent()).isEqualTo(postWriteForm.getContent());
+        assertThat(post.getSubject()).isEqualTo(postWriteForm.getSubject());
+
+    }
 }

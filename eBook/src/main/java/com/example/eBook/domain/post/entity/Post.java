@@ -27,4 +27,8 @@ public class Post extends BaseTimeEntity {
     @Lob
     private String content;
     private String contentHtml;
+
+    public void updateMember(Member member) {
+        this.member = member;
+    }
 }
