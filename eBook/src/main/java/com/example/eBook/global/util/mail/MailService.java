@@ -19,4 +19,13 @@ public class MailService {
 
         javaMailSender.send(simpleMailMessage);
     }
+
+    public void sendUsername(String toEmail, String username) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(toEmail);
+        simpleMailMessage.setSubject("eBook 홈페이지 아이디 정보입니다.");
+        simpleMailMessage.setText(toEmail + "님의 아이디는\n" + username + "\n입니다.");
+
+        javaMailSender.send(simpleMailMessage);
+    }
 }

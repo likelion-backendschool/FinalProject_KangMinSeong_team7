@@ -45,6 +45,11 @@ public class MemberService implements UserDetailsService {
         ));
     }
 
+    @Transactional(readOnly = true)
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+    }
+
     public void modifyInfo(Long memberId, InfoModifyForm infoModifyForm) {
         Member member = memberRepository.findById(memberId).orElseThrow(
                 () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));

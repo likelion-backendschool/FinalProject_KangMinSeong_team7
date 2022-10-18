@@ -1,9 +1,6 @@
 package com.example.eBook.domain.member.controller;
 
-import com.example.eBook.domain.member.dto.InfoModifyForm;
-import com.example.eBook.domain.member.dto.LoginForm;
-import com.example.eBook.domain.member.dto.PwdModifyForm;
-import com.example.eBook.domain.member.dto.SignupForm;
+import com.example.eBook.domain.member.dto.*;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.exception.PasswordNotSameException;
 import com.example.eBook.domain.member.validator.PwdModifyFormValidator;
@@ -13,6 +10,7 @@ import com.example.eBook.global.util.mail.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -112,5 +110,28 @@ public class MemberController {
         }
 
         return "redirect:/";
+    }
+
+    @GetMapping("/member/findUsername")
+    public String showFindUsernameForm(Model model) {
+        model.addAttribute("usernameFindForm", new UsernameFindForm());
+        return "member/find_username_member";
+    }
+
+    @PostMapping("/member/findUsername")
+    public String findUsername(@Validated @ModelAttribute UsernameFindForm usernameFindForm, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "member/find_username_member";
+        }
+
+        try {
+            Member member = memberService.findByEmail(usernameFindForm.getEmail());
+            mailService.sendUsername(member.getEmail(), member.getUsername());
+        } catch (UsernameNotFoundException e) {
+            bindingResult.rejectValue("email", "notFound", e.getMessage());
+            return "member/find_username_member";
+        }
+        return "redirect:/member/login";
     }
 }
