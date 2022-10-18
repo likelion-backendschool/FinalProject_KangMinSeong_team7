@@ -54,6 +54,11 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
     }
 
+    public Member findByUsername(String username) {
+        return memberRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+    }
+
     public void modifyInfo(String username, InfoModifyForm infoModifyForm) {
         Member member = memberRepository.findByUsername(username).orElseThrow(
                 () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
