@@ -3,6 +3,10 @@
     <form th:action th:object="${infoModifyForm}" method="post" class="w-50 mx-auto">
         <h2 class="mb-3 mt-3">회원정보수정</h2>
 
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">전체 오류 메시지</p>
+        </div>
+
         <div class="mb-3">
             <input type="text" th:field="*{email}" th:errorclass="field-error" class="form-control" placeholder="이메일">
             <div th:if="${#fields.hasErrors('email')}" th:errorclass="field-error" th:errors="*{email}"></div>

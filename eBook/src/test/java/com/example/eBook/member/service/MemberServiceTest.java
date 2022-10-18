@@ -1,6 +1,7 @@
 package com.example.eBook.member.service;
 
 import com.example.eBook.domain.member.dto.InfoModifyForm;
+import com.example.eBook.domain.member.dto.PwdModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.repository.MemberRepository;
@@ -11,11 +12,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@Slf4j
 @ActiveProfiles("test")
 class MemberServiceTest {
 
@@ -24,6 +28,9 @@ class MemberServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @AfterEach
     public void afterEach() {
@@ -54,6 +61,7 @@ class MemberServiceTest {
 
     @Test
     @DisplayName("회원정보수정")
+    @Transactional
     public void modifyInfo() {
         Member member = Member.builder()
                 .username("test_username")
@@ -70,5 +78,23 @@ class MemberServiceTest {
 
         assertThat(findMember.getEmail()).isEqualTo("1234@email.com");
         assertThat(findMember.getNickname()).isEqualTo("12345");
+    }
+
+    @Test
+    @DisplayName("비밀번호수정")
+    @Transactional
+    public void modifyPassword() {
+        Member member = Member.builder()
+                .username("test_username")
+                .password(passwordEncoder.encode("1234"))
+                .email("test@email.com")
+                .nickname("test_nickname")
+                .authLevel(3L)
+                .build();
+
+
+        Member savedMember = memberRepository.save(member);
+        memberService.modifyPwd(savedMember.getId(), new PwdModifyForm("1234", "abcd", "abcd"));
+        assertThat(passwordEncoder.matches("abcd", savedMember.getPassword())).isTrue();
     }
 }
