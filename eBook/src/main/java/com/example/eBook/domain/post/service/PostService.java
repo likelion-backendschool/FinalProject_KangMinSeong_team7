@@ -14,6 +14,7 @@ import com.example.eBook.domain.post.repository.PostRepository;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import com.example.eBook.domain.postKeyword.service.PostKeywordService;
 import com.example.eBook.global.mapper.PostMapper;
+import com.example.eBook.global.util.markdown.MarkdownUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ public class PostService {
     private final MemberService memberService;
     private final PostKeywordService postKeywordService;
     private final PostHashTagService postHashTagService;
+    private final MarkdownUtil markdownUtil;
 
     @Transactional(readOnly = true)
     public List<PostDto> findRecentTop100() {
@@ -46,6 +48,7 @@ public class PostService {
         Member member = memberService.findByUsername(username);
 
         post.updateMember(member);
+        post.updateContentHtml(markdownUtil.markdown(post.getContent()));
         postRepository.saveAndFlush(post);
 
         List<PostKeyword> postKeywords = postKeywordService.save(postWriteForm.getKeywords());
@@ -86,7 +89,8 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
 
-        post.updateSubjectAndContent(postModifyForm.getSubject(), postModifyForm.getContent());
+        post.updateSubjectAndContent(postModifyForm.getSubject(), postModifyForm.getContent(),
+                markdownUtil.markdown(postModifyForm.getContent()));
 
         postHashTagService.modify(post, postModifyForm.getPostKeywordContents());
     }
