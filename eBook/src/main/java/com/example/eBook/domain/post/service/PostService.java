@@ -89,7 +89,8 @@ public class PostService {
         Post post = postRepository.findById(postId).orElseThrow(
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
 
-        post.updateSubjectAndContent(postModifyForm.getSubject(), postModifyForm.getContent());
+        post.updateSubjectAndContent(postModifyForm.getSubject(), postModifyForm.getContent(),
+                markdownUtil.markdown(postModifyForm.getContent()));
 
         postHashTagService.modify(post, postModifyForm.getPostKeywordContents());
     }
