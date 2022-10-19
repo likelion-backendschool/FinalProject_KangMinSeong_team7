@@ -5,6 +5,7 @@ import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.domain.product.dto.ProductCreateForm;
 import com.example.eBook.domain.product.dto.ProductDetailDto;
 import com.example.eBook.domain.product.dto.ProductDto;
+import com.example.eBook.domain.product.dto.ProductModifyForm;
 import com.example.eBook.domain.product.entity.Product;
 import com.example.eBook.domain.product.exception.ProductNotFoundException;
 import com.example.eBook.domain.product.repository.ProductRepository;
@@ -36,6 +37,7 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    @Transactional(readOnly = true)
     public ProductDetailDto getProductDetail(Long productId) {
 
         ProductDetailDto productDetailDto = ProductMapper.INSTANCE.entityToProductDetailDto(
@@ -44,5 +46,21 @@ public class ProductService {
 
         productDetailDto.getPostKeyword().getContent();
         return productDetailDto;
+    }
+
+    @Transactional(readOnly = true)
+    public ProductModifyForm getProductModifyForm(Long productId) {
+
+        return ProductMapper.INSTANCE.entityToProductModifyForm(
+                productRepository.findById(productId).orElseThrow(
+                        () -> new ProductNotFoundException("해당 상품은 존재하지 않습니다.")));
+    }
+
+    public void modify(Long productId, ProductModifyForm productModifyForm) {
+
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ProductNotFoundException("해당 상품은 존재하지 않습니다."));
+
+        product.updateProduct(productModifyForm.getSubject(), productModifyForm.getDescription(), productModifyForm.getPrice());
     }
 }

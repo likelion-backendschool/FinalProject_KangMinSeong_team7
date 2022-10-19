@@ -3,6 +3,7 @@ package com.example.eBook.global.mapper;
 import com.example.eBook.domain.product.dto.ProductCreateForm;
 import com.example.eBook.domain.product.dto.ProductDetailDto;
 import com.example.eBook.domain.product.dto.ProductDto;
+import com.example.eBook.domain.product.dto.ProductModifyForm;
 import com.example.eBook.domain.product.entity.Product;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,4 +26,6 @@ public interface ProductMapper {
 
     @Mapping(target = "writer", source = "member.nickname")
     ProductDetailDto entityToProductDetailDto(Product product);
+
+    ProductModifyForm entityToProductModifyForm(Product product);
 }

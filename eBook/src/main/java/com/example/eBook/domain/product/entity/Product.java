@@ -32,4 +32,10 @@ public class Product extends BaseTimeEntity {
     public void updateMember(Member member) {
         this.member = member;
     }
+
+    public void updateProduct(String subject, String description, int price) {
+        this.subject = subject;
+        this.description = description;
+        this.price = price;
+    }
 }

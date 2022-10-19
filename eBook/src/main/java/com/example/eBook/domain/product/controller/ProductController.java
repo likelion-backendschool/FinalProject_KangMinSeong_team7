@@ -5,6 +5,7 @@ import com.example.eBook.domain.postKeyword.service.PostKeywordService;
 import com.example.eBook.domain.product.dto.ProductCreateForm;
 import com.example.eBook.domain.product.dto.ProductDetailDto;
 import com.example.eBook.domain.product.dto.ProductDto;
+import com.example.eBook.domain.product.dto.ProductModifyForm;
 import com.example.eBook.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -60,5 +61,26 @@ public class ProductController {
         model.addAttribute("productDetailDto", productDetailDto);
 
         return "product/detail_product";
+    }
+
+    @GetMapping("/product/{productId}/modify")
+    public String showModifyForm(@PathVariable Long productId, Model model) {
+        ProductModifyForm productModifyForm = productService.getProductModifyForm(productId);
+
+        model.addAttribute("productModifyForm", productModifyForm);
+        return "product/modify_product";
+    }
+
+    @PostMapping("/product/{productId}/modify")
+    public String modify(@PathVariable Long productId, @Validated @ModelAttribute ProductModifyForm productModifyForm,
+                         BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "product/modify_product";
+        }
+
+        productService.modify(productId, productModifyForm);
+
+        return "redirect:/product/%s".formatted(productId);
     }
 }

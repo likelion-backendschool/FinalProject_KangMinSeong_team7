@@ -5,6 +5,7 @@ import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import com.example.eBook.domain.product.dto.ProductCreateForm;
 import com.example.eBook.domain.product.dto.ProductDetailDto;
 import com.example.eBook.domain.product.dto.ProductDto;
+import com.example.eBook.domain.product.dto.ProductModifyForm;
 import com.example.eBook.domain.product.entity.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -89,5 +90,32 @@ class ProductMapperTest {
         assertThat(productDetailDto.getWriter()).isEqualTo(product.getMember().getNickname());
         assertThat(productDetailDto.getCreateDate()).isEqualTo(product.getCreateDate());
         assertThat(productDetailDto.getPostKeyword()).isEqualTo(product.getPostKeyword());
+    }
+
+    @Test
+    @DisplayName("entity_To_ProductModifyForm_mapper")
+    public void entityToProductModifyForm() {
+
+        Member member = Member.builder()
+                .username("test_username")
+                .password("1234")
+                .email("test@email.com")
+                .nickname("test_nickname")
+                .authLevel(3L)
+                .build();
+
+        Product product = Product.builder()
+                .id(1L)
+                .subject("글제목")
+                .description("상품 설명")
+                .member(member)
+                .price(10000)
+                .build();
+
+        ProductModifyForm productModifyForm = ProductMapper.INSTANCE.entityToProductModifyForm(product);
+
+        assertThat(productModifyForm.getSubject()).isEqualTo(product.getSubject());
+        assertThat(productModifyForm.getDescription()).isEqualTo(product.getDescription());
+        assertThat(productModifyForm.getPrice()).isEqualTo(product.getPrice());
     }
 }
