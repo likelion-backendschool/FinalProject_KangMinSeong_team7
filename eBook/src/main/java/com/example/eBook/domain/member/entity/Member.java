@@ -52,6 +52,12 @@ public class Member extends BaseTimeEntity implements UserDetails {
                 return "ROLE_ADMIN";
             });
         }
+
+        if (!nickname.isBlank()) {
+            collectors.add(() -> {
+                return "ROLE_WRITER";
+            });
+        }
         return collectors;
     }
 
