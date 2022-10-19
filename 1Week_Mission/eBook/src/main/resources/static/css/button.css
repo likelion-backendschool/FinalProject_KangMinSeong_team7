@@ -1,0 +1,15 @@
+.create {
+    background-color: #D2D79F;
+}
+
+.modify {
+    background-color: #90B77D;
+}
+
+.delete {
+    background-color: #42855B;
+}
+
+.cancel {
+    background-color: burlywood;
+}
