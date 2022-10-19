@@ -17,14 +17,14 @@ public interface ProductMapper {
 
     ProductMapper INSTANCE = Mappers.getMapper(ProductMapper.class);
 
-    @Mapping(target = "writer", source = "member.nickname")
+    @Mapping(target = "writer", source = "member.username")
     ProductDto entityToProductDto(Product product);
 
     List<ProductDto> entitiesToProductDtos(List<Product> productList);
 
     Product productCreateFormToEntity(ProductCreateForm productCreateForm);
 
-    @Mapping(target = "writer", source = "member.nickname")
+    @Mapping(target = "writer", source = "member.username")
     ProductDetailDto entityToProductDetailDto(Product product);
 
     ProductModifyForm entityToProductModifyForm(Product product);
