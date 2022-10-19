@@ -63,4 +63,8 @@ public class ProductService {
 
         product.updateProduct(productModifyForm.getSubject(), productModifyForm.getDescription(), productModifyForm.getPrice());
     }
+
+    public void delete(Long productId) {
+        productRepository.deleteById(productId);
+    }
 }
