@@ -3,6 +3,7 @@ package com.example.eBook.domain.product.controller;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import com.example.eBook.domain.postKeyword.service.PostKeywordService;
 import com.example.eBook.domain.product.dto.ProductCreateForm;
+import com.example.eBook.domain.product.dto.ProductDetailDto;
 import com.example.eBook.domain.product.dto.ProductDto;
 import com.example.eBook.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
@@ -50,5 +52,13 @@ public class ProductController {
 
         productService.save(principal.getName(), productCreateForm);
         return "redirect:/product/list";
+    }
+
+    @GetMapping("/product/{productId}")
+    public String showProductDetail(@PathVariable Long productId, Model model) {
+        ProductDetailDto productDetailDto = productService.getProductDetail(productId);
+        model.addAttribute("productDetailDto", productDetailDto);
+
+        return "product/detail_product";
     }
 }
