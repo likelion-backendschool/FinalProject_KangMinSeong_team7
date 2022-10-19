@@ -15,14 +15,14 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface PostMapper {
     PostMapper INSTANCE = Mappers.getMapper(PostMapper.class);
-    @Mapping(target = "writer", source = "member.nickname")
+    @Mapping(target = "writer", source = "member.username")
     PostDto entityToPostDto(Post post);
 
     List<PostDto> entitiesToPostDtos(List<Post> postList);
 
     Post postWriteFormToEntity(PostWriteForm postWriteForm);
 
-    @Mapping(target = "writer", source = "member.nickname")
+    @Mapping(target = "writer", source = "member.username")
     PostDetailDto entityToPostDetailDto(Post post);
 
     PostModifyForm entityToPostModifyForm(Post post);
