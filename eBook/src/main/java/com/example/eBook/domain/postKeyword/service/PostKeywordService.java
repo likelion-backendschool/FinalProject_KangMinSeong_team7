@@ -5,11 +5,13 @@ import com.example.eBook.domain.postKeyword.exception.PostKeywordNotFoundExcepti
 import com.example.eBook.domain.postKeyword.repository.PostKeywordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class PostKeywordService {
 
@@ -28,5 +30,10 @@ public class PostKeywordService {
             }
         }
         return postKeywords;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostKeyword> findAll() {
+        return postKeywordRepository.findAll();
     }
 }

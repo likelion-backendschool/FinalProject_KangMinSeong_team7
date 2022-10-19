@@ -1,5 +1,6 @@
 package com.example.eBook.global.mapper;
 
+import com.example.eBook.domain.product.dto.ProductCreateForm;
 import com.example.eBook.domain.product.dto.ProductDto;
 import com.example.eBook.domain.product.entity.Product;
 import org.mapstruct.Mapper;
@@ -18,4 +19,6 @@ public interface ProductMapper {
     ProductDto entityToProductDto(Product product);
 
     List<ProductDto> entitiesToProductDtos(List<Product> productList);
+
+    Product productCreateFormToEntity(ProductCreateForm productCreateForm);
 }

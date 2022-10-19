@@ -1,6 +1,10 @@
 package com.example.eBook.domain.product.service;
 
+import com.example.eBook.domain.member.entity.Member;
+import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.domain.product.dto.ProductCreateForm;
 import com.example.eBook.domain.product.dto.ProductDto;
+import com.example.eBook.domain.product.entity.Product;
 import com.example.eBook.domain.product.repository.ProductRepository;
 import com.example.eBook.global.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +19,18 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final MemberService memberService;
 
     @Transactional(readOnly = true)
     public List<ProductDto> findAll() {
         return ProductMapper.INSTANCE.entitiesToProductDtos(productRepository.findAll());
+    }
+
+    public void save(String username, ProductCreateForm productCreateForm) {
+        Product product = ProductMapper.INSTANCE.productCreateFormToEntity(productCreateForm);
+        Member member = memberService.findByUsername(username);
+
+        product.updateMember(member);
+        productRepository.save(product);
     }
 }

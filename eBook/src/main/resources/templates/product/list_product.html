@@ -12,12 +12,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post, loop : ${productDtoList}" th:onclick="|location.href='@{|/post/${post.id}|}'|">
+        <tr th:each="product, loop : ${productDtoList}" th:onclick="|location.href='@{|/product/${product.id}|}'|">
             <td th:text="${loop.index+1}"></td>
-            <td th:text="${productDtoList.subject}"></td>
-            <td th:text="${productDtoList.price}"></td>
-            <td th:text="${productDtoList.writer}"></td>
-            <td th:text="${#temporals.format(productDtoList.createDate, 'yyyy-MM-dd &nbsp;&nbsp; HH:mm')}"></td>
+            <td th:text="${product.subject}"></td>
+            <td th:text="${product.price}"></td>
+            <td th:text="${product.writer}"></td>
+            <td th:text="${#temporals.format(product.createDate, 'yyyy-MM-dd &nbsp;&nbsp; HH:mm')}"></td>
         </tr>
         </tbody>
     </table>
