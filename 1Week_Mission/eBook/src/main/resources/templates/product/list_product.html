@@ -22,7 +22,7 @@
         </tbody>
     </table>
     <div>
-        <a th:href="@{/product/create}" class="float-end btn create">상품 등록</a>
+        <a th:href="@{/product/create}" class="float-end btn create" sec:authorize="hasAnyRole('WRITER')">상품 등록</a>
     </div>
 </div>
 </html>
