@@ -58,4 +58,9 @@ public class PostHashTagService {
     public void delete(Post post) {
         postHashTagRepository.deleteAllByPostInQuery(post);
     }
+
+    public List<String> findKeywordContentByPostId(Long postId) {
+
+//        postHashTagRepository.findAllByPost(p)
+    }
 }

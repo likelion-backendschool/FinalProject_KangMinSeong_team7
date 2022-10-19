@@ -4,10 +4,7 @@ import com.example.eBook.domain.mapping.postHashTag.entity.PostHashTag;
 import com.example.eBook.domain.mapping.postHashTag.service.PostHashTagService;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
-import com.example.eBook.domain.post.dto.PostDetailDto;
-import com.example.eBook.domain.post.dto.PostDto;
-import com.example.eBook.domain.post.dto.PostModifyForm;
-import com.example.eBook.domain.post.dto.PostWriteForm;
+import com.example.eBook.domain.post.dto.*;
 import com.example.eBook.domain.post.entity.Post;
 import com.example.eBook.domain.post.exception.PostNotFoundException;
 import com.example.eBook.domain.post.repository.PostRepository;
@@ -39,8 +36,15 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostDto> findAll() {
-        return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findAll());
+    public List<PostWithKeywordDto> findAll() {
+        List<PostWithKeywordDto> postWithKeywordDtos = PostMapper.INSTANCE.entitiesToPostWithKeywordDtos(postRepository.findAll());
+
+        for (PostWithKeywordDto postWithKeywordDto : postWithKeywordDtos) {
+            postWithKeywordDto.setPostKeywordContents(postHashTagService.findKeywordContentByPostId(postWithKeywordDto.getId()));
+        }
+
+
+        return postWithKeywordDtos;
     }
 
     public void save(String username, PostWriteForm postWriteForm) {
