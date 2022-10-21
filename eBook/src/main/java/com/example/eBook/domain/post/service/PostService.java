@@ -43,16 +43,18 @@ public class PostService {
         return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findAll());
     }
 
-    public void save(String username, PostWriteForm postWriteForm) {
+    public Post save(String username, PostWriteForm postWriteForm) {
         Post post = PostMapper.INSTANCE.postWriteFormToEntity(postWriteForm);
         Member member = memberService.findByUsername(username);
 
         post.updateMember(member);
         post.updateContentHtml(markdownUtil.markdown(post.getContent()));
-        postRepository.saveAndFlush(post);
+        Post savedPost = postRepository.saveAndFlush(post);
 
         List<PostKeyword> postKeywords = postKeywordService.save(postWriteForm.getKeywords());
-        postHashTagService.save(member, post, postKeywords);
+        postHashTagService.save(member, savedPost, postKeywords);
+
+        return savedPost;
     }
 
     @Transactional(readOnly = true)

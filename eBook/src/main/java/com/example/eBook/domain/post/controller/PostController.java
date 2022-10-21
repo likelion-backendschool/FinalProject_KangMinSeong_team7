@@ -6,6 +6,7 @@ import com.example.eBook.domain.post.dto.PostModifyForm;
 import com.example.eBook.domain.post.dto.PostWriteForm;
 import com.example.eBook.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -25,6 +26,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/")
+    @PreAuthorize("isAnonymous()")
     public String showRecentPost(Model model) {
         List<PostDto> postList = postService.findRecentTop100();
 
@@ -32,6 +34,7 @@ public class PostController {
         return "home/home";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/list")
     public String showPostList(Model model) {
         List<PostDto> postList = postService.findAll();
@@ -40,12 +43,14 @@ public class PostController {
         return "post/list_post";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/write")
     public String showWriteForm(Model model) {
         model.addAttribute("postWriteForm", new PostWriteForm());
         return "post/write_post";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/post/write")
     public String save(@Validated @ModelAttribute PostWriteForm postWriteForm, BindingResult bindingResult,
                        Principal principal) {
@@ -58,6 +63,7 @@ public class PostController {
         return "redirect:/post/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/{postId}")
     public String showPostDetail(@PathVariable Long postId, Model model) {
 
@@ -66,6 +72,7 @@ public class PostController {
         return "post/detail_post";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/{postId}/modify")
     public String showModifyForm(@PathVariable Long postId, Model model) {
 
@@ -75,6 +82,7 @@ public class PostController {
         return "post/modify_post";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/post/{postId}/modify")
     public String modify(@PathVariable Long postId, @Validated @ModelAttribute PostModifyForm postModifyForm,
                          BindingResult bindingResult) {
@@ -87,6 +95,7 @@ public class PostController {
         return "redirect:/post/%s".formatted(postId);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/{postId}/delete")
     public String delete(@PathVariable Long postId) {
 
