@@ -28,12 +28,14 @@ public class MemberController {
     private final SignFormValidator signFormValidator;
     private final PwdModifyFormValidator pwdModifyFormValidator;
 
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/member/join")
     public String showSignupForm(Model model) {
         model.addAttribute("signupForm", new SignupForm());
         return "member/new_member";
     }
 
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/member/join")
     public String signup(@Validated @ModelAttribute SignupForm signupForm, BindingResult bindingResult) {
 
@@ -55,6 +57,7 @@ public class MemberController {
         return "redirect:/member/login";
     }
 
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/member/login")
     public String showLoginForm(Model model, @RequestParam(value = "error", required = false) String error) {
 
@@ -114,12 +117,14 @@ public class MemberController {
         return "redirect:/";
     }
 
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/member/findUsername")
     public String showFindUsernameForm(Model model) {
         model.addAttribute("usernameFindForm", new UsernameFindForm());
         return "member/find_username_member";
     }
 
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/member/findUsername")
     public String findUsername(@Validated @ModelAttribute UsernameFindForm usernameFindForm, BindingResult bindingResult) {
 
@@ -137,12 +142,14 @@ public class MemberController {
         return "redirect:/member/login";
     }
 
+    @PreAuthorize("isAnonymous()")
     @GetMapping("/member/findPassword")
     public String showFindPasswordForm(Model model) {
         model.addAttribute("passwordFindForm", new PasswordFindForm());
         return "member/find_password_member";
     }
 
+    @PreAuthorize("isAnonymous()")
     @PostMapping("/member/findPassword")
     public String findPassword(@Validated @ModelAttribute PasswordFindForm passwordFindForm, BindingResult bindingResult) {
 
