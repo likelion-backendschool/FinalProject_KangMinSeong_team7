@@ -36,12 +36,12 @@ class PostMapperTest {
 
         List<PostDto> postDtoList = PostMapper.INSTANCE.entitiesToPostDtos(posts);
 
-        assertThat(postDtoList.get(0).getWriter()).isEqualTo(posts.get(0).getMember().getNickname());
+        assertThat(postDtoList.get(0).getWriter()).isEqualTo(posts.get(0).getMember().getUsername());
         assertThat(postDtoList.get(0).getSubject()).isEqualTo(posts.get(0).getSubject());
         assertThat(postDtoList.get(0).getCreateDate()).isEqualTo(posts.get(0).getCreateDate());
         assertThat(postDtoList.get(0).getUpdateDate()).isEqualTo(posts.get(0).getUpdateDate());
 
-        assertThat(postDtoList.get(1).getWriter()).isEqualTo(posts.get(1).getMember().getNickname());
+        assertThat(postDtoList.get(1).getWriter()).isEqualTo(posts.get(1).getMember().getUsername());
     }
 
     @Test
@@ -77,7 +77,7 @@ class PostMapperTest {
         assertThat(postDetailDto.getId()).isEqualTo(post.getId());
         assertThat(postDetailDto.getSubject()).isEqualTo(post.getSubject());
         assertThat(postDetailDto.getContent()).isEqualTo(post.getContent());
-        assertThat(postDetailDto.getWriter()).isEqualTo(post.getMember().getNickname());
+        assertThat(postDetailDto.getWriter()).isEqualTo(post.getMember().getUsername());
         assertThat(postDetailDto.getCreateDate()).isEqualTo(post.getCreateDate());
         assertThat(postDetailDto.getUpdateDate()).isEqualTo(post.getUpdateDate());
     }

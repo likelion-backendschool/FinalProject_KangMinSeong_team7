@@ -38,7 +38,7 @@ class ProductMapperTest {
         assertThat(productDto.getId()).isEqualTo(product.getId());
         assertThat(productDto.getSubject()).isEqualTo(product.getSubject());
         assertThat(productDto.getPrice()).isEqualTo(product.getPrice());
-        assertThat(productDto.getWriter()).isEqualTo(product.getMember().getNickname());
+        assertThat(productDto.getWriter()).isEqualTo(product.getMember().getUsername());
         assertThat(productDto.getCreateDate()).isEqualTo(product.getCreateDate());
     }
 
@@ -87,7 +87,7 @@ class ProductMapperTest {
         assertThat(productDetailDto.getSubject()).isEqualTo(product.getSubject());
         assertThat(productDetailDto.getDescription()).isEqualTo(product.getDescription());
         assertThat(productDetailDto.getPrice()).isEqualTo(product.getPrice());
-        assertThat(productDetailDto.getWriter()).isEqualTo(product.getMember().getNickname());
+        assertThat(productDetailDto.getWriter()).isEqualTo(product.getMember().getUsername());
         assertThat(productDetailDto.getCreateDate()).isEqualTo(product.getCreateDate());
         assertThat(productDetailDto.getPostKeyword()).isEqualTo(product.getPostKeyword());
     }

@@ -12,7 +12,6 @@ import java.util.Collection;
 
 @Entity
 @Getter
-@Setter
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
