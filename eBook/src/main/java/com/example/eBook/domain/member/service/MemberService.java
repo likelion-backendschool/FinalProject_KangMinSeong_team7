@@ -4,6 +4,7 @@ import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.PwdModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
 import com.example.eBook.domain.member.entity.Member;
+import com.example.eBook.domain.member.exception.MemberNotFoundException;
 import com.example.eBook.domain.member.exception.PasswordNotSameException;
 import com.example.eBook.domain.member.repository.MemberRepository;
 import com.example.eBook.global.mapper.MemberMapper;
@@ -37,6 +38,7 @@ public class MemberService implements UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return memberRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
@@ -45,30 +47,31 @@ public class MemberService implements UserDetailsService {
     @Transactional(readOnly = true)
     public InfoModifyForm getInfoByUsername(String username) {
         return MemberMapper.INSTANCE.EntityToInfoModifyForm(memberRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 회원입니다.")
+                () -> new MemberNotFoundException("존재하지 않는 회원입니다.")
         ));
     }
 
     @Transactional(readOnly = true)
     public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+        return memberRepository.findByEmail(email).orElseThrow(() -> new MemberNotFoundException("존재하지 않는 회원입니다."));
     }
 
+    @Transactional(readOnly = true)
     public Member findByUsername(String username) {
         return memberRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+                () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
     }
 
     public void modifyInfo(String username, InfoModifyForm infoModifyForm) {
         Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+                () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         member.updateInfo(infoModifyForm.getEmail(), infoModifyForm.getNickname());
     }
 
     public void modifyPwd(String username, PwdModifyForm pwdModifyForm) {
         Member member = memberRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+                () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         if (!passwordEncoder.matches(pwdModifyForm.getOldPassword(), member.getPassword())) {
             throw new PasswordNotSameException("기존 비밀번호와 일치하지 않습니다.");
@@ -79,7 +82,7 @@ public class MemberService implements UserDetailsService {
 
     public String IssueTemporaryPassword(String username, String email) {
         Member member = memberRepository.findByUsernameAndEmail(username, email).orElseThrow(
-                () -> new UsernameNotFoundException("존재하지 않는 회원입니다."));
+                () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         String temporaryPassword = getTemporaryPassword();
         member.updatePassword(passwordEncoder.encode(temporaryPassword));
@@ -90,7 +93,7 @@ public class MemberService implements UserDetailsService {
         String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         int alphaNumLength = alphaNum.length();
 
-        StringBuffer temporaryPassword = new StringBuffer();
+        StringBuilder temporaryPassword = new StringBuilder();
         for (int i = 0; i < 15; i++) {
             temporaryPassword.append(alphaNum.charAt(random.nextInt(alphaNumLength)));
         }
