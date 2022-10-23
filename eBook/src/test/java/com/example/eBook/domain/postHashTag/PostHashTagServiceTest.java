@@ -11,6 +11,7 @@ import com.example.eBook.domain.post.repository.PostRepository;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import com.example.eBook.domain.postKeyword.repository.PostKeywordRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +50,16 @@ public class PostHashTagServiceTest {
 
     @Autowired
     PasswordEncoder passwordEncoder;
+
+    @Autowired
+    EntityManager entityManager;
+
+    @AfterEach
+    void afterEach() {
+        this.entityManager
+                .createNativeQuery("ALTER TABLE post_keyword ALTER COLUMN `id` RESTART WITH 1")
+                .executeUpdate();
+    }
 
     @Test
     @DisplayName("글_해시태그_매핑하기")
@@ -118,6 +130,26 @@ public class PostHashTagServiceTest {
 
         assertThat(postHashTagService.findAllPostKeywordByPost(post).size()).isEqualTo(2);
         assertThat(postHashTagService.findAllPostKeywordByPost(post).get(0) instanceof PostKeywordDto).isTrue();
+    }
+
+    @Test
+    @DisplayName("글_해시태그_글만조회_By멤버+키워드")
+    void findAllPostByMemberAndKeyword() {
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+
+        Post post1 = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
+        Post post2 = postRepository.save(new Post(2L, member, "subject2", "content2", "contentHtml2"));
+
+        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
+        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
+
+        postHashTagRepository.save(new PostHashTag(1L, post1, postKeyword1, member));
+        postHashTagRepository.save(new PostHashTag(2L, post1, postKeyword2, member));
+        postHashTagRepository.save(new PostHashTag(3L, post2, postKeyword2, member));
+
+        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, "1").size()).isEqualTo(1);
+        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, "2").size()).isEqualTo(2);
     }
 
     @Test

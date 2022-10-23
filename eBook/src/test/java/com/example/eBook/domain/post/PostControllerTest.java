@@ -1,5 +1,7 @@
 package com.example.eBook.domain.post;
 
+import com.example.eBook.domain.mapping.postHashTag.entity.PostHashTag;
+import com.example.eBook.domain.mapping.postHashTag.repository.PostHashTagRepository;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.repository.MemberRepository;
 import com.example.eBook.domain.post.controller.PostController;
@@ -9,6 +11,8 @@ import com.example.eBook.domain.post.dto.PostModifyForm;
 import com.example.eBook.domain.post.entity.Post;
 import com.example.eBook.domain.post.repository.PostRepository;
 import com.example.eBook.domain.post.service.PostService;
+import com.example.eBook.domain.postKeyword.entity.PostKeyword;
+import com.example.eBook.domain.postKeyword.repository.PostKeywordRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +62,12 @@ public class PostControllerTest {
     @Autowired
     private EntityManager entityManager;
 
+    @Autowired
+    private PostHashTagRepository postHashTagRepository;
+
+    @Autowired
+    private PostKeywordRepository postKeywordRepository;
+
     @BeforeEach
     void beforeEach() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
@@ -77,6 +87,12 @@ public class PostControllerTest {
     void afterEach() {
         this.entityManager
                 .createNativeQuery("ALTER TABLE post ALTER COLUMN `id` RESTART WITH 1")
+                .executeUpdate();
+        this.entityManager
+                .createNativeQuery("ALTER TABLE post_keyword ALTER COLUMN `id` RESTART WITH 1")
+                .executeUpdate();
+        this.entityManager
+                .createNativeQuery("ALTER TABLE post_hash_tag ALTER COLUMN `id` RESTART WITH 1")
                 .executeUpdate();
     }
 
@@ -104,14 +120,49 @@ public class PostControllerTest {
                 "new@email", 3L, LocalDateTime.now()));
         postRepository.save(new Post((long) 11L, newMember, "new_subject", "new_content", "new_contentHtml"));
 
+        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
+        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
+        PostKeyword postKeyword3 = postKeywordRepository.save(new PostKeyword(3L, "#key3"));
+        postHashTagRepository.save(new PostHashTag(1L, postRepository.findById(1L).orElseThrow(), postKeyword1,
+                memberRepository.findByUsername("test_username").orElseThrow()));
+        postHashTagRepository.save(new PostHashTag(2L, postRepository.findById(2L).orElseThrow(), postKeyword2,
+                memberRepository.findByUsername("test_username").orElseThrow()));
+        postHashTagRepository.save(new PostHashTag(3L, postRepository.findById(3L).orElseThrow(), postKeyword3,
+                memberRepository.findByUsername("test_username").orElseThrow()));
+
         ResultActions resultActions = mockMvc.perform(get("/post/list"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/list_post"))
-                .andExpect(model().attributeExists("postList"))
+                .andExpect(model().attributeExists("postList", "postKeywordList"))
                 .andDo(print());
 
         List<PostDto> postDtoList = (List<PostDto>) resultActions.andReturn().getModelAndView().getModel().get("postList");
-        assertThat(postDtoList.size()).isEqualTo(10);
+        assertThat(postDtoList.size()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("자신이작성한_글목록조회_By키워드")
+    @WithMockUser(username = "test_username", password = "1234", roles = "USER")
+    void showPostList2() throws Exception {
+
+        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
+        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
+        PostKeyword postKeyword3 = postKeywordRepository.save(new PostKeyword(3L, "#key3"));
+        postHashTagRepository.save(new PostHashTag(1L, postRepository.findById(1L).orElseThrow(), postKeyword1,
+                memberRepository.findByUsername("test_username").orElseThrow()));
+        postHashTagRepository.save(new PostHashTag(2L, postRepository.findById(2L).orElseThrow(), postKeyword2,
+                memberRepository.findByUsername("test_username").orElseThrow()));
+        postHashTagRepository.save(new PostHashTag(3L, postRepository.findById(3L).orElseThrow(), postKeyword3,
+                memberRepository.findByUsername("test_username").orElseThrow()));
+
+        ResultActions resultActions = mockMvc.perform(get("/post/list?keyword=1,2"))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("post/list_post"))
+                .andExpect(model().attributeExists("postList", "postKeywordList"))
+                .andDo(print());
+
+        List<PostDto> postDtoList = (List<PostDto>) resultActions.andReturn().getModelAndView().getModel().get("postList");
+        assertThat(postDtoList.size()).isEqualTo(2);
     }
 
     @Test

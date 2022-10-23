@@ -2,7 +2,7 @@
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
     <h2 class="mb-3 mt-3">글 목록</h2>
 
-    <div th:each="postKeyword, loop : ${postKeywordList}" class="d-inline p-2">
+    <div th:each="postKeyword, loop : ${postKeywordList}" th:onclick="|location.href='@{|/post/list?keyword=${postKeyword.id}|}'|" class="d-inline p-2">
         <small th:text="${postKeyword.content}"></small>
     </div>
 
