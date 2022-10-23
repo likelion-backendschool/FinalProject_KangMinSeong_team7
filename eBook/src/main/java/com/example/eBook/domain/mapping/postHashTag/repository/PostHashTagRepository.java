@@ -9,10 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface PostHashTagRepository extends JpaRepository<PostHashTag, Long> {
-
-    @Query("SELECT p FROM PostHashTag p JOIN FETCH p.postKeyword")
-    List<PostHashTag> findAllWithPostKeyword();
+public interface PostHashTagRepository extends JpaRepository<PostHashTag, Long>, CustomPostHashTagRepository {
 
     @Transactional
     @Modifying

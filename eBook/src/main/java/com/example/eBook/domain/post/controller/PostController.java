@@ -1,5 +1,9 @@
 package com.example.eBook.domain.post.controller;
 
+import com.example.eBook.domain.mapping.postHashTag.dto.PostKeywordDto;
+import com.example.eBook.domain.mapping.postHashTag.service.PostHashTagService;
+import com.example.eBook.domain.member.entity.Member;
+import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
 import com.example.eBook.domain.post.dto.PostModifyForm;
@@ -11,10 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -24,9 +25,11 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final PostHashTagService postHashTagService;
+    private final MemberService memberService;
 
-    @GetMapping("/")
     @PreAuthorize("isAnonymous()")
+    @GetMapping("/")
     public String showRecentPost(Model model) {
         List<PostDto> postList = postService.findRecentTop100();
 
@@ -36,9 +39,14 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/list")
-    public String showPostList(Model model) {
-        List<PostDto> postList = postService.findAll();
+    public String showPostList(@RequestParam(value = "keyword", required = false) String keyword,
+                               Model model, Principal principal) {
+        Member member = memberService.findByUsername(principal.getName());
+
+        List<PostDto> postList = postHashTagService.findAllPostByMemberAndKeyword(member, keyword);
+        List<PostKeywordDto> postKeywordList = postHashTagService.findAllPostKeywordByMember(member);
         model.addAttribute("postList", postList);
+        model.addAttribute("postKeywordList", postKeywordList);
 
         return "post/list_post";
     }

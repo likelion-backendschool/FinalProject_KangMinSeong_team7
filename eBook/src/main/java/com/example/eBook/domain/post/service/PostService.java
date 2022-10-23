@@ -1,6 +1,5 @@
 package com.example.eBook.domain.post.service;
 
-import com.example.eBook.domain.mapping.postHashTag.entity.PostHashTag;
 import com.example.eBook.domain.mapping.postHashTag.service.PostHashTagService;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
@@ -39,8 +38,8 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostDto> findAll() {
-        return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findAll());
+    public List<PostDto> findAllByMember(Member member) {
+        return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findAllByMember(member));
     }
 
     public Post save(String username, PostWriteForm postWriteForm) {
@@ -63,10 +62,7 @@ public class PostService {
                 () -> new PostNotFoundException("해당 글은 존재하지 않습니다."));
 
         PostDetailDto postDetailDto = PostMapper.INSTANCE.entityToPostDetailDto(post);
-        postDetailDto.setPostKeywords(postHashTagService.findAllByPost(post)
-                .stream()
-                .map(PostHashTag::getPostKeyword)
-                .collect(Collectors.toList()));
+        postDetailDto.setPostKeywords(postHashTagService.findAllPostKeywordByPost(post));
 
         return postDetailDto;
     }
@@ -78,9 +74,9 @@ public class PostService {
 
         PostModifyForm postModifyForm = PostMapper.INSTANCE.entityToPostModifyForm(post);
 
-        String postKeywordContents = postHashTagService.findAllByPost(post)
+        String postKeywordContents = postHashTagService.findAllPostKeywordByPost(post)
                 .stream()
-                .map(p -> p.getPostKeyword().getContent())
+                .map(p -> p.getContent())
                 .collect(Collectors.joining(" "));
 
         postModifyForm.setPostKeywordContents(postKeywordContents);
