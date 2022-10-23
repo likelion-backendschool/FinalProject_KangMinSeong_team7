@@ -1,6 +1,6 @@
 package com.example.eBook.domain.post.dto;
 
-import com.example.eBook.domain.postKeyword.entity.PostKeyword;
+import com.example.eBook.domain.mapping.postHashTag.dto.PostKeywordDto;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,5 +19,5 @@ public class PostDetailDto {
     private LocalDateTime updateDate;
     private String content;
 
-    private List<PostKeyword> postKeywords;
+    private List<PostKeywordDto> postKeywords;
 }

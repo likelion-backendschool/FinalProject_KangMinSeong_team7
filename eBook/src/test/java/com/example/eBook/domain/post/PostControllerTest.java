@@ -96,9 +96,14 @@ public class PostControllerTest {
 
 
     @Test
-    @DisplayName("글목록조회")
+    @DisplayName("자신이작성한_글목록조회")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showPostList() throws Exception {
+
+        Member newMember = memberRepository.save(new Member((long) 2L, "new_user", "1234", "1234",
+                "new@email", 3L, LocalDateTime.now()));
+        postRepository.save(new Post((long) 11L, newMember, "new_subject", "new_content", "new_contentHtml"));
+
         ResultActions resultActions = mockMvc.perform(get("/post/list"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/list_post"))
@@ -133,7 +138,7 @@ public class PostControllerTest {
                 .andExpect(handler().methodName("save"))
                 .andExpect(redirectedUrl("/post/list"));
 
-        assertThat(postService.findAll().size()).isEqualTo(11);
+        assertThat(postService.findAllByMember(memberRepository.findByUsername("test_username").orElseThrow()).size()).isEqualTo(11);
     }
 
     @Test

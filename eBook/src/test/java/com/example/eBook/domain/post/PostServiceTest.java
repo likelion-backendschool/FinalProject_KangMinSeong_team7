@@ -69,15 +69,17 @@ public class PostServiceTest {
     }
 
     @Test
-    @DisplayName("글목록조회")
-    void findAll() {
+    @DisplayName("자신이작성한_글목록조회")
+    void findAllByMember() {
         List<Post> posts = new ArrayList<>();
-        for (int i = 0; i < 200; i++) {
+        for (int i = 0; i < 10; i++) {
             posts.add(new Post());
         }
         postRepository.saveAll(posts);
+        postRepository.save(new Post((long) 10L, memberRepository.findByUsername("test_username").orElseThrow(),
+                "new subject", "new content", "new contentHtml"));
 
-        assertThat(postService.findAll().size()).isEqualTo(200);
+        assertThat(postService.findAllByMember(memberRepository.findByUsername("test_username").orElseThrow()).size()).isEqualTo(1);
     }
 
     @Test

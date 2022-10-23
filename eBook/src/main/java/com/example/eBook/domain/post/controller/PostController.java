@@ -1,5 +1,9 @@
 package com.example.eBook.domain.post.controller;
 
+import com.example.eBook.domain.mapping.postHashTag.dto.PostKeywordDto;
+import com.example.eBook.domain.mapping.postHashTag.service.PostHashTagService;
+import com.example.eBook.domain.member.entity.Member;
+import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.domain.post.dto.PostDetailDto;
 import com.example.eBook.domain.post.dto.PostDto;
 import com.example.eBook.domain.post.dto.PostModifyForm;
@@ -24,9 +28,11 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+    private final PostHashTagService postHashTagService;
+    private final MemberService memberService;
 
-    @GetMapping("/")
     @PreAuthorize("isAnonymous()")
+    @GetMapping("/")
     public String showRecentPost(Model model) {
         List<PostDto> postList = postService.findRecentTop100();
 
@@ -36,9 +42,13 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/list")
-    public String showPostList(Model model) {
-        List<PostDto> postList = postService.findAll();
+    public String showPostList(Model model, Principal principal) {
+        Member member = memberService.findByUsername(principal.getName());
+
+        List<PostDto> postList = postService.findAllByMember(member);
+        List<PostKeywordDto> postKeywordList = postHashTagService.findAllPostKeywordByMember(member);
         model.addAttribute("postList", postList);
+        model.addAttribute("postKeywordList", postKeywordList);
 
         return "post/list_post";
     }
