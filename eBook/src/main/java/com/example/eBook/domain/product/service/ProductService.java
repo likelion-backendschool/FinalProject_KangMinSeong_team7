@@ -29,12 +29,12 @@ public class ProductService {
         return ProductMapper.INSTANCE.entitiesToProductDtos(productRepository.findAll());
     }
 
-    public void save(String username, ProductCreateForm productCreateForm) {
+    public Product save(String username, ProductCreateForm productCreateForm) {
         Product product = ProductMapper.INSTANCE.productCreateFormToEntity(productCreateForm);
         Member member = memberService.findByUsername(username);
 
         product.updateMember(member);
-        productRepository.save(product);
+        return productRepository.save(product);
     }
 
     @Transactional(readOnly = true)
