@@ -18,4 +18,6 @@ public interface PostHashTagRepository extends JpaRepository<PostHashTag, Long> 
     @Modifying
     @Query("delete from PostHashTag p where p.post = :post")
     void deleteAllByPostInQuery(Post post);
+
+    List<PostHashTag> findAllByPost(Post post);
 }

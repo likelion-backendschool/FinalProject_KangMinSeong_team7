@@ -8,6 +8,7 @@ import com.example.eBook.domain.product.dto.ProductDto;
 import com.example.eBook.domain.product.dto.ProductModifyForm;
 import com.example.eBook.domain.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ public class ProductController {
     private final ProductService productService;
     private final PostKeywordService postKeywordService;
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/product/list")
     public String showProductList(Model model) {
 
@@ -35,6 +37,7 @@ public class ProductController {
         return "product/list_product";
     }
 
+    @PreAuthorize("hasAnyRole(WRITER)")
     @GetMapping("/product/create")
     public String showCreateForm(Model model) {
 
@@ -43,6 +46,7 @@ public class ProductController {
         return "product/create_product";
     }
 
+    @PreAuthorize("hasAnyRole(WRITER)")
     @PostMapping("/product/create")
     public String create(@Validated @ModelAttribute ProductCreateForm productCreateForm, BindingResult bindingResult,
                          Principal principal) {
@@ -55,6 +59,7 @@ public class ProductController {
         return "redirect:/product/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/product/{productId}")
     public String showProductDetail(@PathVariable Long productId, Model model) {
         ProductDetailDto productDetailDto = productService.getProductDetail(productId);
@@ -63,6 +68,7 @@ public class ProductController {
         return "product/detail_product";
     }
 
+    @PreAuthorize("hasAnyRole(WRITER)")
     @GetMapping("/product/{productId}/modify")
     public String showModifyForm(@PathVariable Long productId, Model model) {
         ProductModifyForm productModifyForm = productService.getProductModifyForm(productId);
@@ -71,6 +77,7 @@ public class ProductController {
         return "product/modify_product";
     }
 
+    @PreAuthorize("hasAnyRole(WRITER)")
     @PostMapping("/product/{productId}/modify")
     public String modify(@PathVariable Long productId, @Validated @ModelAttribute ProductModifyForm productModifyForm,
                          BindingResult bindingResult) {
@@ -84,6 +91,7 @@ public class ProductController {
         return "redirect:/product/%s".formatted(productId);
     }
 
+    @PreAuthorize("hasAnyRole(WRITER)")
     @GetMapping("/product/{productId}/delete")
     public String delete(@PathVariable Long productId) {
         productService.delete(productId);
