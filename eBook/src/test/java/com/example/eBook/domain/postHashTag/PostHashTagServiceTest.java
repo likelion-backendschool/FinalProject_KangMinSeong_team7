@@ -1,5 +1,6 @@
 package com.example.eBook.domain.postHashTag;
 
+import com.example.eBook.domain.mapping.postHashTag.dto.PostKeywordDto;
 import com.example.eBook.domain.mapping.postHashTag.entity.PostHashTag;
 import com.example.eBook.domain.mapping.postHashTag.repository.PostHashTagRepository;
 import com.example.eBook.domain.mapping.postHashTag.service.PostHashTagService;
@@ -82,6 +83,41 @@ public class PostHashTagServiceTest {
         postHashTagRepository.save(new PostHashTag(2L, post, postKeyword2, member));
 
         assertThat(postHashTagService.findAllByPost(post).size()).isEqualTo(2);
+    }
+    @Test
+    @DisplayName("글_해시태그_해시태그만조회_By멤버")
+    void findAllPostKeywordByMember() {
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+
+        Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
+
+        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
+        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(1L, "#key2"));
+
+        postHashTagRepository.save(new PostHashTag(1L, post, postKeyword1, member));
+        postHashTagRepository.save(new PostHashTag(2L, post, postKeyword2, member));
+
+        assertThat(postHashTagService.findAllPostKeywordByMember(member).size()).isEqualTo(2);
+        assertThat(postHashTagService.findAllPostKeywordByMember(member).get(0) instanceof PostKeywordDto).isTrue();
+    }
+
+    @Test
+    @DisplayName("글_해시태그_해시태그만조회_By글")
+    void findAllPostKeywordByPost() {
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+
+        Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
+
+        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
+        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(1L, "#key2"));
+
+        postHashTagRepository.save(new PostHashTag(1L, post, postKeyword1, member));
+        postHashTagRepository.save(new PostHashTag(2L, post, postKeyword2, member));
+
+        assertThat(postHashTagService.findAllPostKeywordByPost(post).size()).isEqualTo(2);
+        assertThat(postHashTagService.findAllPostKeywordByPost(post).get(0) instanceof PostKeywordDto).isTrue();
     }
 
     @Test

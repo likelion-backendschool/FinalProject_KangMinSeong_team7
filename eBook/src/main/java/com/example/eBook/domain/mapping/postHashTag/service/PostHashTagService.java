@@ -1,5 +1,6 @@
 package com.example.eBook.domain.mapping.postHashTag.service;
 
+import com.example.eBook.domain.mapping.postHashTag.dto.PostKeywordDto;
 import com.example.eBook.domain.mapping.postHashTag.entity.PostHashTag;
 import com.example.eBook.domain.mapping.postHashTag.repository.PostHashTagRepository;
 import com.example.eBook.domain.member.entity.Member;
@@ -11,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -34,10 +34,17 @@ public class PostHashTagService {
 
     @Transactional(readOnly = true)
     public List<PostHashTag> findAllByPost(Post post) {
-        return postHashTagRepository.findAllWithPostKeyword()
-                .stream()
-                .filter(p -> p.getPost().equals(post))
-                .collect(Collectors.toList());
+        return postHashTagRepository.findAllByPost(post);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostKeywordDto> findAllPostKeywordByMember(Member member) {
+        return postHashTagRepository.findPostKeywordsByMember(member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostKeywordDto> findAllPostKeywordByPost(Post post) {
+        return postHashTagRepository.findPostKeywordsByPost(post);
     }
 
     public void modify(Post post, String postKeywordContents) {
