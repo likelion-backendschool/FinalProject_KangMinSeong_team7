@@ -1,0 +1,33 @@
+<html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
+    <h2 class="mb-3 mt-3">글 목록</h2>
+
+    <div th:each="postKeyword, loop : ${postKeywordList}" th:onclick="|location.href='@{|/post/list?keyword=${postKeyword.id}|}'|" class="d-inline p-2">
+        <small th:text="${postKeyword.content}"></small>
+    </div>
+
+    <table class="table table-hover">
+        <thead class="table-success">
+        <tr>
+            <th>번호</th>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성날짜</th>
+            <th>수정날짜</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post, loop : ${postList}" th:onclick="|location.href='@{|/post/${post.id}|}'|">
+                <td th:text="${loop.index+1}"></td>
+                <td th:text="${post.subject}"></td>
+                <td th:text="${post.writer}"></td>
+                <td th:text="${#temporals.format(post.createDate, 'yyyy-MM-dd &nbsp;&nbsp; HH:mm')}"></td>
+                <td th:text="${#temporals.format(post.updateDate, 'yyyy-MM-dd &nbsp;&nbsp; HH:mm')}"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <a th:href="@{/post/write}" class="float-end btn create">글 작성</a>
+    </div>
+</div>
+</html>
