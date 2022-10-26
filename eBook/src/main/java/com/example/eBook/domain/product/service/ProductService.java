@@ -44,7 +44,6 @@ public class ProductService {
                 productRepository.findById(productId).orElseThrow(
                         () -> new ProductNotFoundException("해당 상품은 존재하지 않습니다.")));
 
-        productDetailDto.getPostKeyword().getContent();
         return productDetailDto;
     }
 
