@@ -29,6 +29,12 @@ public class ProductService {
         return ProductMapper.INSTANCE.entitiesToProductDtos(productRepository.findAll());
     }
 
+    @Transactional(readOnly = true)
+    public Product findById(Long productId) {
+        return productRepository.findById(productId).orElseThrow(
+                () -> new ProductNotFoundException("해당 상품은 존재하지 않습니다."));
+    }
+
     public Product save(String username, ProductCreateForm productCreateForm) {
         Product product = ProductMapper.INSTANCE.productCreateFormToEntity(productCreateForm);
         Member member = memberService.findByUsername(username);

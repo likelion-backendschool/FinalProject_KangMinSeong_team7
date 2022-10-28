@@ -7,6 +7,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
 import java.util.List;
@@ -26,4 +28,12 @@ public class CartController {
         return "cart/list_cart";
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/cart/add/{productId}")
+    public String addCart(@PathVariable("productId") Long productId, Principal principal) {
+
+        cartService.save(productId, principal.getName());
+
+        return "redirect:/cart/list";
+    }
 }
