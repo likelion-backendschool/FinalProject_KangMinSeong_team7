@@ -48,7 +48,7 @@ public class PostService {
 
         post.updateMember(member);
         post.updateContentHtml(markdownUtil.markdown(post.getContent()));
-        Post savedPost = postRepository.saveAndFlush(post);
+        Post savedPost = postRepository.save(post);
 
         List<PostKeyword> postKeywords = postKeywordService.save(postWriteForm.getKeywords());
         postHashTagService.save(member, savedPost, postKeywords);
