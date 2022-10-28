@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface CartRepository extends JpaRepository<CartItem, Long> {
 
-    List<CartItem> findAllByMemberAndIsOrdered(Member member, boolean isOrdered);
+    List<CartItem> findAllByMember(Member member);
 }

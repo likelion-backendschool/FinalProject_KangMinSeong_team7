@@ -24,6 +24,6 @@ public class CartService {
         Member member = memberService.findByUsername(username);
 
         return CartItemMapper.INSTANCE.entitiesToCartItemDtos(
-                cartRepository.findAllByMemberAndIsOrdered(member, false));
+                cartRepository.findAllByMember(member));
     }
 }
