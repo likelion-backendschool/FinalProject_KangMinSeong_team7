@@ -80,6 +80,7 @@ class ProductMapperTest {
                 .description("상품 설명")
                 .member(member)
                 .price(10000)
+                .postKeyword(new PostKeyword(1L, "#key1"))
                 .build();
 
         ProductDetailDto productDetailDto = ProductMapper.INSTANCE.entityToProductDetailDto(product);
@@ -89,7 +90,7 @@ class ProductMapperTest {
         assertThat(productDetailDto.getPrice()).isEqualTo(product.getPrice());
         assertThat(productDetailDto.getWriter()).isEqualTo(product.getMember().getUsername());
         assertThat(productDetailDto.getCreateDate()).isEqualTo(product.getCreateDate());
-        assertThat(productDetailDto.getPostKeyword()).isEqualTo(product.getPostKeyword());
+        assertThat(productDetailDto.getPostKeywordContent()).isEqualTo(product.getPostKeyword().getContent());
     }
 
     @Test

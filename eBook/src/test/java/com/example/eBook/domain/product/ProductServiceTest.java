@@ -110,7 +110,7 @@ public class ProductServiceTest {
         assertThat(productDetail.getSubject()).isEqualTo("subject 1");
         assertThat(productDetail.getPrice()).isEqualTo(1000);
         assertThat(productDetail.getDescription()).isEqualTo("description 1");
-        assertThat(productDetail.getPostKeyword().getContent()).isEqualTo("#keyword1");
+        assertThat(productDetail.getPostKeywordContent()).isEqualTo("#keyword1");
     }
 
     @Test

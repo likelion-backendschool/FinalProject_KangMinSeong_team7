@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +27,17 @@ public class PostHashTagService {
 
     public void save(Member member, Post post, List<PostKeyword> postKeywords) {
 
+        List<PostHashTag> postHashTagList = new ArrayList<>();
+
         for (PostKeyword postKeyword : postKeywords) {
-            postHashTagRepository.save(PostHashTag.builder()
+            postHashTagList.add(PostHashTag.builder()
                     .member(member)
                     .post(post)
                     .postKeyword(postKeyword)
                     .build());
         }
+
+        postHashTagRepository.saveAll(postHashTagList);
     }
 
     @Transactional(readOnly = true)
@@ -68,14 +73,17 @@ public class PostHashTagService {
         postHashTagRepository.deleteAllByPostInQuery(post);
 
         List<PostKeyword> postKeywords = postKeywordService.save(postKeywordContents);
+        List<PostHashTag> postHashTagList = new ArrayList<>();
 
         for (PostKeyword postKeyword : postKeywords) {
-            postHashTagRepository.save(PostHashTag.builder()
+            postHashTagList.add(PostHashTag.builder()
                     .member(post.getMember())
                     .post(post)
                     .postKeyword(postKeyword)
                     .build());
         }
+
+        postHashTagRepository.saveAll(postHashTagList);
     }
 
     public void delete(Post post) {

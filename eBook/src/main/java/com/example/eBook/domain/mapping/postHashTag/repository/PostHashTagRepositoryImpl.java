@@ -10,13 +10,11 @@ import com.example.eBook.global.mapper.PostMapper;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
-@Transactional
 public class PostHashTagRepositoryImpl implements CustomPostHashTagRepository {
 
     private final JPAQueryFactory query;

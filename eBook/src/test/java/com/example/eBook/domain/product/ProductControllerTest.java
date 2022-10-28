@@ -143,7 +143,7 @@ public class ProductControllerTest {
         assertThat(result.getDescription()).isEqualTo("description 1");
         assertThat(result.getPrice()).isEqualTo(1000);
         assertThat(result.getWriter()).isEqualTo("test_username");
-        assertThat(result.getPostKeyword()).isEqualTo(postKeywordRepository.findById(1L).orElseThrow());
+        assertThat(result.getPostKeywordContent()).isEqualTo(postKeywordRepository.findById(1L).orElseThrow().getContent());
     }
 
     @Test
