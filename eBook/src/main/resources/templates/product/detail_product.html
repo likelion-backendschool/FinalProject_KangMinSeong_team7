@@ -16,6 +16,10 @@
         </div>
     </div>
     <div class="my-3 float-end">
+        <div>
+            <a href="javascript:;" onclick="$(this).next().submit()" class="btn modify">장바구니 추가</a>
+            <form th:action="@{|/cart/add/${productDetailDto.id}|}" method="POST" hidden></form>
+        </div>
         <a th:href="@{|/product/${productDetailDto.id}/modify|}" class="btn modify"
            sec:authorize="isAuthenticated()"
            th:if="${#authentication.getPrincipal().getUsername() == productDetailDto.writer}"

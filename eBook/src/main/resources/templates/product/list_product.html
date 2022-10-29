@@ -9,6 +9,7 @@
             <th>가격</th>
             <th>작성자</th>
             <th>작성날짜</th>
+            <th>장바구니 추가</th>
         </tr>
         </thead>
         <tbody>
@@ -18,6 +19,10 @@
             <td th:text="${product.price}"></td>
             <td th:text="${product.writer}"></td>
             <td th:text="${#temporals.format(product.createDate, 'yyyy-MM-dd &nbsp;&nbsp; HH:mm')}"></td>
+            <div>
+                <a href="javascript:;" onclick="$(this).next().submit()" class="btn modify">추가</a>
+                <form th:action="@{|/cart/add/${product.id}|}" method="POST" hidden></form>
+            </div>
         </tr>
         </tbody>
     </table>

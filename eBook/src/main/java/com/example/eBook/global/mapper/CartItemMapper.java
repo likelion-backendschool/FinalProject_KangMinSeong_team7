@@ -20,6 +20,5 @@ public interface CartItemMapper {
     @Mapping(target = "writer", source = "product.member.nickname")
     CartItemDto entityToCartItemDto(CartItem cartItem);
 
-
     List<CartItemDto> entitiesToCartItemDtos(List<CartItem> cartItems);
 }
