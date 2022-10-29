@@ -8,14 +8,19 @@
             <th>상품명</th>
             <th>저자</th>
             <th>가격</th>
+            <th>삭제</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="cart, loop : ${cartItemDtoList}" th:onclick="|location.href='@{|/product/${cart.productId}|}'|">
-            <td th:text="${loop.index+1}"></td>
+        <tr th:each="cart, loop : ${cartItemDtoList}">
+            <td th:onclick="|location.href='@{|/product/${cart.productId}|}'|" th:text="${loop.index+1}"></td>
             <td th:text="${cart.subject}"></td>
             <td th:text="${cart.writer}"></td>
             <td th:text="${cart.price}"></td>
+            <td>
+                <a href="javascript:;" onclick="$(this).next().submit()" class="btn modify">장바구니 삭제</a>
+                <form th:action="@{|/cart/remove/${cart.id}|}" method="POST" hidden></form>
+            </td>
         </tr>
         </tbody>
     </table>

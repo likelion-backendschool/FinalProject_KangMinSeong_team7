@@ -36,4 +36,12 @@ public class CartController {
 
         return "redirect:/cart/list";
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/cart/remove/{productId}")
+    public String removeCart(@PathVariable("productId") Long productId) {
+
+        cartService.delete(productId);
+        return "redirect:/cart/list";
+    }
 }
