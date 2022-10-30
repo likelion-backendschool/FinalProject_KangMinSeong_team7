@@ -28,7 +28,7 @@
             <input type="text" th:field="*{nickname}" th:errorclass="field-error" class="form-control" placeholder="닉네임">
             <div th:if="${#fields.hasErrors('nickname')}" th:errorclass="field-error" th:errors="*{nickname}"></div>
         </div>
-        <button type="submit" class="btn create float-end">회원가입</button>
+        <button type="submit" class="btn btn-sm btn-default float-end">회원가입</button>
     </form>
 </div>
 </html>
