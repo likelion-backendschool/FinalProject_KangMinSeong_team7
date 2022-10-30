@@ -31,5 +31,6 @@ public class CartItemMapperTest {
         assertThat(cartItemDto.getProductId()).isEqualTo(cartItem.getProduct().getId());
         assertThat(cartItemDto.getSubject()).isEqualTo(cartItem.getProduct().getSubject());
         assertThat(cartItemDto.getWriter()).isEqualTo(cartItem.getMember().getNickname());
+        assertThat(cartItemDto.getDescription()).isEqualTo(cartItem.getProduct().getDescription());
     }
 }

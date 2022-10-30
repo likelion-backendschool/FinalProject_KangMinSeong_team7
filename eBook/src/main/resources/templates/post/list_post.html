@@ -3,10 +3,10 @@
     <h2 class="mb-3 mt-3">글 목록</h2>
 
     <div th:each="postKeyword, loop : ${postKeywordList}" th:onclick="|location.href='@{|/post/list?keyword=${postKeyword.id}|}'|" class="d-inline p-2">
-        <small th:text="${postKeyword.content}"></small>
+        <button class="btn btn-outline-dark btn-sm" th:text="${postKeyword.content}"></button>
     </div>
 
-    <table class="table table-hover">
+    <table class="table table-hover mt-3">
         <thead class="table-success">
         <tr>
             <th>번호</th>
