@@ -35,9 +35,9 @@ public class Order extends BaseTimeEntity {
 
     private LocalDateTime payDate;
     private boolean readyStatus;
-    private boolean isPaid;
-    private boolean isCanceled;
-    private boolean isRefunded;
+    private boolean paidStatus;
+    private boolean canceledStatus;
+    private boolean refundedStatus;
 
     private String name;
 
