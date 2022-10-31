@@ -20,12 +20,15 @@ public class Product extends BaseTimeEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_keyword_id")
     private PostKeyword postKeyword;
 
     private String subject;
+    @Lob
     private String description;
     private int price;
 
@@ -37,5 +40,17 @@ public class Product extends BaseTimeEntity {
         this.subject = subject;
         this.description = description;
         this.price = price;
+    }
+
+    public boolean isOrderable() {
+        return true;
+    }
+
+    public int getSalePrice() {
+        return getPrice();
+    }
+
+    public int getWholesalePrice() {
+        return (int) Math.ceil(getPrice() * 0.4);
     }
 }

@@ -24,11 +24,14 @@ public class CartService {
     private final CartRepository cartRepository;
 
     @Transactional(readOnly = true)
-    public List<CartItemDto> findAllByUsername(String username) {
+    public List<CartItem> findAllByUsername(String username) {
         Member member = memberService.findByUsername(username);
 
-        return CartItemMapper.INSTANCE.entitiesToCartItemDtos(
-                cartRepository.findAllByMember(member));
+        return cartRepository.findAllByMember(member);
+    }
+
+    public List<CartItemDto> cartItemDtoConverter(String username) {
+        return CartItemMapper.INSTANCE.entitiesToCartItemDtos(findAllByUsername(username));
     }
 
     public void save(Long productId, String username) {
@@ -45,5 +48,11 @@ public class CartService {
 
     public void delete(Long productId) {
         cartRepository.deleteById(productId);
+    }
+
+    public void deleteAllByUsername(String username) {
+        Member member = memberService.findByUsername(username);
+
+        cartRepository.deleteAllByMemberInBatch(member);
     }
 }

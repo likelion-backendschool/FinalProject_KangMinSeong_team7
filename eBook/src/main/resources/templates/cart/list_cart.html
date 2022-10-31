@@ -21,5 +21,7 @@
             </div>
         </div>
     </div>
+    <a href="javascript:;" onclick="if ( !confirm('주문하시겠습니까?') ) return false; $(this).next().submit()" class="btn btn-default btn-sm float-end">주문하기</a>
+    <form th:action="@{|/order/create|}" method="POST" hidden></form>
 </div>
 </html>

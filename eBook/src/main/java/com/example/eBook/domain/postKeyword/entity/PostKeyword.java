@@ -17,6 +17,7 @@ public class PostKeyword extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_keyword_id")
     private Long id;
 
     @Column(unique = true)

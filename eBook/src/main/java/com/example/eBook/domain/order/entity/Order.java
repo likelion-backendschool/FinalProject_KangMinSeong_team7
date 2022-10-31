@@ -9,12 +9,15 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "orders")
 public class Order extends BaseTimeEntity {
 
     @Id
@@ -26,6 +29,10 @@ public class Order extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    @Builder.Default
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private List<OrderItem> orderItems = new ArrayList<>();
+
     private LocalDateTime payDate;
     private boolean readyStatus;
     private boolean isPaid;
@@ -33,4 +40,9 @@ public class Order extends BaseTimeEntity {
     private boolean isRefunded;
 
     private String name;
+
+    public void addOrderItem(OrderItem orderItem) {
+        this.orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
 }
