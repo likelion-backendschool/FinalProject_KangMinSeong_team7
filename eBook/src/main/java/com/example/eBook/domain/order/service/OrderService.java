@@ -6,6 +6,7 @@ import com.example.eBook.domain.cash.entity.enumuration.CashLogType;
 import com.example.eBook.domain.cash.service.CashLogService;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.domain.mybook.service.MybookService;
 import com.example.eBook.domain.order.dto.OrderDetailDto;
 import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
@@ -34,6 +35,7 @@ public class OrderService {
     private final CartService cartService;
     private final MemberService memberService;
     private final CashLogService cashLogService;
+    private final MybookService mybookService;
 
     public Long save(String username) {
         List<CartItem> cartItems = cartService.findAllByUsername(username);
@@ -99,6 +101,7 @@ public class OrderService {
 
         member.payRestCash(totalPrice);
         order.setPaymentDone();
+        mybookService.save(member, order);
         cashLogService.save(member, CashLogType.PAYMENT_BY_ONLY_CASH, totalPrice);
     }
 }

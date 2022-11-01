@@ -1,0 +1,23 @@
+<html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
+
+    <h2 class="mb-3 mt-3">내 도서 목록</h2>
+
+    <div class="container-fluid mt-5">
+        <div class="row gx-3 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+            <div th:each="mybook : ${mybookDtos}" class="col-4 mb-5">
+                <div class="card" style="width: 18rem; max-height: 19rem;">
+                    <div class="card-body">
+                        <div th:onclick="|location.href='@{|/product/${mybook.productId}|}'|">
+                            <h5 th:text="${mybook.productSubject}" class="card-title"></h5>
+                            <h6 th:text="${mybook.productDescription}" style="max-height: 9.5rem;" class="card-subtitle string-cut mb-2 text-muted"></h6>
+                            <small th:text="|키워드 : ${mybook.productKeywordContent}|" class="card-text"></small><br>
+                            <small th:text="|작성자 : ${mybook.productWriter}|" class="card-text"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

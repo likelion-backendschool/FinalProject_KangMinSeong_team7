@@ -22,7 +22,7 @@ import javax.persistence.ManyToOne;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class MyBook extends BaseTimeEntity {
+public class Mybook extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
