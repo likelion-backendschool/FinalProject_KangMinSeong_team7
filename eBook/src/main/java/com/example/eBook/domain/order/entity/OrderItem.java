@@ -1,7 +1,6 @@
 package com.example.eBook.domain.order.entity;
 
 import com.example.eBook.domain.base.BaseTimeEntity;
-import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.product.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,5 +48,12 @@ public class OrderItem extends BaseTimeEntity {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public void setPaymentDone() {
+        this.pgFee = 0;
+        this.payPrice = getSalePrice();
+        this.isPaid = true;
+        this.payDate = LocalDateTime.now();
     }
 }

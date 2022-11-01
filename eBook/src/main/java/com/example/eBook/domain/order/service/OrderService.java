@@ -2,12 +2,15 @@ package com.example.eBook.domain.order.service;
 
 import com.example.eBook.domain.cart.entity.CartItem;
 import com.example.eBook.domain.cart.service.CartService;
+import com.example.eBook.domain.cash.entity.enumuration.CashLogType;
+import com.example.eBook.domain.cash.service.CashLogService;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
 import com.example.eBook.domain.order.dto.OrderDetailDto;
 import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
 import com.example.eBook.domain.order.entity.OrderItem;
+import com.example.eBook.domain.order.exception.CashNotEnoughException;
 import com.example.eBook.domain.order.exception.OrderNotFoundException;
 import com.example.eBook.domain.order.repository.OrderRepository;
 import com.example.eBook.global.mapper.OrderItemMapper;
@@ -30,6 +33,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final MemberService memberService;
+    private final CashLogService cashLogService;
 
     public Long save(String username) {
         List<CartItem> cartItems = cartService.findAllByUsername(username);
@@ -78,5 +82,23 @@ public class OrderService {
         orderDetailDto.setOrderItemDtos(OrderItemMapper.INSTANCE.entitiesToOrderItemDtos(order.getOrderItems()));
 
         return orderDetailDto;
+    }
+
+    @Transactional
+    public void orderByRestCash(String username, Long orderId) {
+        Member member = memberService.findByUsername(username);
+
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+
+        int totalPrice = order.getTotalPrice();
+
+        if (member.getRestCash() < totalPrice) {
+            throw new CashNotEnoughException("예치금이 부족합니다.");
+        }
+
+        member.payRestCash(totalPrice);
+        order.setPaymentDone();
+        cashLogService.save(member, CashLogType.PAYMENT_BY_ONLY_CASH, totalPrice);
     }
 }

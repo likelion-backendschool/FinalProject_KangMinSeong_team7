@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.security.Principal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -47,6 +48,7 @@ public class OrderController {
 
         model.addAttribute("orderDetailDto", orderDetailDto);
         model.addAttribute("restCash", rashCash);
+        model.addAttribute("nowTime", LocalDateTime.now());
         return "order/detail_order";
     }
 }

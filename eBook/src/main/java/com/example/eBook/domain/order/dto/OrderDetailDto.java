@@ -19,6 +19,7 @@ public class OrderDetailDto {
     private Long id;
     private String name;
 
+    private String buyerUsername;
     private List<OrderItemDto> orderItemDtos;
     private LocalDateTime payDate;
     private boolean readyStatus;

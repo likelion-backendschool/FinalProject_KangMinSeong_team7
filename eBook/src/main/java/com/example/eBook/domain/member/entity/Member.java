@@ -90,4 +90,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void updatePassword(String password) {
         this.password = password;
     }
+
+    public void payRestCash(int price) {
+        this.restCash -= price;
+    }
 }

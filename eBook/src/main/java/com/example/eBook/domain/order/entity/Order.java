@@ -45,4 +45,21 @@ public class Order extends BaseTimeEntity {
         this.orderItems.add(orderItem);
         orderItem.setOrder(this);
     }
+
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getPrice();
+        }
+        return totalPrice;
+    }
+
+    public void setPaymentDone() {
+        this.payDate = LocalDateTime.now();
+        this.paidStatus = true;
+
+        for (OrderItem orderItem : orderItems) {
+            orderItem.setPaymentDone();
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.example.eBook.domain.order.dto.OrderDetailDto;
 import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -14,5 +15,6 @@ public interface OrderMapper {
 
     OrderDto entityToOrderDto(Order order);
 
+    @Mapping(target = "buyerUsername", source = "member.username")
     OrderDetailDto entityToOrderItemDto(Order order);
 }

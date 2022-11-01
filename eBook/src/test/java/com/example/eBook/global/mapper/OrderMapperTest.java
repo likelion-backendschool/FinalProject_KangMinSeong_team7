@@ -47,7 +47,7 @@ public class OrderMapperTest {
 
         Order order = Order.builder()
                 .id(1L)
-                .member(new Member())
+                .member(Member.builder().username("test_username").build())
                 .name("test_name")
                 .orderItems(new ArrayList<>())
                 .canceledStatus(false)
@@ -62,6 +62,7 @@ public class OrderMapperTest {
         assertThat(orderDetailDto.getId()).isEqualTo(order.getId());
         assertThat(orderDetailDto.getName()).isEqualTo(order.getName());
         assertThat(orderDetailDto.getPayDate()).isEqualTo(order.getPayDate());
+        assertThat(orderDetailDto.getBuyerUsername()).isEqualTo(order.getMember().getUsername());
         assertThat(orderDetailDto.isCanceledStatus()).isEqualTo(order.isCanceledStatus());
         assertThat(orderDetailDto.isRefundedStatus()).isEqualTo(order.isRefundedStatus());
         assertThat(orderDetailDto.isReadyStatus()).isEqualTo(order.isReadyStatus());

@@ -1,6 +1,19 @@
 <html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
 
+    <script src="https://js.tosspayments.com/v1"></script>
+
+    <script th:inline="javascript">
+        const orderId = /*[[ ${orderDetailDto.id} ]]*/ null;
+        const buyerName = /*[[ ${orderDetailDto.buyerUsername} ]]*/ null;
+        const orderName = /*[[ ${orderDetailDto.name} ]]*/ null;
+        const orderPayPrice = /*[[ ${orderDetailDto.calculatePayPrice()} ]]*/ null;
+        const toss_clientKey = /*[[ ${@environment.getProperty('custom.tossPayments.clientKey')} ]]*/ null;
+    </script>
+
+    <form hidden name="payByRestCashOnlyForm" method="POST" th:action="@{|/order/${orderDetailDto.id}/pay-only-cash|}">
+    </form>
+
     <h2 class="mb-3 mt-3"><i class="bi bi-receipt"></i> 주문 상세내용</h2>
     <div class="container-fluid mt-5">
         <h5 th:onclick="|location.href='@{|/order/${orderDetailDto.id}|}'|"><i class="bi bi-cart4"></i> [[${orderDetailDto.name}]]</h5>
@@ -22,51 +35,92 @@
 
         <h4><i class="bi bi-wallet"></i> 결제</h4>
         <hr/>
-        <h5><i class="bi bi-cash"></i> 보유 포인트</h5>
-        <div class="mb-2" th:text="|${#numbers.formatInteger(restCash, 0, 'COMMA')} 원|"></div>
-        <h5><i class="bi bi-cash"></i> PG 결제금액</h5>
-        <div class="mb-2" th:text="|${#numbers.formatInteger(orderDetailDto.calculatePayPrice(), 0, 'COMMA')} 원|"></div>
-        <h5><i class="bi bi-cash"></i> 사용할 포인트</h5>
-        <div class="mb-2" th:with="maxUseRestCash = ${orderDetailDto.calculatePayPrice() > restCash ? restCash : orderDetailDto.calculatePayPrice()}">
-            <div>
-                <input type="number" id="PaymentForm__useRestCash"
-                       th:placeholder="|￦ 0 ~ ￦ ${#numbers.formatInteger(maxUseRestCash, 0, 'COMMA')}|"
-                       class="form-control w-50" min="0" th:max="${maxUseRestCash}" />
+        <div th:if="${!orderDetailDto.paidStatus && !orderDetailDto.canceledStatus && !orderDetailDto.refundedStatus && !orderDetailDto.readyStatus}">
+            <h5><i class="bi bi-cash"></i> 보유 포인트</h5>
+            <div class="mb-2" th:text="|${#numbers.formatInteger(restCash, 0, 'COMMA')} 원|"></div>
+            <h5><i class="bi bi-cash"></i> PG 결제금액</h5>
+            <div class="mb-2" th:text="|${#numbers.formatInteger(orderDetailDto.calculatePayPrice(), 0, 'COMMA')} 원|"></div>
+            <h5><i class="bi bi-cash"></i> 사용할 포인트</h5>
+            <div class="mb-2" th:with="maxUseRestCash = ${orderDetailDto.calculatePayPrice() > restCash ? restCash : orderDetailDto.calculatePayPrice()}">
+                <div>
+                    <input type="number" id="PaymentForm__useRestCash"
+                           th:placeholder="|￦ 0 ~ ￦ ${#numbers.formatInteger(maxUseRestCash, 0, 'COMMA')}|"
+                           class="form-control w-50" min="0" th:max="${maxUseRestCash}" />
+                </div>
             </div>
         </div>
-
         <div class="mt-4">
-            <button class="btn btn-sm btn-default mx-1">
+            <button th:if="${!orderDetailDto.paidStatus && !orderDetailDto.canceledStatus && !orderDetailDto.refundedStatus}"
+                    class="btn btn-sm btn-default mx-1" onclick="payment();">
                 <i class="fa-solid fa-basket-shopping"></i>
                 <span class="ml-2"><i class="bi bi-basket"></i> 결제</span>
             </button>
 
-            <a href="javascript:;" onclick="$(this).next().submit();" class="btn btn-sm btn-default mx-1">
+            <a href="javascript:;" th:if="${!orderDetailDto.paidStatus && !orderDetailDto.canceledStatus && !orderDetailDto.refundedStatus}"
+               onclick="$(this).next().submit();" class="btn btn-sm btn-default mx-1">
                 <i class="fa-solid fa-xmark"></i>
                 <span class="ml-2"><i class="bi bi-x-lg"></i> 취소</span>
             </a>
             <form th:action="@{|/order/${orderDetailDto.id}/cancel|}" method="POST" hidden></form>
 
-            <a href="javascript:;"
+            <a href="javascript:;" th:if="${orderDetailDto.paidStatus && ((#temporals.minute(nowTime) - #temporals.minute(orderDetailDto.payDate)) < 10)}"
                onclick="$(this).next().submit();" class="btn btn-sm btn-default mx-1">
                 <i class="fa-solid fa-xmark"></i>
                 <span class="ml-2"><i class="bi bi-x-lg"></i> 환불</span>
             </a>
             <form th:action="@{|/order/${orderDetailDto.id}/refund|}" method="POST" hidden></form>
 
-            <button class="btn btn-sm btn-default mx-1 btn-disabled" disabled>
-                <span class="ml-2">환불가능시간이 지났습니다</span>
+            <button th:if="${orderDetailDto.paidStatus && ((#temporals.minute(nowTime) - #temporals.minute(orderDetailDto.payDate)) > 10)}"
+                    class="btn btn-sm btn-default mx-1 btn-disabled" disabled>
+                <span class="ml-2">결제완료, 환불가능시간이 지났습니다</span>
             </button>
 
-            <button class="btn btn-sm btn-default mx-1 btn-disabled" disabled>
+            <button th:if="${orderDetailDto.canceledStatus}" class="btn btn-sm btn-default mx-1 btn-disabled" disabled>
                 <span class="ml-2">취소된 주문입니다.</span>
             </button>
 
-            <button class="btn btn-sm btn-default mx-1 btn-disabled" disabled>
+            <button th:if="${orderDetailDto.refundedStatus}" class="btn btn-sm btn-default mx-1 btn-disabled" disabled>
                 <span class="ml-2">환불된 주문입니다.</span>
             </button>
         </div>
 
     </div>
+
+    <script>
+
+        const $PaymentForm__useRestCash = $("#PaymentForm__useRestCash");
+        const $PaymentForm__useRestCashAll = $("#PaymentForm__useRestCashAll");
+        const $PaymentForm__pgPayPriceDisplay = $("#PaymentForm__pgPayPriceDisplay");
+
+        const tossPayments = TossPayments(toss_clientKey);
+
+        function payment() {
+            let useRestCash = parseInt($PaymentForm__useRestCash.val());
+
+            if (isNaN(useRestCash)) {
+                useRestCash = 0;
+            }
+
+            if (orderPayPrice == useRestCash) {
+                if (confirm('포인트만을 사용하여 결제하시겠습니까?')) {
+                    document.payByRestCashOnlyForm.submit();
+                }
+                return;
+            }
+
+            const method = "카드"; // "카드" 혹은 "가상계좌"
+
+            const paymentData = {
+                amount: orderPayPrice - useRestCash,
+                orderId: "order__" + orderId + "__" + (Math.random() + "").substring(2),
+                orderName,
+                customerName: buyerName,
+                successUrl: window.location.origin + "/order/" + orderId + "/success",
+                failUrl: window.location.origin + "/order/" + orderId + "/fail"
+            };
+
+            tossPayments.requestPayment(method, paymentData);
+        }
+    </script>
 </div>
 </html>
