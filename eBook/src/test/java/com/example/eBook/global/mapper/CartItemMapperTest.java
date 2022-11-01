@@ -17,7 +17,7 @@ public class CartItemMapperTest {
     @DisplayName("엔티티_To_CartItem_Mapper")
     void entityToCartItemDto() {
 
-        Member member = new Member(1L, "test_username", "1234", "test_nickname", "test@email.com", 3L, LocalDateTime.now());
+        Member member = new Member(1L, "test_username", "1234", "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0);
         CartItem cartItem = CartItem.builder()
                 .id(1L)
                 .member(member)

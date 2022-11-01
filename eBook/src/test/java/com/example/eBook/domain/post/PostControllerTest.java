@@ -71,7 +71,7 @@ public class PostControllerTest {
     @BeforeEach
     void beforeEach() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         List<Post> postList = new ArrayList<>();
 
@@ -117,7 +117,7 @@ public class PostControllerTest {
     void showPostList() throws Exception {
 
         Member newMember = memberRepository.save(new Member((long) 2L, "new_user", "1234", "1234",
-                "new@email", 3L, LocalDateTime.now()));
+                "new@email", 3L, LocalDateTime.now(), 0));
         postRepository.save(new Post((long) 11L, newMember, "new_subject", "new_content", "new_contentHtml"));
 
         PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));

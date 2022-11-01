@@ -65,7 +65,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_매핑하기")
     void save() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
 
@@ -84,7 +84,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_매핑조회_By글")
     void findAllByPost() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
 
@@ -100,7 +100,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_해시태그만조회_By멤버")
     void findAllPostKeywordByMember() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
 
@@ -118,7 +118,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_해시태그만조회_By글")
     void findAllPostKeywordByPost() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
 
@@ -136,7 +136,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_글만조회_By멤버+키워드")
     void findAllPostByMemberAndKeyword() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post1 = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
         Post post2 = postRepository.save(new Post(2L, member, "subject2", "content2", "contentHtml2"));
@@ -156,7 +156,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_매핑수정")
     void modify() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
 
@@ -184,7 +184,7 @@ public class PostHashTagServiceTest {
     @DisplayName("글_해시태그_매핑삭제")
     void delete() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         Post post = postRepository.save(new Post(1L, member, "subject1", "content1", "contentHtml1"));
 

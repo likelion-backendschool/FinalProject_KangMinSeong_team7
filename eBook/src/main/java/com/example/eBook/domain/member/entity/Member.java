@@ -39,6 +39,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private LocalDateTime lastLoginTime;
 
+    private int restCash;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection <GrantedAuthority> collectors = new ArrayList<>();

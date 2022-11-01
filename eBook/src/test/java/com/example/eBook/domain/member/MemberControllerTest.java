@@ -49,7 +49,7 @@ class MemberControllerTest {
     @BeforeEach
     void beforeEach() {
         memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
     }
 
     @Test
