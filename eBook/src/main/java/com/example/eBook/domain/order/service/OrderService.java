@@ -19,6 +19,7 @@ import com.example.eBook.global.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -74,11 +75,15 @@ public class OrderService {
         return orderDtos;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
+    public Order findById(Long orderId) {
+        return orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+    }
+
     public OrderDetailDto getOrderDetail(Long orderId) {
 
-        Order order = orderRepository.findById(orderId).orElseThrow(
-                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+        Order order = findById(orderId);
 
         OrderDetailDto orderDetailDto = OrderMapper.INSTANCE.entityToOrderItemDto(order);
         orderDetailDto.setOrderItemDtos(OrderItemMapper.INSTANCE.entitiesToOrderItemDtos(order.getOrderItems()));
@@ -102,6 +107,25 @@ public class OrderService {
         member.payRestCash(totalPrice);
         order.setPaymentDone();
         mybookService.save(member, order);
-        cashLogService.save(member, CashLogType.PAYMENT_BY_ONLY_CASH, totalPrice);
+        cashLogService.save(member, CashLogType.PAYMENT_BY_ONLY_CASH, totalPrice * -1);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void orderByTossPayments(String username, Long orderId, int needCash) {
+        Member member = memberService.findByUsername(username);
+
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+
+        if (member.getRestCash() < needCash) {
+            throw new CashNotEnoughException("예치금이 부족합니다.");
+        }
+
+        cashLogService.save(member, CashLogType.CHARGE_FOR_PAYMENT, order.getTotalPrice() - needCash);
+        cashLogService.save(member, CashLogType.PAYMENT_BY_TOSSPAYMENTS, (order.getTotalPrice() - needCash) * -1);
+        member.payRestCash(needCash);
+        order.setPaymentDone();
+        mybookService.save(member, order);
+        cashLogService.save(member, CashLogType.PAYMENT_BY_ONLY_CASH, needCash * -1);
     }
 }
