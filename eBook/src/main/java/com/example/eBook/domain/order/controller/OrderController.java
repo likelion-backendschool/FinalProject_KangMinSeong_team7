@@ -1,11 +1,14 @@
 package com.example.eBook.domain.order.controller;
 
+import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.domain.order.dto.OrderDetailDto;
 import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -18,12 +21,13 @@ import java.util.List;
 public class OrderController {
 
     private final OrderService orderService;
+    private final MemberService memberService;
 
     @PostMapping("/create")
     public String create(Principal principal) {
 
-        orderService.save(principal.getName());
-        return "redirect:/order/list";
+        Long orderId = orderService.save(principal.getName());
+        return "redirect:/order/%s".formatted(orderId);
     }
 
     @GetMapping("/list")
@@ -33,5 +37,16 @@ public class OrderController {
         model.addAttribute("orderDtos", orderDtos);
 
         return "/order/list_order";
+    }
+
+    @GetMapping("/{orderId}")
+    public String showOrderDetail(@PathVariable("orderId") Long orderId, Principal principal, Model model) {
+
+        OrderDetailDto orderDetailDto = orderService.getOrderDetail(orderId);
+        int rashCash = memberService.getRestCash(principal.getName());
+
+        model.addAttribute("orderDetailDto", orderDetailDto);
+        model.addAttribute("restCash", rashCash);
+        return "order/detail_order";
     }
 }

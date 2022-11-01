@@ -1,5 +1,6 @@
 package com.example.eBook.global.mapper;
 
+import com.example.eBook.domain.order.dto.OrderDetailDto;
 import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
 import org.mapstruct.Mapper;
@@ -12,4 +13,6 @@ public interface OrderMapper {
     OrderMapper INSTANCE = Mappers.getMapper(OrderMapper.class);
 
     OrderDto entityToOrderDto(Order order);
+
+    OrderDetailDto entityToOrderItemDto(Order order);
 }

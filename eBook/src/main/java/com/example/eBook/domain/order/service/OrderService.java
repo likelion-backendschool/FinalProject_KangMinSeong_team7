@@ -4,13 +4,16 @@ import com.example.eBook.domain.cart.entity.CartItem;
 import com.example.eBook.domain.cart.service.CartService;
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.domain.order.dto.OrderDetailDto;
 import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
 import com.example.eBook.domain.order.entity.OrderItem;
+import com.example.eBook.domain.order.exception.OrderNotFoundException;
 import com.example.eBook.domain.order.repository.OrderRepository;
 import com.example.eBook.global.mapper.OrderItemMapper;
 import com.example.eBook.global.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +24,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OrderService {
 
     private final OrderRepository orderRepository;
     private final CartService cartService;
     private final MemberService memberService;
 
-    public void save(String username) {
+    public Long save(String username) {
         List<CartItem> cartItems = cartService.findAllByUsername(username);
 
         List<OrderItem> orderItems = cartItems.stream()
@@ -44,8 +48,8 @@ public class OrderService {
             order.addOrderItem(orderItem);
         }
 
-        orderRepository.save(order);
         cartService.deleteAllByUsername(username);
+        return orderRepository.save(order).getId();
     }
 
     @Transactional(readOnly = true)
@@ -62,5 +66,17 @@ public class OrderService {
         }
 
         return orderDtos;
+    }
+
+    @Transactional(readOnly = true)
+    public OrderDetailDto getOrderDetail(Long orderId) {
+
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+
+        OrderDetailDto orderDetailDto = OrderMapper.INSTANCE.entityToOrderItemDto(order);
+        orderDetailDto.setOrderItemDtos(OrderItemMapper.INSTANCE.entitiesToOrderItemDtos(order.getOrderItems()));
+
+        return orderDetailDto;
     }
 }

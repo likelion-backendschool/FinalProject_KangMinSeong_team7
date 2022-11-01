@@ -89,6 +89,14 @@ public class MemberService implements UserDetailsService {
         return temporaryPassword;
     }
 
+    @Transactional(readOnly = true)
+    public int getRestCash(String username) {
+        Member member = memberRepository.findByUsername(username).orElseThrow(
+                () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
+
+        return member.getRestCash();
+    }
+
     public String getTemporaryPassword() {
         String alphaNum = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         int alphaNumLength = alphaNum.length();

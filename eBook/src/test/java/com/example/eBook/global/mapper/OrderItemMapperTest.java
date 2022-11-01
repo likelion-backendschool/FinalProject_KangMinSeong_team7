@@ -32,6 +32,7 @@ public class OrderItemMapperTest {
 
         assertThat(orderItemDto.getId()).isEqualTo(orderItem.getId());
         assertThat(orderItemDto.getProductPrice()).isEqualTo(orderItem.getPrice());
+        assertThat(orderItemDto.getProductId()).isEqualTo(orderItem.getId());
         assertThat(orderItemDto.getProductSubject()).isEqualTo(orderItem.getProduct().getSubject());
     }
 }
