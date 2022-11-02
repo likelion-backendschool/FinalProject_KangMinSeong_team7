@@ -76,12 +76,13 @@ public class OrderService {
         return orderDtos;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Order findById(Long orderId) {
         return orderRepository.findById(orderId).orElseThrow(
                 () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
     }
 
+    @Transactional(readOnly = true)
     public OrderDetailDto getOrderDetail(Long orderId) {
 
         Order order = findById(orderId);
@@ -92,7 +93,6 @@ public class OrderService {
         return orderDetailDto;
     }
 
-    @Transactional
     public void orderByRestCash(String username, Long orderId) {
         Member member = memberService.findByUsername(username);
 
@@ -141,5 +141,21 @@ public class OrderService {
         }
 
         order.cancelOrder();
+    }
+
+    public void refund(Long orderId, String username) {
+        Member member = memberService.findByUsername(username);
+
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+
+        if (!order.getMember().equals(member)) {
+            throw new OrderNotAccessedException("해당 주문에 접근할 수 없습니다.");
+        }
+
+        cashLogService.save(member, CashLogType.CHARGE_BY_REFUND, order.getTotalPrice());
+        order.refundOrder();
+
+        mybookService.remove(order, member);
     }
 }

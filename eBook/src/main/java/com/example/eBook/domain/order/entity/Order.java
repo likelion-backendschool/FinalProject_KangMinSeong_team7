@@ -65,4 +65,13 @@ public class Order extends BaseTimeEntity {
     public void cancelOrder() {
         this.canceledStatus = true;
     }
+
+    public void refundOrder() {
+        this.paidStatus = false;
+        this.refundedStatus = true;
+
+        for (OrderItem orderItem : orderItems) {
+            orderItem.refundOrder();
+        }
+    }
 }

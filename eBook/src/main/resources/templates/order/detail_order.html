@@ -64,7 +64,7 @@
             <form th:action="@{|/order/${orderDetailDto.id}/cancel|}" method="POST" hidden></form>
 
             <a href="javascript:;" th:if="${orderDetailDto.paidStatus && ((#temporals.minute(nowTime) - #temporals.minute(orderDetailDto.payDate)) < 10)}"
-               onclick="$(this).next().submit();" class="btn btn-sm btn-default mx-1">
+               onclick="if ( !confirm('환불하시겠습니까?') ) return false; $(this).next().submit();" class="btn btn-sm btn-default mx-1">
                 <i class="fa-solid fa-xmark"></i>
                 <span class="ml-2"><i class="bi bi-x-lg"></i> 환불</span>
             </a>

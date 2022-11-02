@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,5 +43,14 @@ public class MybookService {
         Member member = memberService.findByUsername(username);
 
         return MybookMapper.INSTANCE.entitiesToMybookDtos(mybookRepository.findAllByMember(member));
+    }
+
+    public void remove(Order order, Member member) {
+
+        List<Product> productIds = order.getOrderItems().stream()
+                .map(o -> o.getProduct())
+                .toList();
+
+        mybookRepository.removeByRefund(member, productIds);
     }
 }

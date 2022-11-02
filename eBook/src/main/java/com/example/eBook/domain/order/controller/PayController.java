@@ -68,4 +68,12 @@ public class PayController {
 
         return "redirect:/order/%s".formatted(orderId);
     }
+
+    @PostMapping("/{orderId}/refund")
+    public String refundOrder(@PathVariable("orderId") Long orderId, Principal principal) {
+
+        orderService.refund(orderId, principal.getName());
+
+        return "redirect:/order/%s".formatted(orderId);
+    }
 }

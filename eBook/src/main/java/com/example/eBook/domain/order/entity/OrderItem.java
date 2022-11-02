@@ -38,6 +38,7 @@ public class OrderItem extends BaseTimeEntity {
     private int payPrice;
     private int refundPrice;
     private boolean isPaid;
+    private boolean isRefund;
 
     public OrderItem(Product product) {
         this.product = product;
@@ -55,5 +56,10 @@ public class OrderItem extends BaseTimeEntity {
         this.payPrice = getSalePrice();
         this.isPaid = true;
         this.payDate = LocalDateTime.now();
+    }
+
+    public void refundOrder() {
+        this.isPaid = false;
+        this.isRefund = true;
     }
 }
