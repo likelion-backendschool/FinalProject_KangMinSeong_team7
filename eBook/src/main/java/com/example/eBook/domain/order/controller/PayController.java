@@ -61,5 +61,11 @@ public class PayController {
         return "order/fail_order";
     }
 
+    @PostMapping("/{orderId}/cancel")
+    public String cancelOrder(@PathVariable("orderId") Long orderId, Principal principal) {
 
+        orderService.cancel(orderId, principal.getName());
+
+        return "redirect:/order/%s".formatted(orderId);
+    }
 }

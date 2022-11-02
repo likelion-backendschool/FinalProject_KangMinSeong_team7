@@ -12,6 +12,7 @@ import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
 import com.example.eBook.domain.order.entity.OrderItem;
 import com.example.eBook.domain.order.exception.CashNotEnoughException;
+import com.example.eBook.domain.order.exception.OrderNotAccessedException;
 import com.example.eBook.domain.order.exception.OrderNotFoundException;
 import com.example.eBook.domain.order.repository.OrderRepository;
 import com.example.eBook.global.mapper.OrderItemMapper;
@@ -127,5 +128,18 @@ public class OrderService {
         order.setPaymentDone();
         mybookService.save(member, order);
         cashLogService.save(member, CashLogType.PAYMENT_BY_ONLY_CASH, needCash * -1);
+    }
+
+    public void cancel(Long orderId, String username) {
+        Member member = memberService.findByUsername(username);
+
+        Order order = orderRepository.findById(orderId).orElseThrow(
+                () -> new OrderNotFoundException("해당 주문은 존재하지 않습니다."));
+
+        if (!order.getMember().equals(member)) {
+            throw new OrderNotAccessedException("해당 주문에 접근할 수 없습니다.");
+        }
+
+        order.cancelOrder();
     }
 }

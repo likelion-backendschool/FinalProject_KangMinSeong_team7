@@ -62,4 +62,7 @@ public class Order extends BaseTimeEntity {
             orderItem.setPaymentDone();
         }
     }
+    public void cancelOrder() {
+        this.canceledStatus = true;
+    }
 }
