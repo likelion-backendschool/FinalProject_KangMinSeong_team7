@@ -1,0 +1,9 @@
+.btn-default {
+    background-color: #C8F2EF;
+}
+
+.string-cut{
+    text-overflow:ellipsis;
+    hite-space:nowrap;
+    overflow:hidden;
+}

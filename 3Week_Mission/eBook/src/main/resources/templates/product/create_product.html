@@ -1,0 +1,27 @@
+<html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
+    <form th:action th:object="${productCreateForm}" method="post" class="w-50 mx-auto">
+        <h2 class="mb-3 mt-3">상품 등록</h2>
+
+        <div class="mb-3">
+            <input type="text" th:field="*{subject}" th:errorclass="field-error" class="form-control" placeholder="상품명">
+            <div th:if="${#fields.hasErrors('subject')}" th:errorclass="field-error" th:errors="*{subject}"></div>
+        </div>
+        <div class="mb-3">
+            <input type="text" th:field="*{price}" th:errorclass="field-error" class="form-control" placeholder="상품가격">
+        </div>
+        <div class="mb-3">
+            <textarea th:field="*{description}" th:errorclass="field-error" class="form-control" placeholder="상품설명" rows="7"></textarea>
+            <div th:if="${#fields.hasErrors('description')}" th:errorclass="field-error" th:errors="*{description}"></div>
+        </div>
+        <div th:each="postKeyword : ${productCreateForm.getPostKeywordList()}">
+            <input type="radio" th:field="*{postKeyword}" th:id="${postKeyword.id}" th:value="${postKeyword.id}">
+            <label style="display: inline;margin-top: 5px;" th:for="${postKeyword.id}" th:text="${postKeyword.content}"></label>
+        </div>
+
+        <button type="button" class="btn btn-sm btn-default float-end" onclick="location.href='/product/list'">취소</button>
+        <button type="submit" class="btn btn-sm btn-default float-end mx-3">등록</button>
+    </form>
+
+</div>
+</html>
