@@ -13,6 +13,7 @@ public class CartItemDto {
     private Long productId;
 
     private String subject;
+    private String description;
     private String writer;
     private int price;
 }

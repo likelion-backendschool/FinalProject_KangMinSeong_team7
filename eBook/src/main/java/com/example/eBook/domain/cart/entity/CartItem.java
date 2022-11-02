@@ -19,6 +19,7 @@ public class CartItem extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "card_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

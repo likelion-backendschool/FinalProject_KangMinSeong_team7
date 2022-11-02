@@ -13,6 +13,7 @@ public interface MemberMapper {
     MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
     @Mapping(target="authLevel", constant = "3L")
+    @Mapping(target = "restCash", constant = "0")
     @Mapping(target="id", ignore = true)
     Member signupFormToEntity(SignupForm signupForm);
 

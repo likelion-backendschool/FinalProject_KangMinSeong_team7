@@ -22,7 +22,7 @@ public class CartController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/cart/list")
     public String showCartList(Principal principal, Model model) {
-        List<CartItemDto> cartItemDtoList = cartService.findAllByUsername(principal.getName());
+        List<CartItemDto> cartItemDtoList = cartService.cartItemDtoConverter(principal.getName());
         model.addAttribute("cartItemDtoList", cartItemDtoList);
 
         return "cart/list_cart";

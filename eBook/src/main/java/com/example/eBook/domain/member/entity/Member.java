@@ -39,6 +39,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private LocalDateTime lastLoginTime;
 
+    private int restCash;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection <GrantedAuthority> collectors = new ArrayList<>();
@@ -87,5 +89,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     public void updatePassword(String password) {
         this.password = password;
+    }
+
+    public void payRestCash(int price) {
+        this.restCash -= price;
     }
 }

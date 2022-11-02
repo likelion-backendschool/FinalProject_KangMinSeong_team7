@@ -1,5 +1,5 @@
 <html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
-<div layout:fragment="content" class="container justify-content-center align-items-center h-75 d-flex">
+<div layout:fragment="content" class="container justify-content-center align-items-center h-50 d-flex">
     <form th:action th:object="${infoModifyForm}" method="post" class="w-50 mx-auto">
         <h2 class="mb-3 mt-3">회원정보수정</h2>
 
@@ -16,8 +16,8 @@
             <div th:if="${#fields.hasErrors('nickname')}" th:errorclass="field-error" th:errors="*{nickname}"></div>
         </div>
 
-        <button type="button" class="btn cancel float-end" onclick="location.href='/'">취소</button>
-        <button type="submit" class="btn modify float-end mx-3">수정</button>
+        <button type="button" class="btn btn-sm btn-default float-end" onclick="location.href='/'">취소</button>
+        <button type="submit" class="btn btn-sm btn-default float-end mx-3">수정</button>
     </form>
 </div>
 </html>

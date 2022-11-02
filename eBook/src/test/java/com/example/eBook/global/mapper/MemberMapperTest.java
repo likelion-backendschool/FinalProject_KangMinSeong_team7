@@ -24,6 +24,7 @@ class MemberMapperTest {
         Member member = MemberMapper.INSTANCE.signupFormToEntity(signupForm);
 
         assertThat(member.getUsername()).isEqualTo(signupForm.getUsername());
+        assertThat(member.getRestCash()).isEqualTo(0);
         assertThat(member.getNickname()).isEqualTo(signupForm.getNickname());
         assertThat(member.getEmail()).isEqualTo(signupForm.getEmail());
         assertThat(member.getAuthLevel()).isEqualTo(3L);

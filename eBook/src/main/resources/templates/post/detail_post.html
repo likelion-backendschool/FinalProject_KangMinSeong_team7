@@ -16,12 +16,12 @@
             </div>
         </div>
         <div class="my-3 float-end">
-            <a th:href="@{|/post/${postDetailDto.id}/modify|}" class="btn modify"
+            <a th:href="@{|/post/${postDetailDto.id}/modify|}" class="btn btn-default btn-sm"
                sec:authorize="isAuthenticated()"
                th:if="${#authentication.getPrincipal().getUsername() == postDetailDto.writer}"
                th:text="수정"></a>
             <a onclick="if (!confirm('글을 삭제하시겠습니까?') ) return false;" th:href="@{|/post/${postDetailDto.id}/delete|}"
-               class="btn cancel" sec:authorize="isAuthenticated()"
+               class="btn btn-default btn-sm" sec:authorize="isAuthenticated()"
                th:if="${#authentication.getPrincipal().getUsername() == postDetailDto.writer}"
                th:text="삭제"></a>
         </div>

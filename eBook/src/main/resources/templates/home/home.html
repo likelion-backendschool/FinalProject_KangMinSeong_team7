@@ -1,6 +1,6 @@
 <html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
-    <h2 class="mb-3 mt-3">최근 글 - 100개</h2>
+    <h2 class="mb-3 mt-3">최근 글</h2>
     <table class="table table-hover">
         <thead class="table-success">
         <tr>
@@ -21,9 +21,5 @@
         </tr>
         </tbody>
     </table>
-    <div>
-        <a th:href="@{/post/list}" class="float-end btn create">글 목록</a>
-        <a th:href="@{/product/list}" class="float-end btn create">상품 목록</a>
-    </div>
 </div>
 </html>

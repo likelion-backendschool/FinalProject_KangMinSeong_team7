@@ -20,8 +20,8 @@
             <div th:if="${#fields.hasErrors('description')}" th:errorclass="field-error" th:errors="*{description}"></div>
         </div>
 
-        <button type="button" class="btn cancel float-end" onclick="location.href='/product/list'">취소</button>
-        <button type="submit" class="btn modify float-end mx-3">수정</button>
+        <button type="button" class="btn btn-sm btn-default float-end" onclick="location.href='/product/list'">취소</button>
+        <button type="submit" class="btn btn-sm btn-default float-end mx-3">수정</button>
     </form>
 </div>
 </html>

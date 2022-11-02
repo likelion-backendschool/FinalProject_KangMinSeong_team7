@@ -55,7 +55,7 @@ public class ProductServiceTest {
     @BeforeEach
     void beforeEach() {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now()));
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
         List<Product> productList = new ArrayList<>();

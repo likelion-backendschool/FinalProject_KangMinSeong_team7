@@ -67,6 +67,16 @@ public class MemberController {
         return "member/login_member";
     }
 
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/member/mypage")
+    public String showMyPage(Model model, Principal principal) {
+
+        InfoModifyForm userInfo = memberService.getInfoByUsername(principal.getName());
+        model.addAttribute("userInfo", userInfo);
+        return "member/mypage_member";
+    }
+
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/member/modify")
     public String showModifyForm(Model model, Principal principal) {

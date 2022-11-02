@@ -16,16 +16,14 @@
         </div>
     </div>
     <div class="my-3 float-end">
-        <div>
-            <a href="javascript:;" onclick="$(this).next().submit()" class="btn modify">장바구니 추가</a>
-            <form th:action="@{|/cart/add/${productDetailDto.id}|}" method="POST" hidden></form>
-        </div>
-        <a th:href="@{|/product/${productDetailDto.id}/modify|}" class="btn modify"
+        <a href="javascript:;" onclick="$(this).next().submit()" class="btn btn-default btn-sm">장바구니 추가</a>
+        <form th:action="@{|/cart/add/${productDetailDto.id}|}" method="POST" hidden></form>
+        <a th:href="@{|/product/${productDetailDto.id}/modify|}" class="btn btn-default btn-sm"
            sec:authorize="isAuthenticated()"
            th:if="${#authentication.getPrincipal().getUsername() == productDetailDto.writer}"
            th:text="수정"></a>
         <a onclick="if (!confirm('상품을 삭제하시겠습니까?') ) return false;" th:href="@{|/product/${productDetailDto.id}/delete|}"
-           class="btn cancel" sec:authorize="isAuthenticated()"
+           class="btn btn-default btn-sm" sec:authorize="isAuthenticated()"
            th:if="${#authentication.getPrincipal().getUsername() == productDetailDto.writer}"
            th:text="삭제"></a>
     </div>
