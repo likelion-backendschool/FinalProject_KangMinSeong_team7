@@ -33,7 +33,7 @@ public class PayService {
     private String SECRET_KEY;
 
     @Transactional(readOnly = true)
-    public boolean confirmPayments(Map<String, String> data, long id, String username) {
+    public ResponseEntity<JsonNode> confirmPayments(Map<String, String> data, long id, String username) {
         Order order = orderService.findById(id);
 
         HttpHeaders headers = new HttpHeaders();
@@ -59,10 +59,8 @@ public class PayService {
 
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             orderService.orderByTossPayments(username, id, needCash);
-            return true;
         }
 
-        return false;
+        return responseEntity;
     }
-
 }
