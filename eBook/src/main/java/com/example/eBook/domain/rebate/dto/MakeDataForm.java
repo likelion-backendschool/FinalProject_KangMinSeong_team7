@@ -1,4 +1,4 @@
-package com.example.eBook.domain.rebase.dto;
+package com.example.eBook.domain.rebate.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,4 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MakeDataForm {
+
+    private String yearMonth;
 }

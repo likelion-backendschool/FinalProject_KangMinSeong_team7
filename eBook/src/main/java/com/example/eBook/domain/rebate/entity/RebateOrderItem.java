@@ -1,4 +1,4 @@
-package com.example.eBook.domain.rebase.entity;
+package com.example.eBook.domain.rebate.entity;
 
 import com.example.eBook.domain.base.BaseTimeEntity;
 import com.example.eBook.domain.cash.entity.CashLog;
@@ -6,11 +6,10 @@ import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.order.entity.Order;
 import com.example.eBook.domain.order.entity.OrderItem;
 import com.example.eBook.domain.product.entity.Product;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.SuperBuilder;
 
 import javax.persistence.ConstraintMode;
 import javax.persistence.Entity;
@@ -27,10 +26,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@ToString(callSuper = true)
 public class RebateOrderItem extends BaseTimeEntity {
 
     @Id
@@ -38,12 +36,10 @@ public class RebateOrderItem extends BaseTimeEntity {
     private Long id;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private OrderItem orderItem;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Order order;
 
@@ -51,7 +47,6 @@ public class RebateOrderItem extends BaseTimeEntity {
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Product product;
 
-    // 가격
     private int price;
     private int salePrice;
     private int wholesalePrice;
@@ -62,7 +57,6 @@ public class RebateOrderItem extends BaseTimeEntity {
     private LocalDateTime payDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private CashLog rebateCashLog;
     private LocalDateTime rebateDate;
@@ -72,13 +66,11 @@ public class RebateOrderItem extends BaseTimeEntity {
     private LocalDateTime orderItemCreateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member buyer;
     private String buyerName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @ToString.Exclude
     @JoinColumn(foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Member seller;
     private String sellerName;

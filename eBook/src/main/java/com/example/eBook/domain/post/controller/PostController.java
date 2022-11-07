@@ -28,15 +28,6 @@ public class PostController {
     private final PostHashTagService postHashTagService;
     private final MemberService memberService;
 
-    @PreAuthorize("isAnonymous()")
-    @GetMapping("/")
-    public String showRecentPost(Model model) {
-        List<PostDto> postList = postService.findRecentTop100();
-
-        model.addAttribute("postList", postList);
-        return "home/home";
-    }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/list")
     public String showPostList(@RequestParam(value = "keyword", required = false) String keyword,

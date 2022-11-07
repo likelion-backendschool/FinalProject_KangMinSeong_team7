@@ -14,6 +14,7 @@ import com.example.eBook.domain.order.entity.OrderItem;
 import com.example.eBook.domain.order.exception.CashNotEnoughException;
 import com.example.eBook.domain.order.exception.OrderNotAccessedException;
 import com.example.eBook.domain.order.exception.OrderNotFoundException;
+import com.example.eBook.domain.order.repository.OrderItemRepository;
 import com.example.eBook.domain.order.repository.OrderRepository;
 import com.example.eBook.global.mapper.OrderItemMapper;
 import com.example.eBook.global.mapper.OrderMapper;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,7 @@ import java.util.List;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderItemRepository orderItemRepository;
     private final CartService cartService;
     private final MemberService memberService;
     private final CashLogService cashLogService;
@@ -157,5 +160,10 @@ public class OrderService {
         order.refundOrder();
 
         mybookService.remove(order, member);
+    }
+
+    @Transactional(readOnly = true)
+    public List<OrderItem> findAllByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
+        return orderItemRepository.findAllByPayDateBetween(fromDate, toDate);
     }
 }
