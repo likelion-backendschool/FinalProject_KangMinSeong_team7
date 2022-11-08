@@ -6,6 +6,7 @@ import com.example.eBook.domain.rebate.dto.MakeDataForm;
 import com.example.eBook.domain.rebate.dto.RebateOrderItemDto;
 import com.example.eBook.domain.rebate.entity.RebateOrderItem;
 import com.example.eBook.domain.rebate.repository.RebateRepository;
+import com.example.eBook.global.mapper.RebateOrderItemMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,20 +55,34 @@ public class RebateService {
 
     @Transactional(readOnly = true)
     public List<RebateOrderItemDto> findAll() {
-        // mapStruct 통해 entity -> dto 이후 반환
-        return null;
+        return RebateOrderItemMapper.INSTANCE.entitiesToRebateOrderItemDtos(rebateRepository.findAll());
     }
 
     @Transactional(readOnly = true)
     public List<RebateOrderItemDto> findAllByYear(Integer year) {
-        // mapStruct 통해 entity -> dto 이후 반환
-        return null;
+
+        String fromDate = year + "-01-01 00:00:00.000000";
+        String toDate = year + "-12-31 23:59:59.999999";
+
+        return RebateOrderItemMapper.INSTANCE.entitiesToRebateOrderItemDtos(
+                rebateRepository.findAllByPayDateBetweenOrderByIdAsc(
+                        LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
+                        LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"))));
     }
 
     @Transactional(readOnly = true)
     public List<RebateOrderItemDto> findAllByYearAndMonth(Integer year, Integer month) {
-        // mapStruct 통해 entity -> dto 이후 반환
-        return null;
+
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, month-1, 1);
+
+        String fromDate = year + "-" + month + "-01 00:00:00.000000";
+        String toDate = year + "-" + month + "-%02d 23:59:59.999999".formatted(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+
+        return RebateOrderItemMapper.INSTANCE.entitiesToRebateOrderItemDtos(
+                rebateRepository.findAllByPayDateBetweenOrderByIdAsc(
+                        LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
+                        LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"))));
     }
 
     public void rebateOne(Long rebateOrderItemId) {
