@@ -63,7 +63,7 @@
                     <td th:text="${rebateOrderItem.rebateCashLogId}"></td>
                     <td>
                         <a th:if="${rebateOrderItem.rebateAvailable}" href="javascript:;" onclick="$(this).next().submit();"
-                           class="btn btn-primary btn-xs">정산</a>
+                           class="btn btn-sm btn-default">정산</a>
                         <form method="POST" th:action="@{|/adm/rebate/rebateOne/${rebateOrderItem.orderItemId}|}"
                               hidden></form>
                     </td>
@@ -72,15 +72,15 @@
             </table>
         </div>
 
-        <div class="grid grid-cols-2 mt-2 gap-2">
-            <button type="button" onclick="history.back();" class="btn btn-secondary btn-outline">
-                <i class="fa-solid fa-angle-left"></i>
-                <span class="ml-1">취소</span>
-            </button>
-            <a href="javascript:;" onclick="RebateForm__submit();" class="btn btn-primary btn-block">선택정산</a>
+        <div class="grid grid-cols-2 mt-2 gap-2 float-end">
+            <a href="javascript:;" onclick="RebateForm__submit();" class="btn btn-sm btn-default btn-block">선택정산</a>
             <form method="POST" name="rebateForm" th:action="@{|/adm/rebate/rebate|}" hidden>
                 <input type="hidden" name="ids">
             </form>
+            <button type="button" onclick="history.back();" class="btn btn-sm btn-default btn-outline ">
+                <i class="fa-solid fa-angle-left"></i>
+                <span class="ml-1">취소</span>
+            </button>
         </div>
 
         <script>
