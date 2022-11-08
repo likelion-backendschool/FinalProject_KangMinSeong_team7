@@ -1,7 +1,7 @@
-package com.example.eBook.domain.rebase.controller;
+package com.example.eBook.domain.rebate.controller;
 
-import com.example.eBook.domain.rebase.dto.MakeDataForm;
-import com.example.eBook.domain.rebase.service.RebateService;
+import com.example.eBook.domain.rebate.dto.MakeDataForm;
+import com.example.eBook.domain.rebate.service.RebateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -39,8 +39,10 @@ public class RebateController {
             return "rebate/makeData_rebase";
         }
 
-        rebateService.save(makeDataForm);
-        return "redirect:/adm/rebate/rebateOrderItemList?year=%d&month=%d".formatted(year, month);
+        rebateService.makeRebateData(makeDataForm);
+
+        String[] yearAndMonth = makeDataForm.getYearMonth().split("-");
+        return "redirect:/adm/rebate/rebateOrderItemList?year=%s&month=%s".formatted(yearAndMonth[0], yearAndMonth[1]);
     }
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN')")

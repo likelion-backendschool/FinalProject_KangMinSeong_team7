@@ -27,9 +27,7 @@ public class HomeController {
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN')")
     @GetMapping("/adm/home/main")
-    public String showAdminHome(Model model) {
-        // 구현 필요
-
+    public String showAdminHome() {
         return "home/adminHome";
     }
 }
