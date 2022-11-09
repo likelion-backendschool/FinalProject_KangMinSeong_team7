@@ -5,7 +5,6 @@ import com.example.eBook.domain.mybook.dto.response.MybooksResponse;
 import com.example.eBook.domain.mybook.service.MybookService;
 import com.example.eBook.global.api.reponse.dto.SuccessSingleResponse;
 import com.example.eBook.global.api.reponse.service.ResponseService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

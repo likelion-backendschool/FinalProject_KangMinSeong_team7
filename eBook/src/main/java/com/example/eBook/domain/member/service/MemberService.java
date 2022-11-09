@@ -1,6 +1,7 @@
 package com.example.eBook.domain.member.service;
 
 import com.example.eBook.domain.member.dto.reponse.MemberInfoResponse;
+import com.example.eBook.domain.member.dto.reponse.MemberInfoResponseDto;
 import com.example.eBook.domain.member.dto.request.LoginFormRequest;
 import com.example.eBook.global.api.exception.member.ApiMemberNotFoundException;
 import com.example.eBook.global.api.exception.member.LoginFailedException;
@@ -119,19 +120,9 @@ public class MemberService implements UserDetailsService {
         Member member = memberRepository.findByUsername(username)
                 .orElseThrow(ApiMemberNotFoundException::new);
 
-        MemberInfoResponse memberInfoResponse = new MemberInfoResponse();
+        MemberInfoResponseDto memberInfoResponseDto = MemberInfoResponseDto.toResponseDto(member);
 
-        MemberInfoResponse.MemberDetail memberDetail = memberInfoResponse.new MemberDetail(
-                member.getId(),
-                member.getCreateDate(),
-                member.getUpdateDate(),
-                member.getUsername(),
-                member.getEmail(),
-                true,
-                member.getNickname());
-
-        memberInfoResponse.setMember(memberDetail);
-        return memberInfoResponse;
+        return new MemberInfoResponse(memberInfoResponseDto);
     }
 
     public String getTemporaryPassword() {
