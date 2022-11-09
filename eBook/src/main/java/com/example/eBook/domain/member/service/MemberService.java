@@ -1,5 +1,10 @@
 package com.example.eBook.domain.member.service;
 
+import com.example.eBook.domain.member.dto.reponse.MemberInfoResponse;
+import com.example.eBook.domain.member.dto.reponse.MemberInfoResponseDto;
+import com.example.eBook.domain.member.dto.request.LoginFormRequest;
+import com.example.eBook.global.api.exception.member.ApiMemberNotFoundException;
+import com.example.eBook.global.api.exception.member.LoginFailedException;
 import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.PwdModifyForm;
 import com.example.eBook.domain.member.dto.SignupForm;
@@ -95,6 +100,29 @@ public class MemberService implements UserDetailsService {
                 () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 
         return member.getRestCash();
+    }
+
+    // REST API
+    @Transactional(readOnly = true)
+    public Member confirmLogin(LoginFormRequest loginFormRequest) {
+        Member member = memberRepository.findByUsername(loginFormRequest.getId())
+                .orElseThrow(LoginFailedException::new);
+
+        if (!passwordEncoder.matches(loginFormRequest.getPassword(), member.getPassword())) {
+            throw new LoginFailedException();
+        }
+
+        return member;
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getInfoByUsernameForApi(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(ApiMemberNotFoundException::new);
+
+        MemberInfoResponseDto memberInfoResponseDto = MemberInfoResponseDto.toResponseDto(member);
+
+        return new MemberInfoResponse(memberInfoResponseDto);
     }
 
     public String getTemporaryPassword() {

@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -43,7 +44,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection <GrantedAuthority> collectors = new ArrayList<>();
+        Collection<GrantedAuthority> collectors = new ArrayList<>();
         collectors.add(() -> {
             return "ROLE_USER";
         });
@@ -60,6 +61,11 @@ public class Member extends BaseTimeEntity implements UserDetails {
             });
         }
         return collectors;
+    }
+
+    public List<String> getRoles() {
+        return getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
     }
 
     @Override
