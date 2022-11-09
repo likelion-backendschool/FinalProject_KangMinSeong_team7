@@ -1,6 +1,8 @@
 package com.example.eBook.domain.member.service;
 
+import com.example.eBook.domain.member.dto.reponse.MemberInfoResponse;
 import com.example.eBook.domain.member.dto.request.LoginFormRequest;
+import com.example.eBook.global.api.exception.member.ApiMemberNotFoundException;
 import com.example.eBook.global.api.exception.member.LoginFailedException;
 import com.example.eBook.domain.member.dto.InfoModifyForm;
 import com.example.eBook.domain.member.dto.PwdModifyForm;
@@ -110,6 +112,26 @@ public class MemberService implements UserDetailsService {
         }
 
         return member;
+    }
+
+    @Transactional(readOnly = true)
+    public MemberInfoResponse getInfoByUsernameForApi(String username) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(ApiMemberNotFoundException::new);
+
+        MemberInfoResponse memberInfoResponse = new MemberInfoResponse();
+
+        MemberInfoResponse.MemberDetail memberDetail = memberInfoResponse.new MemberDetail(
+                member.getId(),
+                member.getCreateDate(),
+                member.getUpdateDate(),
+                member.getUsername(),
+                member.getEmail(),
+                true,
+                member.getNickname());
+
+        memberInfoResponse.setMember(memberDetail);
+        return memberInfoResponse;
     }
 
     public String getTemporaryPassword() {

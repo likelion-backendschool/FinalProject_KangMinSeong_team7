@@ -27,20 +27,20 @@ public class GlobalExceptionHandler {
     public ResponseEntity<FailResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(responseService.getFailResponse(e.getFieldError().getDefaultMessage(), "CLIENT_ERROR-1"));
+                .body(responseService.getFailResponse(e.getFieldError().getDefaultMessage(), "CLIENT_ERROR_1"));
     }
 
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<FailResponse> DataAccessException(DataAccessException e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(responseService.getFailResponse(e.getMessage() + " server error", "SERVER_ERROR-1"));
+                .body(responseService.getFailResponse(e.getMessage() + " server error", "SERVER_ERROR_1"));
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<FailResponse> RuntimeException(RuntimeException e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(responseService.getFailResponse(e.getMessage() + " server error", "SERVER_ERROR-2"));
+                .body(responseService.getFailResponse(e.getMessage() + " server error", "SERVER_ERROR_2"));
     }
 }
