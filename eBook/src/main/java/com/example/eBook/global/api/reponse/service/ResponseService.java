@@ -38,9 +38,9 @@ public class ResponseService {
         return getMultiDataResponse(data, "성공", "S-1", true, false);
     }
 
-    public FailResponse getFailResponse(String msg) {
+    public FailResponse getFailResponse(String msg, String errorCode) {
         FailResponse response = new FailResponse();
-        response.setResultCode("F-1");
+        response.setResultCode(errorCode);
         response.setMsg(msg);
         response.setSuccess(false);
         response.setFail(true);
