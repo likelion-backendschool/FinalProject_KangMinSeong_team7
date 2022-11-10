@@ -105,7 +105,7 @@ public class MemberService implements UserDetailsService {
     // REST API
     @Transactional(readOnly = true)
     public Member confirmLogin(LoginFormRequest loginFormRequest) {
-        Member member = memberRepository.findByUsername(loginFormRequest.getId())
+        Member member = memberRepository.findByUsername(loginFormRequest.getUsername())
                 .orElseThrow(LoginFailedException::new);
 
         if (!passwordEncoder.matches(loginFormRequest.getPassword(), member.getPassword())) {

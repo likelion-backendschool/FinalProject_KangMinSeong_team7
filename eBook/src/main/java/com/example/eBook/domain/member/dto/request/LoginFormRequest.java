@@ -9,7 +9,7 @@ import javax.validation.constraints.NotEmpty;
 @Setter
 public class LoginFormRequest {
     @NotEmpty(message = "아이디를 입력해주세요.")
-    private String id;
+    private String username;
 
     @NotEmpty(message = "비밀번호를 입력해주세요.")
     private String password;
