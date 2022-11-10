@@ -12,6 +12,7 @@ import com.example.eBook.domain.order.dto.OrderDto;
 import com.example.eBook.domain.order.entity.Order;
 import com.example.eBook.domain.order.entity.OrderItem;
 import com.example.eBook.domain.order.exception.CashNotEnoughException;
+import com.example.eBook.domain.order.exception.OrderItemNotFoundException;
 import com.example.eBook.domain.order.exception.OrderNotAccessedException;
 import com.example.eBook.domain.order.exception.OrderNotFoundException;
 import com.example.eBook.domain.order.repository.OrderItemRepository;
@@ -165,5 +166,11 @@ public class OrderService {
     @Transactional(readOnly = true)
     public List<OrderItem> findAllByPayDateBetween(LocalDateTime fromDate, LocalDateTime toDate) {
         return orderItemRepository.findAllByPayDateBetween(fromDate, toDate);
+    }
+
+    @Transactional(readOnly = true)
+    public OrderItem findOrderItemById(Long orderItemId) {
+        return orderItemRepository.findById(orderItemId).orElseThrow(
+                () -> new OrderItemNotFoundException("해당 주문 품목을 찾을 수 없습니다."));
     }
 }

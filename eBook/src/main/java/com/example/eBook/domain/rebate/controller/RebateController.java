@@ -3,6 +3,7 @@ package com.example.eBook.domain.rebate.controller;
 import com.example.eBook.domain.rebate.dto.MakeDataForm;
 import com.example.eBook.domain.rebate.service.RebateService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.time.LocalDateTime;
 
 @Controller
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/adm/rebate")
 public class RebateController {
@@ -67,8 +71,12 @@ public class RebateController {
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN')")
     @PostMapping("/rebateOne/{rebateOrderItemId}")
-    public String rebateOne(@PathVariable("rebateOrderItemId") Long rebateOrderItemId) {
+    public String rebateOne(@PathVariable("rebateOrderItemId") Long rebateOrderItemId, HttpServletRequest request) {
         rebateService.rebateOne(rebateOrderItemId);
+
+        if (request.getHeader("Referer") != null) {
+            return "redirect:%s".formatted(request.getHeader("Referer"));
+        }
 
         return "redirect:/adm/rebate/rebateOrderItemList";
     }

@@ -1,10 +1,15 @@
 package com.example.eBook.domain.rebate.service;
 
+import com.example.eBook.domain.cash.entity.CashLog;
+import com.example.eBook.domain.cash.service.CashLogService;
+import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.order.entity.OrderItem;
 import com.example.eBook.domain.order.service.OrderService;
 import com.example.eBook.domain.rebate.dto.MakeDataForm;
 import com.example.eBook.domain.rebate.dto.RebateOrderItemDto;
 import com.example.eBook.domain.rebate.entity.RebateOrderItem;
+import com.example.eBook.domain.rebate.exception.CannotRebateItemException;
+import com.example.eBook.domain.rebate.exception.RebateItemNotFoundException;
 import com.example.eBook.domain.rebate.repository.RebateRepository;
 import com.example.eBook.global.mapper.RebateOrderItemMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.List;
 
+import static com.example.eBook.domain.cash.entity.enumuration.CashLogType.*;
 import static java.lang.Integer.parseInt;
 
 @Service
@@ -26,6 +32,7 @@ public class RebateService {
 
     private final RebateRepository rebateRepository;
     private final OrderService orderService;
+    private final CashLogService cashLogService;
 
     public void makeRebateData(MakeDataForm makeDataForm) {
         String[] yearAndMonth = makeDataForm.getYearMonth().split("-");
@@ -86,8 +93,21 @@ public class RebateService {
     }
 
     public void rebateOne(Long rebateOrderItemId) {
-        // rebateOrderItemId 엔티티 찾은 후
-        // rebate 처리 및 CashLog 처리
+        OrderItem orderItem = orderService.findOrderItemById(rebateOrderItemId);
+
+        RebateOrderItem rebateOrderItem = rebateRepository.findByOrderItem(orderItem).orElseThrow(
+                () -> new RebateItemNotFoundException("해당 정산 데이터를 찾을 수 없습니다."));
+
+        if (!rebateOrderItem.isRebateAvailable()) {
+            throw new CannotRebateItemException("해당 정산 데이터를 정산할 수 없습니다.");
+        }
+
+        int rebatePrice = rebateOrderItem.calculateRebatePrice();
+        Member seller = rebateOrderItem.getProduct().getMember();
+
+        CashLog cashLog = cashLogService.save(seller, CALCULATE_FROM_SELLER, rebatePrice);
+        seller.addRestCash(rebatePrice);
+        rebateOrderItem.setRebateDone(cashLog);
     }
 
     public void rebateAll(String ids) {
