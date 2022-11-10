@@ -56,7 +56,7 @@ public class RebateService {
             Optional<RebateOrderItem> rebateOrderItem = rebateRepository.findByOrderItem(orderItem);
             if (rebateOrderItem.isEmpty()) {
                 addOrderItems.add(orderItem);
-            } else if (rebateOrderItem.isPresent() && !rebateOrderItem.get().isRebateDone()) {
+            } else if (!rebateOrderItem.get().isRebateDone()) {
                 removeOrderItems.add(orderItem);
                 addOrderItems.add(orderItem);
             }
@@ -77,25 +77,18 @@ public class RebateService {
     }
 
     @Transactional(readOnly = true)
-    public List<RebateOrderItemDto> findAllByYear(Integer year) {
+    public List<RebateOrderItemDto> findAllByYearAndMonth(String yearMonth) {
 
-        String fromDate = year + "-01-01 00:00:00.000000";
-        String toDate = year + "-12-31 23:59:59.999999";
-
-        return RebateOrderItemMapper.INSTANCE.entitiesToRebateOrderItemDtos(
-                rebateRepository.findAllByPayDateBetweenOrderByIdAsc(
-                        LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
-                        LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"))));
-    }
-
-    @Transactional(readOnly = true)
-    public List<RebateOrderItemDto> findAllByYearAndMonth(Integer year, Integer month) {
+        String[] yearAndMonth = yearMonth.split("-");
+        String year = yearAndMonth[0];
+        String month = yearAndMonth[1];
 
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month-1, 1);
+        cal.set(Integer.parseInt(year), Integer.parseInt(month)-1, 1);
 
         String fromDate = year + "-" + month + "-01 00:00:00.000000";
         String toDate = year + "-" + month + "-%02d 23:59:59.999999".formatted(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+
 
         return RebateOrderItemMapper.INSTANCE.entitiesToRebateOrderItemDtos(
                 rebateRepository.findAllByPayDateBetweenOrderByIdAsc(

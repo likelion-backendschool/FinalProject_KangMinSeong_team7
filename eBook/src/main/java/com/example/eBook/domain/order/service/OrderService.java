@@ -158,6 +158,7 @@ public class OrderService {
         }
 
         cashLogService.save(member, CashLogType.CHARGE_BY_REFUND, order.getTotalPrice());
+        member.addRestCash(order.getTotalPrice());
         order.refundOrder();
 
         mybookService.remove(order, member);
