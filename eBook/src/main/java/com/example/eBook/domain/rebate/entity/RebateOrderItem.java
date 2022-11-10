@@ -102,6 +102,11 @@ public class RebateOrderItem extends BaseTimeEntity {
     public boolean isRebateAvailable() {
         return refundPrice <= 0 && rebateDate == null;
     }
+
+    public boolean isRebateDone() {
+        return rebateDate != null;
+    }
+
     public int calculateRebatePrice() {
         if (refundPrice > 0) {
             return 0;

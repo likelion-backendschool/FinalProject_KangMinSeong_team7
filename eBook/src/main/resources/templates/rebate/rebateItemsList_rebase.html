@@ -54,12 +54,12 @@
                     <td th:text="${rebateOrderItem.orderItemId}"></td>
                     <td th:text="${#temporals.format(rebateOrderItem.payDate, 'yy-MM-dd HH:mm')}"></td>
                     <td th:text="${rebateOrderItem.productSubject}"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.payPrice, 0, 'COMMA')}|"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.pgFee, 0, 'COMMA')}|"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.refundPrice, 0, 'COMMA')}|"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.payPrice, 0, 'COMMA')}|"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.pgFee, 0, 'COMMA')}|"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.refundPrice, 0, 'COMMA')}|"></td>
                     <td th:text="${rebateOrderItem.sellerName}"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.rebatePrice, 0, 'COMMA')}|"></td>
-                    <td th:text="${#temporals.format(rebateOrderItem.rebateDate, 'yy-MM-dd HH:mm')}"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.rebatePrice, 0, 'COMMA')}|"></td>
+                    <td th:text="${#temporals.format(rebateOrderItem.rebateDate, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${rebateOrderItem.rebateCashLogId}"></td>
                     <td>
                         <a th:if="${rebateOrderItem.rebateAvailable}" href="javascript:;" onclick="$(this).next().submit();"

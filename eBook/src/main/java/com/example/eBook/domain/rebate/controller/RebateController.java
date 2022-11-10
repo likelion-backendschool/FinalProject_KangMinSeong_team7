@@ -83,8 +83,12 @@ public class RebateController {
 
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN')")
     @PostMapping("/rebate")
-    public String rebateAll(@RequestParam("ids") String ids) {
+    public String rebateAll(@RequestParam("ids") String ids, HttpServletRequest request) {
         rebateService.rebateAll(ids);
+
+        if (request.getHeader("Referer") != null) {
+            return "redirect:%s".formatted(request.getHeader("Referer"));
+        }
 
         return "redirect:/adm/rebate/rebateOrderItemList";
     }

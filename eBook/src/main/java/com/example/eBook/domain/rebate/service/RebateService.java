@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import static com.example.eBook.domain.cash.entity.enumuration.CashLogType.*;
 import static java.lang.Integer.parseInt;
@@ -47,13 +49,22 @@ public class RebateService {
                 LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
                 LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")));
 
-        List<OrderItem> removeOrderItems = orderItems.stream()
-                .filter(o -> rebateRepository.findByOrderItem(o).isPresent())
-                .toList();
+        List<OrderItem> removeOrderItems = new ArrayList<>();
+        List<OrderItem> addOrderItems = new ArrayList<>();
+
+        orderItems.forEach(orderItem -> {
+            Optional<RebateOrderItem> rebateOrderItem = rebateRepository.findByOrderItem(orderItem);
+            if (rebateOrderItem.isEmpty()) {
+                addOrderItems.add(orderItem);
+            } else if (rebateOrderItem.isPresent() && !rebateOrderItem.get().isRebateDone()) {
+                removeOrderItems.add(orderItem);
+                addOrderItems.add(orderItem);
+            }
+        });
 
         rebateRepository.removeByOrderItem(removeOrderItems);
 
-        List<RebateOrderItem> rebateOrderItems = orderItems.stream()
+        List<RebateOrderItem> rebateOrderItems = addOrderItems.stream()
                 .map(RebateOrderItem::new)
                 .toList();
 
@@ -111,7 +122,10 @@ public class RebateService {
     }
 
     public void rebateAll(String ids) {
-        // ids split
-        // rebate 처리 및 CashLog 처리
+        String[] rebateOrderItemIds = ids.split(",");
+
+        for (String rebateOrderItemId : rebateOrderItemIds) {
+            rebateOne(Long.valueOf(rebateOrderItemId));
+        }
     }
 }
