@@ -22,19 +22,20 @@ public class ApiSecurityConfig {
     public SecurityFilterChain apiFilterChain(HttpSecurity httpSecurity) throws Exception {
 
         httpSecurity
+                .antMatcher("/api/**")
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
                 .authorizeRequests()
-                .mvcMatchers("/", "/error/**", "/js/**", "/css/**", "/image/**").permitAll()
-                .antMatchers("/member/join", "/member/login", "/member/findPassword", "/member/findUsername").permitAll()
-                .antMatchers("/api/v1/member/login").permitAll()
+                .antMatchers("/api/*/member/login").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
+                .formLogin().disable()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class);
+                        UsernamePasswordAuthenticationFilter.class)
+                .logout().disable();
 
         return httpSecurity.build();
     }
