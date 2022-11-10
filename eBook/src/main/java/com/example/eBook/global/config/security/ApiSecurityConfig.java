@@ -2,6 +2,7 @@ package com.example.eBook.global.config.security;
 
 import com.example.eBook.global.config.jwt.JwtAuthenticationFilter;
 import com.example.eBook.global.config.jwt.JwtTokenProvider;
+import com.example.eBook.global.config.web.CorsConfig;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class ApiSecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CorsConfig corsConfig;
 
     @Bean
     public SecurityFilterChain apiFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -33,6 +35,7 @@ public class ApiSecurityConfig {
 
                 .and()
                 .formLogin().disable()
+                .addFilter(corsConfig.corsFilter())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
                         UsernamePasswordAuthenticationFilter.class)
                 .logout().disable();
