@@ -61,5 +61,6 @@ public class OrderItem extends BaseTimeEntity {
     public void refundOrder() {
         this.isPaid = false;
         this.isRefund = true;
+        this.refundPrice = product.getPrice();
     }
 }

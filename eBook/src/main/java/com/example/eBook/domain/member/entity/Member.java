@@ -100,4 +100,8 @@ public class Member extends BaseTimeEntity implements UserDetails {
     public void payRestCash(int price) {
         this.restCash -= price;
     }
+
+    public void addRestCash(int price) {
+        this.restCash += price;
+    }
 }

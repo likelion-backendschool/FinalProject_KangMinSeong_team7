@@ -98,4 +98,25 @@ public class RebateOrderItem extends BaseTimeEntity {
         seller = orderItem.getProduct().getMember();
         sellerName = orderItem.getProduct().getMember().getNickname();
     }
+
+    public boolean isRebateAvailable() {
+        return refundPrice <= 0 && rebateDate == null;
+    }
+
+    public boolean isRebateDone() {
+        return rebateDate != null;
+    }
+
+    public int calculateRebatePrice() {
+        if (refundPrice > 0) {
+            return 0;
+        }
+
+        return wholesalePrice - pgFee;
+    }
+
+    public void setRebateDone(CashLog cashLog) {
+        this.rebateDate = LocalDateTime.now();
+        this.rebateCashLog = cashLog;
+    }
 }

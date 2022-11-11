@@ -9,7 +9,8 @@
         </h1>
 
         <div class="mt-2">
-            <select name="yearMonth" class="select select-bordered">
+            <select name="yearMonth" class="select select-bordered" onchange="this.options[this.selectedIndex].value
+            && (window.location = 'http://localhost:8080/adm/rebate/rebateOrderItemList?yearMonth=' + this.options[this.selectedIndex].value);">
                 <option value="2022-11">2022-11</option>
                 <option value="2022-10">2022-10</option>
                 <option value="2022-09">2022-09</option>
@@ -17,10 +18,10 @@
                 <option value="2022-07">2022-07</option>
                 <option value="2022-06">2022-06</option>
             </select>
-<!--            <script th:inline="javascript">-->
-<!--                const yearMonth = /*[[ ${yearMonth} ]]*/ null;-->
-<!--                $('select[name=yearMonth]').last().val(yearMonth);-->
-<!--            </script>-->
+            <script th:inline="javascript">
+                const yearMonth = [[ ${yearMonth} ]];
+                $('select[name=yearMonth]').last().val(yearMonth);
+            </script>
         </div>
 
         <div class="overflow-x-auto mt-2">
@@ -54,12 +55,12 @@
                     <td th:text="${rebateOrderItem.orderItemId}"></td>
                     <td th:text="${#temporals.format(rebateOrderItem.payDate, 'yy-MM-dd HH:mm')}"></td>
                     <td th:text="${rebateOrderItem.productSubject}"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.payPrice, 0, 'COMMA')}|"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.pgFee, 0, 'COMMA')}|"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.refundPrice, 0, 'COMMA')}|"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.payPrice, 0, 'COMMA')}|"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.pgFee, 0, 'COMMA')}|"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.refundPrice, 0, 'COMMA')}|"></td>
                     <td th:text="${rebateOrderItem.sellerName}"></td>
-                    <td th:text="|￦ ${#numbers.formatInteger(rebateOrderItem.rebatePrice, 0, 'COMMA')}|"></td>
-                    <td th:text="${#temporals.format(rebateOrderItem.rebateDate, 'yy-MM-dd HH:mm')}"></td>
+                    <td th:text="|￦${#numbers.formatInteger(rebateOrderItem.rebatePrice, 0, 'COMMA')}|"></td>
+                    <td th:text="${#temporals.format(rebateOrderItem.rebateDate, 'yyyy-MM-dd HH:mm')}"></td>
                     <td th:text="${rebateOrderItem.rebateCashLogId}"></td>
                     <td>
                         <a th:if="${rebateOrderItem.rebateAvailable}" href="javascript:;" onclick="$(this).next().submit();"
