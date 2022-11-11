@@ -2,6 +2,7 @@ package com.example.eBook.domain.withdraw.service;
 
 import com.example.eBook.domain.member.entity.Member;
 import com.example.eBook.domain.member.service.MemberService;
+import com.example.eBook.domain.withdraw.dto.AdmWithdrawApplyDto;
 import com.example.eBook.domain.withdraw.dto.WithdrawApplyDto;
 import com.example.eBook.domain.withdraw.dto.WithdrawApplyForm;
 import com.example.eBook.domain.withdraw.entity.WithdrawApply;
@@ -41,5 +42,10 @@ public class WithdrawService {
         Member member = memberService.findByUsername(username);
 
         return WithdrawApplyMapper.INSTANCE.entitiesToWithdrawApplyDtos(withdrawRepository.findAllByApplicant(member));
+    }
+
+    @Transactional(readOnly = true)
+    public List<AdmWithdrawApplyDto> findAllAdmWithdrawApplyDto() {
+        return WithdrawApplyMapper.INSTANCE.entitiesToAdmWithdrawApplyDtos(withdrawRepository.findAll());
     }
 }

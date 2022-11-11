@@ -1,0 +1,41 @@
+<html layout:decorate="~{layout_admin}" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
+    <h2 class="mb-3 mt-3">출금 신청 목록</h2>
+
+    <div class="px-2 pt-4">
+        <table class="table table-compact w-full">
+            <thead>
+            <tr>
+                <th>번호</th>
+                <th>회원명</th>
+                <th>은행명</th>
+                <th>계좌번호</th>
+                <th>금액</th>
+                <th>신청날짜</th>
+                <th>출금완료여부</th>
+                <th>출금하기</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="withdrawApply, loop : ${withdrawApplies}">
+                <td th:text="${loop.index+1}"></td>
+                <td th:text="${withdrawApply.applicantName}"></td>
+                <td th:text="${withdrawApply.bankName}"></td>
+                <td th:text="${withdrawApply.bankAccountNo}"></td>
+                <td th:text="${withdrawApply.money}"></td>
+                <td th:text="${#temporals.format(withdrawApply.applyDate, 'yyyy-MM-dd&nbsp;HH:mm')}"></td>
+                <td th:if="${withdrawApply.canApply}">미처리</td>
+                <td th:if="!${withdrawApply.canApply}">처리완료</td>
+                <td>
+                    <a th:if="${withdrawApply.canApply}" href="javascript:;" onclick="$(this).next().submit();"
+                       class="btn btn-sm btn-default">출금처리</a>
+                    <form method="POST" th:action="@{|/adm/withdraw/${withdrawApply.id}|}" hidden></form>
+                    <button class="btn btn-sm btn-default" th:if="${withdrawApply.canApply == false}" disabled type="button">출금완료</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+</html>
