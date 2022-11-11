@@ -1,0 +1,37 @@
+<html layout:decorate="~{layout}" xmlns="http://www.w3.org/1999/html">
+<div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
+    <h2 class="mb-3 mt-3">출금 내역</h2>
+
+    <table class="table table-hover mt-3">
+        <thead class="table-success">
+        <tr>
+            <th>번호</th>
+            <th>은행</th>
+            <th>계좌번호</th>
+            <th>출금금액</th>
+            <th>신청날짜</th>
+            <th>출금날짜</th>
+            <th>완료여부</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="withdrawApply, loop : ${withdrawApplies}">
+            <td th:text="${loop.index+1}"></td>
+            <td th:text="${withdrawApply.bankName}"></td>
+            <td th:text="${withdrawApply.bankAccountNo}"></td>
+            <td th:text="${withdrawApply.money}"></td>
+            <td th:text="${#temporals.format(withdrawApply.applyDate, 'yyyy-MM-dd&nbsp;HH:mm')}"></td>
+
+            <td th:if="${withdrawApply.withdrawDate}" th:text="${#temporals.format(withdrawApply.withdrawDate, 'yyyy-MM-dd&nbsp;HH:mm')}"></td>
+            <td th:if="!${withdrawApply.withdrawDate}">-</td>
+
+            <td th:if="${withdrawApply.withdrawDate}">완료</td>
+            <td th:if="!${withdrawApply.withdrawDate}">처리중</td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+</div>
+</html>
