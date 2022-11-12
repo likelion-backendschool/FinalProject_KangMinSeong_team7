@@ -45,6 +45,11 @@ public class WithdrawApply extends BaseTimeEntity {
     private LocalDateTime applyDate;
     private LocalDateTime withdrawDate;
 
+    public void disposeWithdraw(CashLog cashLog) {
+        this.withdrawCashLog = cashLog;
+        this.withdrawDate = LocalDateTime.now();
+    }
+
     public boolean isDone() {
         return this.withdrawDate != null && this.withdrawCashLog != null;
     }
