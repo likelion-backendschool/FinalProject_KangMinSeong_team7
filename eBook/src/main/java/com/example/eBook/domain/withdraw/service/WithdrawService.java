@@ -8,6 +8,7 @@ import com.example.eBook.domain.withdraw.dto.AdmWithdrawApplyDto;
 import com.example.eBook.domain.withdraw.dto.WithdrawApplyDto;
 import com.example.eBook.domain.withdraw.dto.WithdrawApplyForm;
 import com.example.eBook.domain.withdraw.entity.WithdrawApply;
+import com.example.eBook.domain.withdraw.exception.CannotApplyWithdrawException;
 import com.example.eBook.domain.withdraw.exception.WithdrawNotFoundException;
 import com.example.eBook.domain.withdraw.repository.WithdrawRepository;
 import com.example.eBook.global.mapper.WithdrawApplyMapper;
@@ -56,6 +57,16 @@ public class WithdrawService {
         applicant.withdrawRestCash(withdrawMoney);
     }
 
+    @Transactional(readOnly = true)
+    public void canApplyWithdraw(String username) {
+        Member member = memberService.findByUsername(username);
+
+        List<WithdrawApply> recentWithdrawApply = withdrawRepository.findRecentOneByApplicant(member);
+
+        if (!recentWithdrawApply.isEmpty() && !recentWithdrawApply.get(0).isDone()) {
+            throw new CannotApplyWithdrawException("처리되지 않는 출금신청건이 있습니다");
+        }
+    }
 
     @Transactional(readOnly = true)
     public List<WithdrawApplyDto> findAllByMember(String username) {

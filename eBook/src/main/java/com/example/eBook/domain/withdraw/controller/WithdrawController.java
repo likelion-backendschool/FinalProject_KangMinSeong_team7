@@ -27,6 +27,9 @@ public class WithdrawController {
 
     @GetMapping("/apply")
     public String showApplyForm(Model model, Principal principal) {
+
+        withdrawService.canApplyWithdraw(principal.getName());
+
         int restCash = memberService.getRestCash(principal.getName());
 
         model.addAttribute("restCash", restCash);
