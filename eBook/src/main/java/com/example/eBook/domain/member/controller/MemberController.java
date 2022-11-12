@@ -74,6 +74,8 @@ public class MemberController {
 
         InfoModifyForm userInfo = memberService.getInfoByUsername(principal.getName());
         model.addAttribute("userInfo", userInfo);
+        model.addAttribute("restCash", memberService.getRestCash(principal.getName()));
+
         return "member/mypage_member";
     }
 
