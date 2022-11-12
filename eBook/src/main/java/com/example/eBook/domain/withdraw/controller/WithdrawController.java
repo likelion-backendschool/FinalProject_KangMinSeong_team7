@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -55,5 +56,12 @@ public class WithdrawController {
         model.addAttribute("withdrawApplies", withdrawApplies);
 
         return "withdraw/history_withdraw";
+    }
+
+    @GetMapping("/history/{withdrawApplyId}/delete")
+    public String delete(@PathVariable("withdrawApplyId") Long id, Principal principal) {
+        withdrawService.delete(id, principal.getName());
+
+        return "redirect:/withdraw/history";
     }
 }

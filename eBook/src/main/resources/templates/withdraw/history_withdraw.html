@@ -23,10 +23,13 @@
             <td th:text="${#temporals.format(withdrawApply.applyDate, 'yyyy-MM-dd&nbsp;HH:mm')}"></td>
 
             <td th:if="${withdrawApply.withdrawDate}" th:text="${#temporals.format(withdrawApply.withdrawDate, 'yyyy-MM-dd&nbsp;HH:mm')}"></td>
-            <td th:if="!${withdrawApply.withdrawDate}">-</td>
+            <td th:if="!${withdrawApply.withdrawDate}">처리중</td>
 
             <td th:if="${withdrawApply.withdrawDate}">완료</td>
-            <td th:if="!${withdrawApply.withdrawDate}">처리중</td>
+            <td th:if="!${withdrawApply.withdrawDate}">
+                <a onclick="if (!confirm('출금신청을 취소하시겠습니까?') ) return false;" th:href="@{|/withdraw/history/${withdrawApply.id}/delete|}"
+                   class="btn btn-default btn-sm" th:text="취소"></a>
+            </td>
         </tr>
         </tbody>
     </table>
