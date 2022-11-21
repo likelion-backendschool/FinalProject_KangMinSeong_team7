@@ -26,7 +26,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,16 +59,17 @@ public class PostControllerTest {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private EntityManager entityManager;
-
-    @Autowired
     private PostHashTagRepository postHashTagRepository;
 
     @Autowired
     private PostKeywordRepository postKeywordRepository;
 
-    @BeforeEach
-    void beforeEach() {
+    @Test
+    @DisplayName("홈-최근글100개보여주기")
+    @WithAnonymousUser
+    void showRecentPost() throws Exception {
+
+        // given
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
@@ -81,31 +81,15 @@ public class PostControllerTest {
         }
 
         postRepository.saveAll(postList);
-    }
 
-    @AfterEach
-    void afterEach() {
-        this.entityManager
-                .createNativeQuery("ALTER TABLE post ALTER COLUMN `id` RESTART WITH 1")
-                .executeUpdate();
-        this.entityManager
-                .createNativeQuery("ALTER TABLE post_keyword ALTER COLUMN `id` RESTART WITH 1")
-                .executeUpdate();
-        this.entityManager
-                .createNativeQuery("ALTER TABLE post_hash_tag ALTER COLUMN `id` RESTART WITH 1")
-                .executeUpdate();
-    }
-
-    @Test
-    @DisplayName("홈-최근글100개보여주기")
-    @WithAnonymousUser
-    void showRecentPost() throws Exception {
+        // when
         ResultActions resultActions = mockMvc.perform(get("/"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("home/home"))
                 .andExpect(model().attributeExists("postList"))
                 .andDo(print());
 
+        // then
         List<PostDto> postDtoList = (List<PostDto>) resultActions.andReturn().getModelAndView().getModel().get("postList");
         assertThat(postDtoList.size()).isEqualTo(10);
     }
@@ -116,20 +100,23 @@ public class PostControllerTest {
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showPostList() throws Exception {
 
-        Member newMember = memberRepository.save(new Member((long) 2L, "new_user", "1234", "1234",
-                "new@email", 3L, LocalDateTime.now(), 0));
-        postRepository.save(new Post((long) 11L, newMember, "new_subject", "new_content", "new_contentHtml"));
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        Post post1 = postRepository.save(new Post(1L, member, "new_subject1", "new_content", "new_contentHtml"));
+        Post post2 = postRepository.save(new Post(2L, member, "new_subject2", "new_content", "new_contentHtml"));
+        Post post3 = postRepository.save(new Post(3L, member, "new_subject3", "new_content", "new_contentHtml"));
 
         PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
         PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
         PostKeyword postKeyword3 = postKeywordRepository.save(new PostKeyword(3L, "#key3"));
-        postHashTagRepository.save(new PostHashTag(1L, postRepository.findById(1L).orElseThrow(), postKeyword1,
-                memberRepository.findByUsername("test_username").orElseThrow()));
-        postHashTagRepository.save(new PostHashTag(2L, postRepository.findById(2L).orElseThrow(), postKeyword2,
-                memberRepository.findByUsername("test_username").orElseThrow()));
-        postHashTagRepository.save(new PostHashTag(3L, postRepository.findById(3L).orElseThrow(), postKeyword3,
-                memberRepository.findByUsername("test_username").orElseThrow()));
 
+        postHashTagRepository.save(new PostHashTag(1L, post1, postKeyword1, member));
+        postHashTagRepository.save(new PostHashTag(2L, post2, postKeyword2, member));
+        postHashTagRepository.save(new PostHashTag(3L, post3, postKeyword3, member));
+
+        // when then
         ResultActions resultActions = mockMvc.perform(get("/post/list"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/list_post"))
@@ -145,17 +132,24 @@ public class PostControllerTest {
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showPostList2() throws Exception {
 
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        Post post1 = postRepository.save(new Post(1L, member, "new_subject1", "new_content", "new_contentHtml"));
+        Post post2 = postRepository.save(new Post(2L, member, "new_subject2", "new_content", "new_contentHtml"));
+        Post post3 = postRepository.save(new Post(3L, member, "new_subject3", "new_content", "new_contentHtml"));
+
         PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
         PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
         PostKeyword postKeyword3 = postKeywordRepository.save(new PostKeyword(3L, "#key3"));
-        postHashTagRepository.save(new PostHashTag(1L, postRepository.findById(1L).orElseThrow(), postKeyword1,
-                memberRepository.findByUsername("test_username").orElseThrow()));
-        postHashTagRepository.save(new PostHashTag(2L, postRepository.findById(2L).orElseThrow(), postKeyword2,
-                memberRepository.findByUsername("test_username").orElseThrow()));
-        postHashTagRepository.save(new PostHashTag(3L, postRepository.findById(3L).orElseThrow(), postKeyword3,
-                memberRepository.findByUsername("test_username").orElseThrow()));
 
-        ResultActions resultActions = mockMvc.perform(get("/post/list?keyword=1,2"))
+        postHashTagRepository.save(new PostHashTag(1L, post1, postKeyword1, member));
+        postHashTagRepository.save(new PostHashTag(2L, post2, postKeyword2, member));
+        postHashTagRepository.save(new PostHashTag(3L, post3, postKeyword3, member));
+
+        // when then
+        ResultActions resultActions = mockMvc.perform(get("/post/list?keyword=%s,%s".formatted(postKeyword1.getId(), postKeyword2.getId())))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/list_post"))
                 .andExpect(model().attributeExists("postList", "postKeywordList"))
@@ -169,6 +163,8 @@ public class PostControllerTest {
     @DisplayName("글작성폼_보여주기")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showWriteForm() throws Exception {
+
+        // when then
         mockMvc.perform(get("/post/write"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/write_post"))
@@ -180,6 +176,12 @@ public class PostControllerTest {
     @DisplayName("글작성")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void save() throws Exception {
+
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        // when then
         mockMvc.perform(post("/post/write")
                         .param("subject", "new subject")
                         .param("content", "new content")
@@ -189,7 +191,7 @@ public class PostControllerTest {
                 .andExpect(handler().methodName("save"))
                 .andExpect(redirectedUrl("/post/list"));
 
-        assertThat(postService.findAllByMember(memberRepository.findByUsername("test_username").orElseThrow()).size()).isEqualTo(11);
+        assertThat(postService.findAllByMember(memberRepository.findByUsername("test_username").orElseThrow()).size()).isEqualTo(1);
     }
 
     @Test
@@ -197,8 +199,13 @@ public class PostControllerTest {
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showPostDetail() throws Exception {
 
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
 
-        ResultActions resultActions = mockMvc.perform(get("/post/1"))
+        // when then
+        ResultActions resultActions = mockMvc.perform(get("/post/%s".formatted(post.getId())))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/detail_post"))
                 .andExpect(model().attributeExists("postDetailDto"))
@@ -206,8 +213,8 @@ public class PostControllerTest {
 
         PostDetailDto result = (PostDetailDto) resultActions.andReturn().getModelAndView().getModel().get("postDetailDto");
 
-        assertThat(result.getSubject()).isEqualTo("subject 1");
-        assertThat(result.getContent()).isEqualTo("content 1");
+        assertThat(result.getSubject()).isEqualTo("new_subject");
+        assertThat(result.getContent()).isEqualTo("new_content");
         assertThat(result.getWriter()).isEqualTo("test_username");
     }
 
@@ -215,7 +222,14 @@ public class PostControllerTest {
     @DisplayName("글수정폼_보여주기")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showModifyForm() throws Exception {
-        ResultActions resultActions = mockMvc.perform(get("/post/1/modify"))
+
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
+
+        // when then
+        ResultActions resultActions = mockMvc.perform(get("/post/%s/modify".formatted(post.getId())))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("post/modify_post"))
                 .andExpect(model().attributeExists("postModifyForm"))
@@ -223,15 +237,22 @@ public class PostControllerTest {
 
         PostModifyForm result = (PostModifyForm) resultActions.andReturn().getModelAndView().getModel().get("postModifyForm");
 
-        assertThat(result.getSubject()).isEqualTo("subject 1");
-        assertThat(result.getContent()).isEqualTo("content 1");
+        assertThat(result.getSubject()).isEqualTo("new_subject");
+        assertThat(result.getContent()).isEqualTo("new_content");
     }
 
     @Test
     @DisplayName("글수정")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void modify() throws Exception {
-        mockMvc.perform(post("/post/1/modify")
+
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
+
+        // when then
+        mockMvc.perform(post("/post/%s/modify".formatted(post.getId()))
                         .param("subject", "modify subject")
                         .param("content", "modify content")
                         .param("postKeywordContents", "#key1 #key2"))
@@ -240,7 +261,7 @@ public class PostControllerTest {
                 .andExpect(handler().methodName("modify"))
                 .andExpect(redirectedUrlPattern("/post/**"));
 
-        Post findPost = postRepository.findById(1L).orElseThrow();
+        Post findPost = postRepository.findById(post.getId()).orElseThrow();
 
         assertThat(findPost.getSubject()).isEqualTo("modify subject");
         assertThat(findPost.getContent()).isEqualTo("modify content");
@@ -250,13 +271,21 @@ public class PostControllerTest {
     @DisplayName("글삭제")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void delete() throws Exception {
-        mockMvc.perform(get("/post/1/delete"))
+
+        // given
+        Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
+
+        // when then
+        mockMvc.perform(get("/post/%s/delete".formatted(post.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(PostController.class))
                 .andExpect(handler().methodName("delete"))
                 .andExpect(redirectedUrl("/post/list"));
 
         assertThat(postRepository.findById(1L).isEmpty()).isTrue();
-        assertThat(postRepository.findAll().size()).isEqualTo(9);
+        assertThat(postRepository.findAll().size()).isEqualTo(0);
     }
 }
+

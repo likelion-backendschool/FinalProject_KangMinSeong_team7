@@ -54,13 +54,6 @@ public class PostHashTagServiceTest {
     @Autowired
     EntityManager entityManager;
 
-    @AfterEach
-    void afterEach() {
-        this.entityManager
-                .createNativeQuery("ALTER TABLE post_keyword ALTER COLUMN `id` RESTART WITH 1")
-                .executeUpdate();
-    }
-
     @Test
     @DisplayName("글_해시태그_매핑하기")
     void save() {
@@ -148,8 +141,8 @@ public class PostHashTagServiceTest {
         postHashTagRepository.save(new PostHashTag(2L, post1, postKeyword2, member));
         postHashTagRepository.save(new PostHashTag(3L, post2, postKeyword2, member));
 
-        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, "1").size()).isEqualTo(1);
-        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, "2").size()).isEqualTo(2);
+        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, String.valueOf(postKeyword1.getId())).size()).isEqualTo(1);
+        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, String.valueOf(postKeyword2.getId())).size()).isEqualTo(2);
     }
 
     @Test
