@@ -76,8 +76,12 @@ public class PostControllerTest {
         List<Post> postList = new ArrayList<>();
 
         for (int i = 1; i <= 10; i++) {
-            postList.add(new Post((long) i, member, "subject %s".formatted(i),
-                    "content %s".formatted(i), "contentHtml %s".formatted(i)));
+            postList.add(Post.builder()
+                    .member(member)
+                    .subject("subject %s".formatted(i))
+                    .content("content %s".formatted(i))
+                    .contentHtml("contentHtml %s".formatted(i))
+                    .build());
         }
 
         postRepository.saveAll(postList);
@@ -104,17 +108,17 @@ public class PostControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        Post post1 = postRepository.save(new Post(1L, member, "new_subject1", "new_content", "new_contentHtml"));
-        Post post2 = postRepository.save(new Post(2L, member, "new_subject2", "new_content", "new_contentHtml"));
-        Post post3 = postRepository.save(new Post(3L, member, "new_subject3", "new_content", "new_contentHtml"));
+        Post post1 = postRepository.save(Post.builder().member(member).subject("new_subject1").content("new_content1").contentHtml("new_contentHtml1").build());
+        Post post2 = postRepository.save(Post.builder().member(member).subject("new_subject2").content("new_content2").contentHtml("new_contentHtml2").build());
+        Post post3 = postRepository.save(Post.builder().member(member).subject("new_subject3").content("new_content3").contentHtml("new_contentHtml3").build());
 
-        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
-        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
-        PostKeyword postKeyword3 = postKeywordRepository.save(new PostKeyword(3L, "#key3"));
+        PostKeyword postKeyword1 = postKeywordRepository.save(PostKeyword.builder().content("#key1").build());
+        PostKeyword postKeyword2 = postKeywordRepository.save(PostKeyword.builder().content("#key2").build());
+        PostKeyword postKeyword3 = postKeywordRepository.save(PostKeyword.builder().content("#key3").build());
 
-        postHashTagRepository.save(new PostHashTag(1L, post1, postKeyword1, member));
-        postHashTagRepository.save(new PostHashTag(2L, post2, postKeyword2, member));
-        postHashTagRepository.save(new PostHashTag(3L, post3, postKeyword3, member));
+        postHashTagRepository.save(PostHashTag.builder().post(post1).postKeyword(postKeyword1).member(member).build());
+        postHashTagRepository.save(PostHashTag.builder().post(post2).postKeyword(postKeyword2).member(member).build());
+        postHashTagRepository.save(PostHashTag.builder().post(post3).postKeyword(postKeyword3).member(member).build());
 
         // when then
         ResultActions resultActions = mockMvc.perform(get("/post/list"))
@@ -136,17 +140,17 @@ public class PostControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        Post post1 = postRepository.save(new Post(1L, member, "new_subject1", "new_content", "new_contentHtml"));
-        Post post2 = postRepository.save(new Post(2L, member, "new_subject2", "new_content", "new_contentHtml"));
-        Post post3 = postRepository.save(new Post(3L, member, "new_subject3", "new_content", "new_contentHtml"));
+        Post post1 = postRepository.save(Post.builder().member(member).subject("new_subject1").content("new_content1").contentHtml("new_contentHtml1").build());
+        Post post2 = postRepository.save(Post.builder().member(member).subject("new_subject2").content("new_content2").contentHtml("new_contentHtml2").build());
+        Post post3 = postRepository.save(Post.builder().member(member).subject("new_subject3").content("new_content3").contentHtml("new_contentHtml3").build());
 
-        PostKeyword postKeyword1 = postKeywordRepository.save(new PostKeyword(1L, "#key1"));
-        PostKeyword postKeyword2 = postKeywordRepository.save(new PostKeyword(2L, "#key2"));
-        PostKeyword postKeyword3 = postKeywordRepository.save(new PostKeyword(3L, "#key3"));
+        PostKeyword postKeyword1 = postKeywordRepository.save(PostKeyword.builder().content("#key1").build());
+        PostKeyword postKeyword2 = postKeywordRepository.save(PostKeyword.builder().content("#key2").build());
+        PostKeyword postKeyword3 = postKeywordRepository.save(PostKeyword.builder().content("#key3").build());
 
-        postHashTagRepository.save(new PostHashTag(1L, post1, postKeyword1, member));
-        postHashTagRepository.save(new PostHashTag(2L, post2, postKeyword2, member));
-        postHashTagRepository.save(new PostHashTag(3L, post3, postKeyword3, member));
+        postHashTagRepository.save(PostHashTag.builder().post(post1).postKeyword(postKeyword1).member(member).build());
+        postHashTagRepository.save(PostHashTag.builder().post(post2).postKeyword(postKeyword2).member(member).build());
+        postHashTagRepository.save(PostHashTag.builder().post(post3).postKeyword(postKeyword3).member(member).build());
 
         // when then
         ResultActions resultActions = mockMvc.perform(get("/post/list?keyword=%s,%s".formatted(postKeyword1.getId(), postKeyword2.getId())))
@@ -226,7 +230,8 @@ public class PostControllerTest {
         // given
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
-        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
+        Post post = postRepository.save(Post.builder().member(member).subject("new_subject").content("new_content").contentHtml("new_contentHtml").build());
+
 
         // when then
         ResultActions resultActions = mockMvc.perform(get("/post/%s/modify".formatted(post.getId())))
@@ -249,7 +254,7 @@ public class PostControllerTest {
         // given
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
-        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
+        Post post = postRepository.save(Post.builder().member(member).subject("new_subject").content("new_content").contentHtml("new_contentHtml").build());
 
         // when then
         mockMvc.perform(post("/post/%s/modify".formatted(post.getId()))
@@ -275,7 +280,7 @@ public class PostControllerTest {
         // given
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
-        Post post = postRepository.save(new Post(1L, member, "new_subject", "new_content", "new_contentHtml"));
+        Post post = postRepository.save(Post.builder().member(member).subject("new_subject").content("new_content").contentHtml("new_contentHtml").build());
 
         // when then
         mockMvc.perform(get("/post/%s/delete".formatted(post.getId())))

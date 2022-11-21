@@ -110,17 +110,17 @@ jacocoTestCoverageVerification {
 			element = 'CLASS'
 			enabled = true
 
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.60
-			}
-
-			limit {
-				counter = 'METHOD'
-				value = 'COVEREDRATIO'
-				minimum = 0.60
-			}
+//			limit {
+//				counter = 'LINE'
+//				value = 'COVEREDRATIO'
+//				minimum = 0.60
+//			}
+//
+//			limit {
+//				counter = 'METHOD'
+//				value = 'COVEREDRATIO'
+//				minimum = 0.60
+//			}
 
 			excludes = [
 					'**.*BlogApplication*',

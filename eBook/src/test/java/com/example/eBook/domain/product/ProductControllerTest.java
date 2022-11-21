@@ -11,7 +11,6 @@ import com.example.eBook.domain.product.dto.ProductModifyForm;
 import com.example.eBook.domain.product.entity.Product;
 import com.example.eBook.domain.product.repository.ProductRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,12 +66,17 @@ public class ProductControllerTest {
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
+
         List<Product> productList = new ArrayList<>();
-
         for (int i = 1; i <= 10; i++) {
-            productList.add(new Product((long) i, member, postKeyword, "subject %s".formatted(i), "description %s".formatted(i), i * 1000));
+            productList.add(Product.builder()
+                    .member(member)
+                    .postKeyword(postKeyword)
+                    .subject("subject %s".formatted(i))
+                    .description("description %s".formatted(i))
+                    .price(i * 1000)
+                    .build());
         }
-
         productRepository.saveAll(productList);
 
         // when then

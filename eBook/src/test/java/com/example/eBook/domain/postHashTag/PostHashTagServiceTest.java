@@ -11,7 +11,6 @@ import com.example.eBook.domain.post.repository.PostRepository;
 import com.example.eBook.domain.postKeyword.entity.PostKeyword;
 import com.example.eBook.domain.postKeyword.repository.PostKeywordRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
