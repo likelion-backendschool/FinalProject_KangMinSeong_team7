@@ -6,7 +6,6 @@ import com.example.eBook.domain.member.exception.MemberNotFoundException;
 import com.example.eBook.domain.member.repository.MemberRepository;
 import com.example.eBook.domain.member.service.MemberService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,17 +45,12 @@ class MemberControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @BeforeEach
-    void beforeEach() {
-        memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
-                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
-    }
-
     @Test
     @DisplayName("회원가입폼_보여주기")
     @WithAnonymousUser
     void showSignupForm() throws Exception {
 
+        // given then
         mockMvc.perform(get("/member/join"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/new_member"))
@@ -69,6 +63,7 @@ class MemberControllerTest {
     @WithAnonymousUser
     void signup() throws Exception {
 
+        // given then
         mockMvc.perform(post("/member/join")
                         .param("username", "user1")
                         .param("password", "1234")
@@ -87,6 +82,7 @@ class MemberControllerTest {
     @WithAnonymousUser
     void signup2() throws Exception {
 
+        // given then
         mockMvc.perform(post("/member/join")
                         .param("username", "user1")
                         .param("password", "1234")
@@ -104,6 +100,7 @@ class MemberControllerTest {
     @WithAnonymousUser
     void showLoginForm() throws Exception {
 
+        // given then
         mockMvc.perform(get("/member/login"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/login_member"))
@@ -116,6 +113,11 @@ class MemberControllerTest {
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showModifyForm() throws Exception {
 
+        // given
+        memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        // when then
         mockMvc.perform(get("/member/modify"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/modify_info_member"))
@@ -128,6 +130,11 @@ class MemberControllerTest {
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void modifyInfo() throws Exception {
 
+        // given
+        memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        // when then
         mockMvc.perform(post("/member/modify")
                         .param("email", "email2@naver.com")
                         .param("nickname", "nickname2"))
@@ -146,6 +153,7 @@ class MemberControllerTest {
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void showModifyPasswordForm() throws Exception {
 
+        // when then
         mockMvc.perform(get("/member/modifyPassword"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/modify_pwd_member"))
@@ -157,6 +165,12 @@ class MemberControllerTest {
     @DisplayName("비밀번호수정")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
     void modifyPassword() throws Exception {
+
+        // given
+        memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        // when then
         mockMvc.perform(post("/member/modifyPassword")
                         .param("oldPassword", "1234")
                         .param("password", "11223344")
@@ -175,6 +189,7 @@ class MemberControllerTest {
     @WithAnonymousUser
     void showFindUsernameForm() throws Exception {
 
+        // when then
         mockMvc.perform(get("/member/findUsername"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/find_username_member"))
@@ -187,6 +202,11 @@ class MemberControllerTest {
     @WithAnonymousUser
     void findUsername() throws Exception {
 
+        // given
+        memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        // when then
         mockMvc.perform(post("/member/findUsername")
                         .param("email", "test@email.com"))
                 .andExpect(status().is3xxRedirection())
@@ -199,6 +219,8 @@ class MemberControllerTest {
     @DisplayName("비밀번호찾기폼_보여주기")
     @WithAnonymousUser
     void showFindPasswordForm() throws Exception {
+
+        // when then
         mockMvc.perform(get("/member/findPassword"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/find_password_member"))
@@ -211,6 +233,11 @@ class MemberControllerTest {
     @WithAnonymousUser
     void findPassword() throws Exception {
 
+        // given
+        memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
+                "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
+
+        // when then
         mockMvc.perform(post("/member/findPassword")
                         .param("username", "test_username")
                         .param("email", "test@email.com"))
@@ -223,4 +250,5 @@ class MemberControllerTest {
         assertThat(passwordEncoder.matches("1234", testMember.getPassword())).isFalse();
     }
 }
+
 
