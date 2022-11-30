@@ -49,7 +49,6 @@ public class MemberController {
             Member member = memberService.save(signupForm);
             mailService.sendSingUpMail(member.getEmail());
         } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
             bindingResult.rejectValue("username", "duplicated", "이미 등록된 아이디입니다.");
             return "member/new_member";
         }

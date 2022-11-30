@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.2.0/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
     <title>eBook</title>
@@ -29,6 +29,11 @@
                 <li class="nav-item" ><a class="nav-link" th:href="@{/adm/rebate/rebateOrderItemList}"><span class="bi bi-calculator">&nbsp;정산목록</span></a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/adm/withdraw/applyList}"><span class="bi bi-piggy-bank">&nbsp;출금목록</span></a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/member/logout}"><span class="bi bi-box-arrow-left">&nbsp;로그아웃</span></a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="javascript:;" onclick="$(this).next().submit();">
+                        <span class="bi bi-box-arrow-left">&nbsp;로그아웃</span></a>
+                    <form method="POST" th:action="@{/member/logout}" hidden></form>
+                </li>
             </ul>
         </div>
     </div>

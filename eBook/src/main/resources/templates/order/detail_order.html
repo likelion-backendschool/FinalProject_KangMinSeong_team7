@@ -5,7 +5,7 @@
 </head>
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
 
-    <script src="https://js.tosspayments.com/v1"></script>
+    <script src="https://js.tosspayments.com/v1" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"></script>
 
     <script th:inline="javascript">
         const orderId = /*[[ ${orderDetailDto.id} ]]*/ null;
@@ -70,7 +70,7 @@
             <a href="javascript:;" th:if="${orderDetailDto.paidStatus && ((#temporals.minute(nowTime) - #temporals.minute(orderDetailDto.payDate)) < 10)}"
                onclick="if ( !confirm('환불하시겠습니까?') ) return false; $(this).next().submit();" class="btn btn-sm btn-default mx-1">
                 <span class="fa-solid fa-xmark"></span>
-                <span class="ml-2"><span class="bi bi-x-lg"></> 환불</span>
+                <span class="ml-2"><span class="bi bi-x-lg"></span> 환불</span>
             </a>
             <form th:action="@{|/order/${orderDetailDto.id}/refund|}" method="POST" hidden></form>
 

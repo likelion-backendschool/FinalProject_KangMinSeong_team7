@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -20,8 +21,9 @@ public class SecurityConfig {
 
         httpSecurity
                 .httpBasic().disable()
-                .csrf().disable()
+                .csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 
+                .and()
                 .formLogin()
                 .loginPage("/member/login")
                 .loginProcessingUrl("/member/login")
@@ -33,7 +35,7 @@ public class SecurityConfig {
                 .logoutUrl("/member/logout")
                 .logoutSuccessUrl("/member/login")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
+                .deleteCookies("JSESSIONID", "JWT-SESSION")
 
                 .and()
                 .authorizeRequests()

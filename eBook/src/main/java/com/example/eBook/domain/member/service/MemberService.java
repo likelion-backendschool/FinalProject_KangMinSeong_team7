@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +33,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final static Random random = new Random();
+    private final static SecureRandom random = new SecureRandom();
 
     public Member save(SignupForm signupForm) {
         Member member = MemberMapper.INSTANCE.signupFormToEntity(signupForm);

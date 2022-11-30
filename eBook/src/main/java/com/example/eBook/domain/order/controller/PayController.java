@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,7 @@ public class PayController {
         return "redirect:/order/%s".formatted(orderId);
     }
 
-    @RequestMapping("/{id}/success")
+    @GetMapping("/{id}/success")
     public String successPayment(
             @PathVariable("id") Long id,
             @RequestParam Map<String, String> params,
@@ -49,7 +50,7 @@ public class PayController {
         }
     }
 
-    @RequestMapping("/{id}/fail")
+    @GetMapping("/{id}/fail")
     public String failPayment(
             @PathVariable("id") Long id,
             @RequestParam String message,

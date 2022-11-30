@@ -25,7 +25,6 @@ public class ApiSecurityConfig {
 
         httpSecurity
                 .antMatcher("/api/**")
-                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
