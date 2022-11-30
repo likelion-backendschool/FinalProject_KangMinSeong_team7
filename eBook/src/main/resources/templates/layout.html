@@ -23,16 +23,16 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/}"><i class="bi bi-journal-text">&nbsp;All Posts</i></a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/post/list}"><i class="bi bi-journal-text">&nbsp;My Posts</i></a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/product/list}" ><i class="bi bi-book">&nbsp;Books</i></a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/mybook/list}"><i class="bi bi-book">&nbsp;My Books</i></a></li>
+                <li class="nav-item"><a class="nav-link" aria-current="page" th:href="@{/}"><span class="bi bi-journal-text">&nbsp;All Posts</span></a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/post/list}"><span class="bi bi-journal-text">&nbsp;My Posts</span></a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/product/list}" ><span class="bi bi-book">&nbsp;Books</span></a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/mybook/list}"><span class="bi bi-book">&nbsp;My Books</span></a></li>
             </ul>
             <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
-                <li class="nav-item"><a class="nav-link" th:href="@{/cart/list}"><i class="bi bi-cart">&nbsp;Cart</i></a></li>
-                <li class="nav-item" ><a class="nav-link" th:href="@{/order/list}"><i class="bi bi-receipt">&nbsp;Order</i></a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/member/mypage}"><i class="bi bi-person">&nbsp;My Page</i></a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/member/logout}"><i class="bi bi-box-arrow-left">&nbsp;Logout</i></a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/cart/list}"><span class="bi bi-cart">&nbsp;Cart</span></a></li>
+                <li class="nav-item" ><a class="nav-link" th:href="@{/order/list}"><span class="bi bi-receipt">&nbsp;Order</span></a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/member/mypage}"><span class="bi bi-person">&nbsp;My Page</span></a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/member/logout}"><span class="bi bi-box-arrow-left">&nbsp;Logout</span></a></li>
             </ul>
         </div>
     </div>
@@ -44,8 +44,8 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div sec:authorize="!isAuthenticated()" class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4 justify-content-end">
-                <li class="nav-item float-right"><a class="nav-link" aria-current="page" th:href="@{/member/login}"><i class="bi bi-box-arrow-in-right">&nbsp;Login</i></a></li>
-                <li class="nav-item float-right"><a class="nav-link" th:href="@{/member/join}"><i class="bi bi-person-plus">&nbsp;Register</i></a></li>
+                <li class="nav-item float-right"><a class="nav-link" aria-current="page" th:href="@{/member/login}"><span class="bi bi-box-arrow-in-right">&nbsp;Login</span></a></li>
+                <li class="nav-item float-right"><a class="nav-link" th:href="@{/member/join}"><span class="bi bi-person-plus">&nbsp;Register</span></a></li>
             </ul>
         </div>
     </div>

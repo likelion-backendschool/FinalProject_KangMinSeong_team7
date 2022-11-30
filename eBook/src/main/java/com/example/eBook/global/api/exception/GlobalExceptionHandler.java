@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<FailResponse> methodArgumentNotValidException(MethodArgumentNotValidException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(responseService.getFailResponse(e.getFieldError().getDefaultMessage(), "CLIENT_ERROR_1"));
+                .body(responseService.getFailResponse(e.getMessage(), "CLIENT_ERROR_1"));
     }
 
     @ExceptionHandler(DataAccessException.class)

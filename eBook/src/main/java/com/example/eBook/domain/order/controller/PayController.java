@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,8 +42,8 @@ public class PayController {
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
             return "redirect:/order/%s".formatted(id);
         } else {
-            model.addAttribute("message", responseEntity.getBody().get("message").asText());
-            model.addAttribute("code", responseEntity.getBody().get("code").asText());
+            model.addAttribute("message", Objects.requireNonNull(responseEntity.getBody()).get("message").asText());
+            model.addAttribute("code", Objects.requireNonNull(responseEntity.getBody()).get("code").asText());
             model.addAttribute("orderId", params.get("orderId"));
             return "order/fail_order";
         }
