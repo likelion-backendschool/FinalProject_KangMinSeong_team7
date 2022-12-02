@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 @Transactional
 @ActiveProfiles("test")
-public class PostServiceTest {
+class PostServiceTest {
 
     @Autowired
     private PostService postService;
@@ -110,9 +110,9 @@ public class PostServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(postRepository.findById(testPost.getId()).isPresent()).isTrue(),
+                () -> assertThat(postRepository.findById(testPost.getId())).isPresent(),
                 () -> assertThat(postKeywordRepository.count()).isEqualTo(3),
-                () -> assertThat(postHashTagRepository.findAllByPost(testPost).size()).isEqualTo(3)
+                () -> assertThat(postHashTagRepository.findAllByPost(testPost)).hasSize(3)
         );
     }
 
@@ -139,7 +139,7 @@ public class PostServiceTest {
                 () -> assertThat(postDetail.getSubject()).isEqualTo("new_subject"),
                 () -> assertThat(postDetail.getWriter()).isEqualTo("test_username"),
                 () -> assertThat(postDetail.getContent()).isEqualTo("new_content"),
-                () -> assertThat(postDetail.getPostKeywords().size()).isEqualTo(3)
+                () -> assertThat(postDetail.getPostKeywords()).hasSize(3)
         );
     }
 
@@ -194,9 +194,9 @@ public class PostServiceTest {
         assertAll(
                 () -> assertThat(findPost.getSubject()).isEqualTo("modify_subject"),
                 () -> assertThat(findPost.getContent()).isEqualTo("modify_content"),
-                () -> assertThat(postHashTagRepository.findAllByPost(findPost).size()).isEqualTo(2),
-                () -> assertThat(postKeywordRepository.findByContent("#key1").isPresent()).isTrue(),
-                () -> assertThat(postKeywordRepository.findByContent("#key5").isPresent()).isTrue()
+                () -> assertThat(postHashTagRepository.findAllByPost(findPost)).hasSize(2),
+                () -> assertThat(postKeywordRepository.findByContent("#key1")).isPresent(),
+                () -> assertThat(postKeywordRepository.findByContent("#key5")).isPresent()
         );
     }
 
@@ -226,8 +226,8 @@ public class PostServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(postRepository.count()).isEqualTo(0),
-                () -> assertThat(postHashTagRepository.count()).isEqualTo(0)
+                () -> assertThat(postRepository.count()).isZero(),
+                () -> assertThat(postHashTagRepository.count()).isZero()
         );
     }
 }

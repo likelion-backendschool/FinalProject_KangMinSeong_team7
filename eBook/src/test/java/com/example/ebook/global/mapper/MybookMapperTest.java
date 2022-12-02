@@ -9,8 +9,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MybookMapperTest {
+class MybookMapperTest {
 
     @Test
     @DisplayName("entity_To_MybookDto_Mapper")
@@ -28,11 +29,13 @@ public class MybookMapperTest {
 
         MybookDto mybookDto = MybookMapper.INSTANCE.entityToMybookDto(mybook);
 
-        assertThat(mybookDto.getId()).isEqualTo(mybook.getId());
-        assertThat(mybookDto.getProductId()).isEqualTo(mybook.getProduct().getId());
-        assertThat(mybookDto.getProductSubject()).isEqualTo(mybook.getProduct().getSubject());
-        assertThat(mybookDto.getProductDescription()).isEqualTo(mybook.getProduct().getDescription());
-        assertThat(mybookDto.getProductWriter()).isEqualTo(mybook.getProduct().getMember().getNickname());
-        assertThat(mybookDto.getProductKeywordContent()).isEqualTo(mybook.getProduct().getPostKeyword().getContent());
+        assertAll(
+                () -> assertThat(mybookDto.getId()).isEqualTo(mybook.getId()),
+                () -> assertThat(mybookDto.getProductId()).isEqualTo(mybook.getProduct().getId()),
+                () -> assertThat(mybookDto.getProductSubject()).isEqualTo(mybook.getProduct().getSubject()),
+                () -> assertThat(mybookDto.getProductDescription()).isEqualTo(mybook.getProduct().getDescription()),
+                () -> assertThat(mybookDto.getProductWriter()).isEqualTo(mybook.getProduct().getMember().getNickname()),
+                () -> assertThat(mybookDto.getProductKeywordContent()).isEqualTo(mybook.getProduct().getPostKeyword().getContent())
+        );
     }
 }

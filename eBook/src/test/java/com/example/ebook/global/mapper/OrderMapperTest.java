@@ -11,8 +11,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class OrderMapperTest {
+class OrderMapperTest {
 
     @Test
     @DisplayName("entity_To_OrderDto_Mapper")
@@ -32,13 +33,15 @@ public class OrderMapperTest {
 
         OrderDto orderDto = OrderMapper.INSTANCE.entityToOrderDto(order);
 
-        assertThat(orderDto.getId()).isEqualTo(order.getId());
-        assertThat(orderDto.getName()).isEqualTo(order.getName());
-        assertThat(orderDto.getPayDate()).isEqualTo(order.getPayDate());
-        assertThat(orderDto.isReadyStatus()).isEqualTo(order.isReadyStatus());
-        assertThat(orderDto.isCanceledStatus()).isEqualTo(order.isCanceledStatus());
-        assertThat(orderDto.isPaidStatus()).isEqualTo(order.isPaidStatus());
-        assertThat(orderDto.isRefundedStatus()).isEqualTo(order.isRefundedStatus());
+        assertAll(
+                () -> assertThat(orderDto.getId()).isEqualTo(order.getId()),
+                () -> assertThat(orderDto.getName()).isEqualTo(order.getName()),
+                () -> assertThat(orderDto.getPayDate()).isEqualTo(order.getPayDate()),
+                () -> assertThat(orderDto.isReadyStatus()).isEqualTo(order.isReadyStatus()),
+                () -> assertThat(orderDto.isCanceledStatus()).isEqualTo(order.isCanceledStatus()),
+                () -> assertThat(orderDto.isPaidStatus()).isEqualTo(order.isPaidStatus()),
+                () -> assertThat(orderDto.isRefundedStatus()).isEqualTo(order.isRefundedStatus())
+        );
     }
 
     @Test
@@ -59,13 +62,15 @@ public class OrderMapperTest {
 
         OrderDetailDto orderDetailDto = OrderMapper.INSTANCE.entityToOrderItemDto(order);
 
-        assertThat(orderDetailDto.getId()).isEqualTo(order.getId());
-        assertThat(orderDetailDto.getName()).isEqualTo(order.getName());
-        assertThat(orderDetailDto.getPayDate()).isEqualTo(order.getPayDate());
-        assertThat(orderDetailDto.getBuyerUsername()).isEqualTo(order.getMember().getUsername());
-        assertThat(orderDetailDto.isCanceledStatus()).isEqualTo(order.isCanceledStatus());
-        assertThat(orderDetailDto.isRefundedStatus()).isEqualTo(order.isRefundedStatus());
-        assertThat(orderDetailDto.isReadyStatus()).isEqualTo(order.isReadyStatus());
-        assertThat(orderDetailDto.isPaidStatus()).isEqualTo(order.isPaidStatus());
+        assertAll(
+                () -> assertThat(orderDetailDto.getId()).isEqualTo(order.getId()),
+                () -> assertThat(orderDetailDto.getName()).isEqualTo(order.getName()),
+                () -> assertThat(orderDetailDto.getPayDate()).isEqualTo(order.getPayDate()),
+                () -> assertThat(orderDetailDto.getBuyerUsername()).isEqualTo(order.getMember().getUsername()),
+                () -> assertThat(orderDetailDto.isCanceledStatus()).isEqualTo(order.isCanceledStatus()),
+                () -> assertThat(orderDetailDto.isRefundedStatus()).isEqualTo(order.isRefundedStatus()),
+                () -> assertThat(orderDetailDto.isReadyStatus()).isEqualTo(order.isReadyStatus()),
+                () -> assertThat(orderDetailDto.isPaidStatus()).isEqualTo(order.isPaidStatus())
+        );
     }
 }

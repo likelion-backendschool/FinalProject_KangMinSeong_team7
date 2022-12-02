@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Slf4j
 @Transactional
 @ActiveProfiles("test")
-public class ProductServiceTest {
+class ProductServiceTest {
 
     @Autowired
     private MemberRepository memberRepository;
@@ -99,8 +99,8 @@ public class ProductServiceTest {
 
         // then
         assertAll(
-                () -> assertThat(productRepository.findById(testProduct.getId()).isPresent()).isTrue(),
-                () -> assertThat(productRepository.findAll().size()).isEqualTo(1)
+                () -> assertThat(productRepository.findById(testProduct.getId())).isPresent(),
+                () -> assertThat(productRepository.findAll()).hasSize(1)
         );
     }
 
@@ -194,6 +194,6 @@ public class ProductServiceTest {
         productService.delete(product.getId());
 
         // then
-        assertThat(productRepository.findAll().size()).isEqualTo(0);
+        assertThat(productRepository.findAll()).isEmpty();
     }
 }

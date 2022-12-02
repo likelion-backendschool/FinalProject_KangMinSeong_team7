@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -41,7 +42,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @Slf4j
-public class PostControllerTest {
+class PostControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -95,7 +96,7 @@ public class PostControllerTest {
 
         // then
         List<PostDto> postDtoList = (List<PostDto>) resultActions.andReturn().getModelAndView().getModel().get("postList");
-        assertThat(postDtoList.size()).isEqualTo(10);
+        assertThat(postDtoList).hasSize(10);
     }
 
 
@@ -128,7 +129,7 @@ public class PostControllerTest {
                 .andDo(print());
 
         List<PostDto> postDtoList = (List<PostDto>) resultActions.andReturn().getModelAndView().getModel().get("postList");
-        assertThat(postDtoList.size()).isEqualTo(3);
+        assertThat(postDtoList).hasSize(3);
     }
 
     @Test
@@ -160,7 +161,7 @@ public class PostControllerTest {
                 .andDo(print());
 
         List<PostDto> postDtoList = (List<PostDto>) resultActions.andReturn().getModelAndView().getModel().get("postList");
-        assertThat(postDtoList.size()).isEqualTo(2);
+        assertThat(postDtoList).hasSize(2);
     }
 
     @Test
@@ -189,13 +190,14 @@ public class PostControllerTest {
         mockMvc.perform(post("/post/write")
                         .param("subject", "new subject")
                         .param("content", "new content")
-                        .param("keywords", "#new1 #new2"))
+                        .param("keywords", "#new1 #new2")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(PostController.class))
                 .andExpect(handler().methodName("save"))
                 .andExpect(redirectedUrl("/post/list"));
 
-        assertThat(postService.findAllByMember(memberRepository.findByUsername("test_username").orElseThrow()).size()).isEqualTo(1);
+        assertThat(postService.findAllByMember(memberRepository.findByUsername("test_username").orElseThrow())).hasSize(1);
     }
 
     @Test
@@ -260,7 +262,8 @@ public class PostControllerTest {
         mockMvc.perform(post("/post/%s/modify".formatted(post.getId()))
                         .param("subject", "modify subject")
                         .param("content", "modify content")
-                        .param("postKeywordContents", "#key1 #key2"))
+                        .param("postKeywordContents", "#key1 #key2")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(PostController.class))
                 .andExpect(handler().methodName("modify"))
@@ -289,8 +292,8 @@ public class PostControllerTest {
                 .andExpect(handler().methodName("delete"))
                 .andExpect(redirectedUrl("/post/list"));
 
-        assertThat(postRepository.findById(1L).isEmpty()).isTrue();
-        assertThat(postRepository.findAll().size()).isEqualTo(0);
+        assertThat(postRepository.findById(1L)).isEmpty();
+        assertThat(postRepository.findAll()).isEmpty();
     }
 }
 

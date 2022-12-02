@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 @Slf4j
 @Transactional
 @ActiveProfiles("test")
-public class PostKeywordServiceTest {
+class PostKeywordServiceTest {
 
     @Autowired
     private PostKeywordService postKeywordService;

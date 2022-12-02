@@ -13,8 +13,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RebateOrderItemMapperTest {
+class RebateOrderItemMapperTest {
 
     @Test
     @DisplayName("entity_To_RebateOrderItemDto_Mapper")
@@ -48,14 +49,16 @@ public class RebateOrderItemMapperTest {
 
         RebateOrderItemDto rebateOrderItemDto = RebateOrderItemMapper.INSTANCE.entityToRebateOrderItemDto(rebateOrderItem);
 
-        assertThat(rebateOrderItemDto.getOrderItemId()).isEqualTo(rebateOrderItem.getOrderItem().getId());
-        assertThat(rebateOrderItemDto.getPayDate()).isEqualTo(rebateOrderItem.getPayDate());
-        assertThat(rebateOrderItemDto.getRebateDate()).isEqualTo(rebateOrderItem.getRebateDate());
-        assertThat(rebateOrderItemDto.getPayPrice()).isEqualTo(rebateOrderItem.getPayPrice());
-        assertThat(rebateOrderItemDto.getPgFee()).isEqualTo(rebateOrderItem.getPgFee());
-        assertThat(rebateOrderItemDto.getRefundPrice()).isEqualTo(rebateOrderItem.getRefundPrice());
-        assertThat(rebateOrderItemDto.getSellerName()).isEqualTo(rebateOrderItem.getSellerName());
-        assertThat(rebateOrderItemDto.isRebateAvailable()).isEqualTo(true);
-        assertThat(rebateOrderItemDto.getRebatePrice()).isEqualTo(900);
+        assertAll(
+                () -> assertThat(rebateOrderItemDto.getOrderItemId()).isEqualTo(rebateOrderItem.getOrderItem().getId()),
+                () -> assertThat(rebateOrderItemDto.getPayDate()).isEqualTo(rebateOrderItem.getPayDate()),
+                () -> assertThat(rebateOrderItemDto.getRebateDate()).isEqualTo(rebateOrderItem.getRebateDate()),
+                () -> assertThat(rebateOrderItemDto.getPayPrice()).isEqualTo(rebateOrderItem.getPayPrice()),
+                () -> assertThat(rebateOrderItemDto.getPgFee()).isEqualTo(rebateOrderItem.getPgFee()),
+                () -> assertThat(rebateOrderItemDto.getRefundPrice()).isEqualTo(rebateOrderItem.getRefundPrice()),
+                () -> assertThat(rebateOrderItemDto.getSellerName()).isEqualTo(rebateOrderItem.getSellerName()),
+                () -> assertThat(rebateOrderItemDto.isRebateAvailable()).isTrue(),
+                () -> assertThat(rebateOrderItemDto.getRebatePrice()).isEqualTo(900)
+        );
     }
 }

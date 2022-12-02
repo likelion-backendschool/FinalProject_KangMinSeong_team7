@@ -10,8 +10,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CartItemMapperTest {
+class CartItemMapperTest {
 
     @Test
     @DisplayName("엔티티_To_CartItem_Mapper")
@@ -26,11 +27,13 @@ public class CartItemMapperTest {
 
         CartItemDto cartItemDto = CartItemMapper.INSTANCE.entityToCartItemDto(cartItem);
 
-        assertThat(cartItemDto.getId()).isEqualTo(cartItem.getId());
-        assertThat(cartItemDto.getPrice()).isEqualTo(cartItem.getProduct().getPrice());
-        assertThat(cartItemDto.getProductId()).isEqualTo(cartItem.getProduct().getId());
-        assertThat(cartItemDto.getSubject()).isEqualTo(cartItem.getProduct().getSubject());
-        assertThat(cartItemDto.getWriter()).isEqualTo(cartItem.getMember().getNickname());
-        assertThat(cartItemDto.getDescription()).isEqualTo(cartItem.getProduct().getDescription());
+        assertAll(
+                () -> assertThat(cartItemDto.getId()).isEqualTo(cartItem.getId()),
+                () -> assertThat(cartItemDto.getPrice()).isEqualTo(cartItem.getProduct().getPrice()),
+                () -> assertThat(cartItemDto.getProductId()).isEqualTo(cartItem.getProduct().getId()),
+                () -> assertThat(cartItemDto.getSubject()).isEqualTo(cartItem.getProduct().getSubject()),
+                () -> assertThat(cartItemDto.getWriter()).isEqualTo(cartItem.getMember().getNickname()),
+                () -> assertThat(cartItemDto.getDescription()).isEqualTo(cartItem.getProduct().getDescription())
+        );
     }
 }

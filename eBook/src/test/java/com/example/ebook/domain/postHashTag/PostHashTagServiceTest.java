@@ -11,6 +11,7 @@ import com.example.ebook.domain.post.repository.PostRepository;
 import com.example.ebook.domain.postkeyword.entity.PostKeyword;
 import com.example.ebook.domain.postkeyword.repository.PostKeywordRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +26,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Slf4j
 @Transactional
 @ActiveProfiles("test")
-public class PostHashTagServiceTest {
+class PostHashTagServiceTest {
 
     @Autowired
     PostHashTagService postHashTagService;
@@ -86,7 +88,7 @@ public class PostHashTagServiceTest {
         postHashTagRepository.save(new PostHashTag(1L, post, postKeyword1, member));
         postHashTagRepository.save(new PostHashTag(2L, post, postKeyword2, member));
 
-        assertThat(postHashTagService.findAllByPost(post).size()).isEqualTo(2);
+        assertThat(postHashTagService.findAllByPost(post)).hasSize(2);
     }
     @Test
     @DisplayName("글_해시태그_해시태그만조회_By멤버")
@@ -102,8 +104,10 @@ public class PostHashTagServiceTest {
         postHashTagRepository.save(new PostHashTag(1L, post, postKeyword1, member));
         postHashTagRepository.save(new PostHashTag(2L, post, postKeyword2, member));
 
-        assertThat(postHashTagService.findAllPostKeywordByMember(member).size()).isEqualTo(2);
-        assertThat(postHashTagService.findAllPostKeywordByMember(member).get(0) instanceof PostKeywordDto).isTrue();
+        assertAll(
+                () -> assertThat(postHashTagService.findAllPostKeywordByMember(member)).hasSize(2),
+                () -> assertThat(postHashTagService.findAllPostKeywordByMember(member).get(0)).isInstanceOf(PostKeywordDto.class)
+        );
     }
 
     @Test
@@ -120,8 +124,10 @@ public class PostHashTagServiceTest {
         postHashTagRepository.save(new PostHashTag(1L, post, postKeyword1, member));
         postHashTagRepository.save(new PostHashTag(2L, post, postKeyword2, member));
 
-        assertThat(postHashTagService.findAllPostKeywordByPost(post).size()).isEqualTo(2);
-        assertThat(postHashTagService.findAllPostKeywordByPost(post).get(0) instanceof PostKeywordDto).isTrue();
+        assertAll(
+                () -> assertThat(postHashTagService.findAllPostKeywordByPost(post)).hasSize(2),
+                () -> assertThat(postHashTagService.findAllPostKeywordByPost(post).get(0)).isInstanceOf(PostKeywordDto.class)
+        );
     }
 
     @Test
@@ -140,8 +146,10 @@ public class PostHashTagServiceTest {
         postHashTagRepository.save(new PostHashTag(2L, post1, postKeyword2, member));
         postHashTagRepository.save(new PostHashTag(3L, post2, postKeyword2, member));
 
-        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, String.valueOf(postKeyword1.getId())).size()).isEqualTo(1);
-        assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, String.valueOf(postKeyword2.getId())).size()).isEqualTo(2);
+        assertAll(
+                () -> assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, String.valueOf(postKeyword1.getId()))).hasSize(1),
+                () -> assertThat(postHashTagService.findAllPostByMemberAndKeyword(member, String.valueOf(postKeyword2.getId()))).hasSize(2)
+        );
     }
 
     @Test
@@ -166,10 +174,12 @@ public class PostHashTagServiceTest {
                 .map(p -> p.getPostKeyword().getContent())
                 .toList();
 
-        assertThat(postHashTags.size()).isEqualTo(3);
-        assertThat(keywords.contains("#key1")).isTrue();
-        assertThat(keywords.contains("#key4")).isTrue();
-        assertThat(keywords.contains("#key5")).isTrue();
+        assertAll(
+                () -> assertThat(postHashTags).hasSize(3),
+                () -> assertThat(keywords).contains("#key1"),
+                () -> assertThat(keywords).contains("#key4"),
+                () -> assertThat(keywords).contains("#key5")
+        );
     }
 
     @Test
@@ -188,6 +198,6 @@ public class PostHashTagServiceTest {
 
         postHashTagService.delete(post);
 
-        assertThat(postHashTagRepository.findAllByPost(post).size()).isEqualTo(0);
+        assertThat(postHashTagRepository.findAllByPost(post)).isEmpty();
     }
 }

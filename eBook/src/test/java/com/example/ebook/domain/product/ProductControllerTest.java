@@ -29,6 +29,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @Slf4j
-public class ProductControllerTest {
+class ProductControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -87,7 +89,7 @@ public class ProductControllerTest {
                 .andDo(print());
 
         List<ProductDto> productDtoList = (List<ProductDto>) resultActions.andReturn().getModelAndView().getModel().get("productDtoList");
-        assertThat(productDtoList.size()).isEqualTo(10);
+        assertThat(productDtoList).hasSize(10);
     }
 
     @Test
@@ -116,13 +118,14 @@ public class ProductControllerTest {
         mockMvc.perform(post("/product/create")
                         .param("subject", "new subject")
                         .param("price", "10000")
-                        .param("description", "new description"))
+                        .param("description", "new description")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(ProductController.class))
                 .andExpect(handler().methodName("create"))
                 .andExpect(redirectedUrl("/product/list"));
 
-        assertThat(productRepository.findAll().size()).isEqualTo(1);
+        assertThat(productRepository.findAll()).hasSize(1);
     }
 
     @Test
@@ -176,9 +179,11 @@ public class ProductControllerTest {
 
         ProductModifyForm result = (ProductModifyForm) resultActions.andReturn().getModelAndView().getModel().get("productModifyForm");
 
-        assertThat(result.getSubject()).isEqualTo("subject");
-        assertThat(result.getPrice()).isEqualTo(1000);
-        assertThat(result.getDescription()).isEqualTo("description");
+        assertAll(
+                () -> assertThat(result.getSubject()).isEqualTo("subject"),
+                () -> assertThat(result.getPrice()).isEqualTo(1000),
+                () -> assertThat(result.getDescription()).isEqualTo("description")
+        );
     }
 
     @Test
@@ -197,7 +202,8 @@ public class ProductControllerTest {
         mockMvc.perform(post("/product/%s/modify".formatted(product.getId()))
                         .param("subject", "modify subject")
                         .param("description", "modify description")
-                        .param("price", "2000"))
+                        .param("price", "2000")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(ProductController.class))
                 .andExpect(handler().methodName("modify"))
@@ -205,9 +211,11 @@ public class ProductControllerTest {
 
         Product findProduct = productRepository.findById(product.getId()).get();
 
-        assertThat(findProduct.getSubject()).isEqualTo("modify subject");
-        assertThat(findProduct.getDescription()).isEqualTo("modify description");
-        assertThat(findProduct.getPrice()).isEqualTo(2000);
+        assertAll(
+                () -> assertThat(findProduct.getSubject()).isEqualTo("modify subject"),
+                () -> assertThat(findProduct.getDescription()).isEqualTo("modify description"),
+                () -> assertThat(findProduct.getPrice()).isEqualTo(2000)
+        );
     }
 
     @Test
@@ -229,9 +237,9 @@ public class ProductControllerTest {
                 .andExpect(handler().methodName("delete"))
                 .andExpect(redirectedUrl("/product/list"));
 
-        assertThat(productRepository.findById(product.getId()).isEmpty()).isTrue();
-        assertThat(productRepository.findAll().size()).isEqualTo(0);
+        assertAll(
+                () -> assertThat(productRepository.findById(product.getId())).isEmpty(),
+                () -> assertThat(productRepository.findAll()).isEmpty()
+        );
     }
-
-
 }

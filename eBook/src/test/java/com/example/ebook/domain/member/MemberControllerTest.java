@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -51,7 +52,8 @@ class MemberControllerTest {
     void showSignupForm() throws Exception {
 
         // given then
-        mockMvc.perform(get("/member/join"))
+        mockMvc.perform(get("/member/join")
+                        .with(csrf()))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("member/new_member"))
                 .andExpect(model().attributeExists("signupForm"))
@@ -68,7 +70,8 @@ class MemberControllerTest {
                         .param("username", "user1")
                         .param("password", "1234")
                         .param("passwordConfirm", "1234")
-                        .param("email", "email@naver.com"))
+                        .param("email", "email@naver.com")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("signup"))
@@ -87,7 +90,8 @@ class MemberControllerTest {
                         .param("username", "user1")
                         .param("password", "1234")
                         .param("passwordConfirm", "12345")
-                        .param("email", "email@naver.com"))
+                        .param("email", "email@naver.com")
+                        .with(csrf()))
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("signup"));
 
@@ -137,7 +141,8 @@ class MemberControllerTest {
         // when then
         mockMvc.perform(post("/member/modify")
                         .param("email", "email2@naver.com")
-                        .param("nickname", "nickname2"))
+                        .param("nickname", "nickname2")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("modifyInfo"))
@@ -174,7 +179,8 @@ class MemberControllerTest {
         mockMvc.perform(post("/member/modifyPassword")
                         .param("oldPassword", "1234")
                         .param("password", "11223344")
-                        .param("passwordConfirm", "11223344"))
+                        .param("passwordConfirm", "11223344")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("modifyPassword"))
@@ -208,7 +214,8 @@ class MemberControllerTest {
 
         // when then
         mockMvc.perform(post("/member/findUsername")
-                        .param("email", "test@email.com"))
+                        .param("email", "test@email.com")
+                        .with(csrf()))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("findUsername"))
@@ -240,7 +247,9 @@ class MemberControllerTest {
         // when then
         mockMvc.perform(post("/member/findPassword")
                         .param("username", "test_username")
-                        .param("email", "test@email.com"))
+                        .param("email", "test@email.com")
+                        .with(csrf()))
+
                 .andExpect(status().is3xxRedirection())
                 .andExpect(handler().handlerType(MemberController.class))
                 .andExpect(handler().methodName("findPassword"))

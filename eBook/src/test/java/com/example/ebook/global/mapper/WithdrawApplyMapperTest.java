@@ -10,8 +10,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class WithdrawApplyMapperTest {
+class WithdrawApplyMapperTest {
 
     @Test
     @DisplayName(value = "entity_To_WithdrawApplyDto_Mapper")
@@ -28,12 +29,14 @@ public class WithdrawApplyMapperTest {
 
         WithdrawApplyDto withdrawApplyDto = WithdrawApplyMapper.INSTANCE.entityToWithdrawApplyDto(withdrawApply);
 
-        assertThat(withdrawApplyDto.getId()).isEqualTo(withdrawApply.getId());
-        assertThat(withdrawApplyDto.getBankName()).isEqualTo(withdrawApply.getBankName());
-        assertThat(withdrawApplyDto.getBankAccountNo()).isEqualTo(withdrawApply.getBankAccountNo());
-        assertThat(withdrawApplyDto.getMoney()).isEqualTo(withdrawApply.getMoney());
-        assertThat(withdrawApplyDto.getWithdrawDate()).isEqualTo(withdrawApply.getWithdrawDate());
-        assertThat(withdrawApplyDto.getApplyDate()).isEqualTo(withdrawApply.getApplyDate());
+        assertAll(
+                () -> assertThat(withdrawApplyDto.getId()).isEqualTo(withdrawApply.getId()),
+                () -> assertThat(withdrawApplyDto.getBankName()).isEqualTo(withdrawApply.getBankName()),
+                () -> assertThat(withdrawApplyDto.getBankAccountNo()).isEqualTo(withdrawApply.getBankAccountNo()),
+                () -> assertThat(withdrawApplyDto.getMoney()).isEqualTo(withdrawApply.getMoney()),
+                () -> assertThat(withdrawApplyDto.getWithdrawDate()).isEqualTo(withdrawApply.getWithdrawDate()),
+                () -> assertThat(withdrawApplyDto.getApplyDate()).isEqualTo(withdrawApply.getApplyDate())
+        );
     }
 
     @Test
@@ -52,12 +55,14 @@ public class WithdrawApplyMapperTest {
         AdmWithdrawApplyDto admWithdrawApplyDto =
                 WithdrawApplyMapper.INSTANCE.entityToAdmWithdrawApplyDto(withdrawApply);
 
-        assertThat(admWithdrawApplyDto.getId()).isEqualTo(withdrawApply.getId());
-        assertThat(admWithdrawApplyDto.getApplicantName()).isEqualTo(withdrawApply.getApplicant().getNickname());
-        assertThat(admWithdrawApplyDto.getBankName()).isEqualTo(withdrawApply.getBankName());
-        assertThat(admWithdrawApplyDto.getBankAccountNo()).isEqualTo(withdrawApply.getBankAccountNo());
-        assertThat(admWithdrawApplyDto.getMoney()).isEqualTo(withdrawApply.getMoney());
-        assertThat(admWithdrawApplyDto.getApplyDate()).isEqualTo(withdrawApply.getApplyDate());
-        assertThat(admWithdrawApplyDto.isCanApply()).isEqualTo(!withdrawApply.isDone());
+        assertAll(
+                () -> assertThat(admWithdrawApplyDto.getId()).isEqualTo(withdrawApply.getId()),
+                () -> assertThat(admWithdrawApplyDto.getApplicantName()).isEqualTo(withdrawApply.getApplicant().getNickname()),
+                () -> assertThat(admWithdrawApplyDto.getBankName()).isEqualTo(withdrawApply.getBankName()),
+                () -> assertThat(admWithdrawApplyDto.getBankAccountNo()).isEqualTo(withdrawApply.getBankAccountNo()),
+                () -> assertThat(admWithdrawApplyDto.getMoney()).isEqualTo(withdrawApply.getMoney()),
+                () -> assertThat(admWithdrawApplyDto.getApplyDate()).isEqualTo(withdrawApply.getApplyDate()),
+                () -> assertThat(admWithdrawApplyDto.isCanApply()).isEqualTo(!withdrawApply.isDone())
+        );
     }
 }

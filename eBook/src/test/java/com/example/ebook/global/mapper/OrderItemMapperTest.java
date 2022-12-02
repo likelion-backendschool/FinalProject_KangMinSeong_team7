@@ -12,8 +12,9 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class OrderItemMapperTest {
+class OrderItemMapperTest {
 
     @Test
     @DisplayName("entity_To_OrderItemDto_Mapper")
@@ -30,9 +31,11 @@ public class OrderItemMapperTest {
 
         OrderItemDto orderItemDto = OrderItemMapper.INSTANCE.entityToOrderItemDto(orderItem);
 
-        assertThat(orderItemDto.getId()).isEqualTo(orderItem.getId());
-        assertThat(orderItemDto.getProductPrice()).isEqualTo(orderItem.getPrice());
-        assertThat(orderItemDto.getProductId()).isEqualTo(orderItem.getId());
-        assertThat(orderItemDto.getProductSubject()).isEqualTo(orderItem.getProduct().getSubject());
+        assertAll(
+                () -> assertThat(orderItemDto.getId()).isEqualTo(orderItem.getId()),
+                () -> assertThat(orderItemDto.getProductPrice()).isEqualTo(orderItem.getPrice()),
+                () -> assertThat(orderItemDto.getProductId()).isEqualTo(orderItem.getId()),
+                () ->assertThat(orderItemDto.getProductSubject()).isEqualTo(orderItem.getProduct().getSubject())
+        );
     }
 }

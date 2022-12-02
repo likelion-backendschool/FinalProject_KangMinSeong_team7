@@ -11,12 +11,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ProductMapperTest {
 
     @Test
     @DisplayName("entity_To_ProductDto_Mapper")
-    public void entityToProductDto() {
+    void entityToProductDto() {
         Member member = Member.builder()
                 .username("test_username")
                 .password("1234")
@@ -35,16 +36,18 @@ class ProductMapperTest {
 
         ProductDto productDto = ProductMapper.INSTANCE.entityToProductDto(product);
 
-        assertThat(productDto.getId()).isEqualTo(product.getId());
-        assertThat(productDto.getSubject()).isEqualTo(product.getSubject());
-        assertThat(productDto.getPrice()).isEqualTo(product.getPrice());
-        assertThat(productDto.getWriter()).isEqualTo(product.getMember().getUsername());
-        assertThat(productDto.getCreateDate()).isEqualTo(product.getCreateDate());
+        assertAll(
+                () -> assertThat(productDto.getId()).isEqualTo(product.getId()),
+                () -> assertThat(productDto.getSubject()).isEqualTo(product.getSubject()),
+                () -> assertThat(productDto.getPrice()).isEqualTo(product.getPrice()),
+                () -> assertThat(productDto.getWriter()).isEqualTo(product.getMember().getUsername()),
+                () -> assertThat(productDto.getCreateDate()).isEqualTo(product.getCreateDate())
+        );
     }
 
     @Test
     @DisplayName("productCreateForm_To_Entity_test")
-    public void productCreateFormToEntity() {
+    void productCreateFormToEntity() {
 
         ProductCreateForm productCreateForm = ProductCreateForm.builder()
                 .subject("상품명1")
@@ -55,16 +58,18 @@ class ProductMapperTest {
 
         Product product = ProductMapper.INSTANCE.productCreateFormToEntity(productCreateForm);
 
-        assertThat(product.getSubject()).isEqualTo(productCreateForm.getSubject());
-        assertThat(product.getDescription()).isEqualTo(productCreateForm.getDescription());
-        assertThat(product.getPrice()).isEqualTo(productCreateForm.getPrice());
-        assertThat(product.getPostKeyword()).isEqualTo(productCreateForm.getPostKeyword());
-        assertThat(product.getMember()).isNull();
+        assertAll(
+                () -> assertThat(product.getSubject()).isEqualTo(productCreateForm.getSubject()),
+                () -> assertThat(product.getDescription()).isEqualTo(productCreateForm.getDescription()),
+                () -> assertThat(product.getPrice()).isEqualTo(productCreateForm.getPrice()),
+                () -> assertThat(product.getPostKeyword()).isEqualTo(productCreateForm.getPostKeyword()),
+                () -> assertThat(product.getMember()).isNull()
+        );
     }
 
     @Test
     @DisplayName("entity_To_ProductDetailDto_mapper")
-    public void entityToProductDetailDto() {
+    void entityToProductDetailDto() {
 
         Member member = Member.builder()
                 .username("test_username")
@@ -84,18 +89,21 @@ class ProductMapperTest {
                 .build();
 
         ProductDetailDto productDetailDto = ProductMapper.INSTANCE.entityToProductDetailDto(product);
-        assertThat(productDetailDto.getId()).isEqualTo(product.getId());
-        assertThat(productDetailDto.getSubject()).isEqualTo(product.getSubject());
-        assertThat(productDetailDto.getDescription()).isEqualTo(product.getDescription());
-        assertThat(productDetailDto.getPrice()).isEqualTo(product.getPrice());
-        assertThat(productDetailDto.getWriter()).isEqualTo(product.getMember().getUsername());
-        assertThat(productDetailDto.getCreateDate()).isEqualTo(product.getCreateDate());
-        assertThat(productDetailDto.getPostKeywordContent()).isEqualTo(product.getPostKeyword().getContent());
+
+        assertAll(
+                () -> assertThat(productDetailDto.getId()).isEqualTo(product.getId()),
+                () -> assertThat(productDetailDto.getSubject()).isEqualTo(product.getSubject()),
+                () -> assertThat(productDetailDto.getDescription()).isEqualTo(product.getDescription()),
+                () -> assertThat(productDetailDto.getPrice()).isEqualTo(product.getPrice()),
+                () -> assertThat(productDetailDto.getWriter()).isEqualTo(product.getMember().getUsername()),
+                () -> assertThat(productDetailDto.getCreateDate()).isEqualTo(product.getCreateDate()),
+                () -> assertThat(productDetailDto.getPostKeywordContent()).isEqualTo(product.getPostKeyword().getContent())
+        );
     }
 
     @Test
     @DisplayName("entity_To_ProductModifyForm_mapper")
-    public void entityToProductModifyForm() {
+    void entityToProductModifyForm() {
 
         Member member = Member.builder()
                 .username("test_username")
@@ -115,8 +123,10 @@ class ProductMapperTest {
 
         ProductModifyForm productModifyForm = ProductMapper.INSTANCE.entityToProductModifyForm(product);
 
-        assertThat(productModifyForm.getSubject()).isEqualTo(product.getSubject());
-        assertThat(productModifyForm.getDescription()).isEqualTo(product.getDescription());
-        assertThat(productModifyForm.getPrice()).isEqualTo(product.getPrice());
+        assertAll(
+                () -> assertThat(productModifyForm.getSubject()).isEqualTo(product.getSubject()),
+                () -> assertThat(productModifyForm.getDescription()).isEqualTo(product.getDescription()),
+                () -> assertThat(productModifyForm.getPrice()).isEqualTo(product.getPrice())
+        );
     }
 }
