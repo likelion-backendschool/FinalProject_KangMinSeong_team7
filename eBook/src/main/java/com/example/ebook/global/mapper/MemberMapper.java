@@ -17,5 +17,5 @@ public interface MemberMapper {
     @Mapping(target="id", ignore = true)
     Member signupFormToEntity(SignupForm signupForm);
 
-    InfoModifyForm EntityToInfoModifyForm(Member member);
+    InfoModifyForm entityToInfoModifyForm(Member member);
 }

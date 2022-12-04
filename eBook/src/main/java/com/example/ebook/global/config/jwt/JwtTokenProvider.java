@@ -25,7 +25,7 @@ public class JwtTokenProvider {
     @Value("spring.jwt.secret")
     private String secretKey;
 
-    private final long tokenValidTime = 30 * 60 * 1000L; // 30 minutes
+    private static final long TOKEN_VALID_TIME = 30 * 60 * 1000L; // 30 minutes
     private final MemberService memberService;
 
     @PostConstruct
@@ -40,7 +40,7 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + tokenValidTime))
+                .setExpiration(new Date(now.getTime() + TOKEN_VALID_TIME))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }

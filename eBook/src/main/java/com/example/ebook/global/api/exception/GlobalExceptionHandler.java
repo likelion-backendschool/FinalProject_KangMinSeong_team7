@@ -32,14 +32,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<FailResponse> DataAccessException(DataAccessException e) {
+    public ResponseEntity<FailResponse> dataAccessException(DataAccessException e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(responseService.getFailResponse(e.getMessage() + " server error", "SERVER_ERROR_1"));
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<FailResponse> RuntimeException(RuntimeException e) {
+    public ResponseEntity<FailResponse> runtimeException(RuntimeException e) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(responseService.getFailResponse(e.getMessage() + " server error", "SERVER_ERROR_2"));

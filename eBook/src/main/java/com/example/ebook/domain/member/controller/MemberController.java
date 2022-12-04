@@ -28,11 +28,18 @@ public class MemberController {
     private final SignFormValidator signFormValidator;
     private final PwdModifyFormValidator pwdModifyFormValidator;
 
+    private static final String REGISTER_VIEW = "member/new_member";
+    private static final String REDIRECT_LOGIN_VIEW = "redirect:/member/login";
+    private static final String MODIFY_PWD_VIEW = "member/modify_pwd_member";
+    private static final String FIND_USERNAME_VIEW = "member/find_username_member";
+    private static final String FIND_PWD_VIEW = "member/find_password_member";
+
+
     @PreAuthorize("isAnonymous()")
     @GetMapping("/member/join")
     public String showSignupForm(Model model) {
         model.addAttribute("signupForm", new SignupForm());
-        return "member/new_member";
+        return REGISTER_VIEW;
     }
 
     @PreAuthorize("isAnonymous()")
@@ -42,7 +49,7 @@ public class MemberController {
         signFormValidator.validate(signupForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "member/new_member";
+            return REGISTER_VIEW;
         }
 
         try {
@@ -50,10 +57,10 @@ public class MemberController {
             mailService.sendSingUpMail(member.getEmail());
         } catch (DataIntegrityViolationException e) {
             bindingResult.rejectValue("username", "duplicated", "이미 등록된 아이디입니다.");
-            return "member/new_member";
+            return REGISTER_VIEW;
         }
 
-        return "redirect:/member/login";
+        return REDIRECT_LOGIN_VIEW;
     }
 
     @PreAuthorize("isAnonymous()")
@@ -104,7 +111,7 @@ public class MemberController {
     @GetMapping("/member/modifyPassword")
     public String showModifyPasswordForm(Model model) {
         model.addAttribute("pwdModifyForm", new PwdModifyForm());
-        return "member/modify_pwd_member";
+        return MODIFY_PWD_VIEW;
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -115,14 +122,14 @@ public class MemberController {
         pwdModifyFormValidator.validate(pwdModifyForm, bindingResult);
 
         if (bindingResult.hasErrors()) {
-            return "member/modify_pwd_member";
+            return MODIFY_PWD_VIEW;
         }
 
         try {
             memberService.modifyPwd(principal.getName(), pwdModifyForm);
         } catch (PasswordNotSameException e) {
             bindingResult.rejectValue("oldPassword", "notSame", e.getMessage());
-            return "member/modify_pwd_member";
+            return MODIFY_PWD_VIEW;
         }
 
         return "redirect:/";
@@ -132,7 +139,7 @@ public class MemberController {
     @GetMapping("/member/findUsername")
     public String showFindUsernameForm(Model model) {
         model.addAttribute("usernameFindForm", new UsernameFindForm());
-        return "member/find_username_member";
+        return FIND_USERNAME_VIEW;
     }
 
     @PreAuthorize("isAnonymous()")
@@ -140,7 +147,7 @@ public class MemberController {
     public String findUsername(@Validated @ModelAttribute UsernameFindForm usernameFindForm, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "member/find_username_member";
+            return FIND_USERNAME_VIEW;
         }
 
         try {
@@ -148,16 +155,16 @@ public class MemberController {
             mailService.sendUsername(member.getEmail(), member.getUsername());
         } catch (UsernameNotFoundException e) {
             bindingResult.rejectValue("email", "notFound", e.getMessage());
-            return "member/find_username_member";
+            return FIND_USERNAME_VIEW;
         }
-        return "redirect:/member/login";
+        return REDIRECT_LOGIN_VIEW;
     }
 
     @PreAuthorize("isAnonymous()")
     @GetMapping("/member/findPassword")
     public String showFindPasswordForm(Model model) {
         model.addAttribute("passwordFindForm", new PasswordFindForm());
-        return "member/find_password_member";
+        return FIND_PWD_VIEW;
     }
 
     @PreAuthorize("isAnonymous()")
@@ -165,17 +172,17 @@ public class MemberController {
     public String findPassword(@Validated @ModelAttribute PasswordFindForm passwordFindForm, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return "member/find_password_member";
+            return FIND_PWD_VIEW;
         }
 
         try {
-            String temporaryPassword = memberService.IssueTemporaryPassword(passwordFindForm.getUsername(), passwordFindForm.getEmail());
+            String temporaryPassword = memberService.issueTemporaryPassword(passwordFindForm.getUsername(), passwordFindForm.getEmail());
             mailService.sendTemporaryPassword(passwordFindForm.getEmail(), temporaryPassword);
         } catch (UsernameNotFoundException e) {
             bindingResult.reject("notFound", e.getMessage());
-            return "member/find_password_member";
+            return FIND_PWD_VIEW;
         }
 
-        return "redirect:/member/login";
+        return REDIRECT_LOGIN_VIEW;
     }
 }

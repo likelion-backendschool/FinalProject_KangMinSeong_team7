@@ -29,6 +29,8 @@ public class RebateController {
 
     private final RebateService rebateService;
 
+    private static final String HEADER_REFERER = "Referer";
+
     @PreAuthorize("isAuthenticated() and hasAnyAuthority('ADMIN')")
     @GetMapping("/makeData")
     public String showMakeDataForm(Model model) {
@@ -69,8 +71,8 @@ public class RebateController {
     public String rebateOne(@PathVariable("rebateOrderItemId") Long rebateOrderItemId, HttpServletRequest request) {
         rebateService.rebateOne(rebateOrderItemId);
 
-        if (request.getHeader("Referer") != null) {
-            return "redirect:%s".formatted(request.getHeader("Referer"));
+        if (request.getHeader(HEADER_REFERER) != null) {
+            return "redirect:%s".formatted(request.getHeader(HEADER_REFERER));
         }
 
         return "redirect:/adm/rebate/rebateOrderItemList";
@@ -81,8 +83,8 @@ public class RebateController {
     public String rebateAll(@RequestParam("ids") String ids, HttpServletRequest request) {
         rebateService.rebateAll(ids);
 
-        if (request.getHeader("Referer") != null) {
-            return "redirect:%s".formatted(request.getHeader("Referer"));
+        if (request.getHeader(HEADER_REFERER) != null) {
+            return "redirect:%s".formatted(request.getHeader(HEADER_REFERER));
         }
 
         return "redirect:/adm/rebate/rebateOrderItemList";

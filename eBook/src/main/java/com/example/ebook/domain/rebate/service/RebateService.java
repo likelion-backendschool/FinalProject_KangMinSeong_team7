@@ -36,6 +36,8 @@ public class RebateService {
     private final OrderService orderService;
     private final CashLogService cashLogService;
 
+    private static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss.SSSSSS";
+
     public void makeRebateData(MakeDataForm makeDataForm) {
         String[] yearAndMonth = makeDataForm.getYearMonth().split("-");
 
@@ -46,8 +48,8 @@ public class RebateService {
         String toDate = makeDataForm.getYearMonth() + "-%02d 23:59:59.999999".formatted(cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 
         List<OrderItem> orderItems = orderService.findAllByPayDateBetween(
-                LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
-                LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")));
+                LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern(DATETIME_FORMAT)),
+                LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern(DATETIME_FORMAT)));
 
         List<OrderItem> removeOrderItems = new ArrayList<>();
         List<OrderItem> addOrderItems = new ArrayList<>();
@@ -92,8 +94,8 @@ public class RebateService {
 
         return RebateOrderItemMapper.INSTANCE.entitiesToRebateOrderItemDtos(
                 rebateRepository.findAllByPayDateBetweenOrderByIdAsc(
-                        LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS")),
-                        LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSSSSS"))));
+                        LocalDateTime.parse(fromDate, DateTimeFormatter.ofPattern(DATETIME_FORMAT)),
+                        LocalDateTime.parse(toDate, DateTimeFormatter.ofPattern(DATETIME_FORMAT))));
     }
 
     public void rebateOne(Long rebateOrderItemId) {

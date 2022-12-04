@@ -61,8 +61,8 @@ public class PostHashTagService {
 
         if (postKeyword != null) {
             postKeywordIds = Arrays.stream(postKeyword.split(","))
-                    .map(pk -> Long.parseLong(pk))
-                    .collect(Collectors.toList());
+                    .map(Long::parseLong)
+                    .toList();
         }
 
         return postHashTagRepository.findPostsByMemberAndKeyword(member, postKeywordIds);

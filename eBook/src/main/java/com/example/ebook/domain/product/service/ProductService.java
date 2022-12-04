@@ -45,12 +45,10 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDetailDto getProductDetail(Long productId) {
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new ProductNotFoundException("해당 상품은 존재하지 않습니다."));
 
-        ProductDetailDto productDetailDto = ProductMapper.INSTANCE.entityToProductDetailDto(
-                productRepository.findById(productId).orElseThrow(
-                        () -> new ProductNotFoundException("해당 상품은 존재하지 않습니다.")));
-
-        return productDetailDto;
+        return ProductMapper.INSTANCE.entityToProductDetailDto(product);
     }
 
     @Transactional(readOnly = true)

@@ -3,10 +3,7 @@ package com.example.ebook.domain.cart.entity;
 import com.example.ebook.domain.base.BaseTimeEntity;
 import com.example.ebook.domain.member.entity.Member;
 import com.example.ebook.domain.product.entity.Product;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 

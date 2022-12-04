@@ -44,7 +44,7 @@ class MemberMapperTest {
                 .authLevel(3L)
                 .build();
 
-        InfoModifyForm infoModifyForm = MemberMapper.INSTANCE.EntityToInfoModifyForm(member);
+        InfoModifyForm infoModifyForm = MemberMapper.INSTANCE.entityToInfoModifyForm(member);
 
         assertAll(
                 () -> assertThat(infoModifyForm.getNickname()).isEqualTo(member.getNickname()),

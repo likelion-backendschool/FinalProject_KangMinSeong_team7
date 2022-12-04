@@ -202,7 +202,7 @@ class MemberServiceTest {
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
         // when
-        String temporaryPassword = memberService.IssueTemporaryPassword("test_username", "test@email.com");
+        String temporaryPassword = memberService.issueTemporaryPassword("test_username", "test@email.com");
 
         // then
         Member findMember = memberRepository.findById(member.getId()).get();

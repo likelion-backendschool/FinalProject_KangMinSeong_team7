@@ -45,20 +45,20 @@ public class Member extends BaseTimeEntity implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Collection<GrantedAuthority> collectors = new ArrayList<>();
-        collectors.add(() -> {
-            return "ROLE_USER";
-        });
+        collectors.add(() ->
+                "ROLE_USER"
+        );
 
         if (authLevel == 7) {
-            collectors.add(() -> {
-                return "ROLE_ADMIN";
-            });
+            collectors.add(() ->
+                    "ROLE_ADMIN"
+            );
         }
 
         if (!nickname.isBlank()) {
-            collectors.add(() -> {
-                return "ROLE_WRITER";
-            });
+            collectors.add(() ->
+                    "ROLE_WRITER"
+            );
         }
         return collectors;
     }

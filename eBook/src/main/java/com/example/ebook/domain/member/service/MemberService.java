@@ -33,7 +33,7 @@ public class MemberService implements UserDetailsService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    private final static SecureRandom random = new SecureRandom();
+    private static final SecureRandom random = new SecureRandom();
 
     public Member save(SignupForm signupForm) {
         Member member = MemberMapper.INSTANCE.signupFormToEntity(signupForm);
@@ -51,7 +51,7 @@ public class MemberService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public InfoModifyForm getInfoByUsername(String username) {
-        return MemberMapper.INSTANCE.EntityToInfoModifyForm(memberRepository.findByUsername(username).orElseThrow(
+        return MemberMapper.INSTANCE.entityToInfoModifyForm(memberRepository.findByUsername(username).orElseThrow(
                 () -> new MemberNotFoundException("존재하지 않는 회원입니다.")
         ));
     }
@@ -85,7 +85,7 @@ public class MemberService implements UserDetailsService {
         member.updatePassword(passwordEncoder.encode(pwdModifyForm.getPassword()));
     }
 
-    public String IssueTemporaryPassword(String username, String email) {
+    public String issueTemporaryPassword(String username, String email) {
         Member member = memberRepository.findByUsernameAndEmail(username, email).orElseThrow(
                 () -> new MemberNotFoundException("존재하지 않는 회원입니다."));
 

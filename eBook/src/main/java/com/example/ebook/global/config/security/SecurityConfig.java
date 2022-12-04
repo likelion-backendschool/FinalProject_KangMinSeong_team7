@@ -16,6 +16,11 @@ public class SecurityConfig {
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
 
+    private static final String LOGIN_URL = "/member/login";
+    private static final String LOGOUT_URL = "/member/logout";
+
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -25,15 +30,15 @@ public class SecurityConfig {
 
                 .and()
                 .formLogin()
-                .loginPage("/member/login")
-                .loginProcessingUrl("/member/login")
+                .loginPage(LOGIN_URL)
+                .loginProcessingUrl(LOGIN_URL)
                 .successHandler(authenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
 
                 .and()
                 .logout()
-                .logoutUrl("/member/logout")
-                .logoutSuccessUrl("/member/login")
+                .logoutUrl(LOGOUT_URL)
+                .logoutSuccessUrl(LOGIN_URL)
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID", "JWT-SESSION")
 
