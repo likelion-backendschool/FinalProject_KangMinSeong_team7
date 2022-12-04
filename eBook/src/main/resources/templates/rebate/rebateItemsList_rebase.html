@@ -1,10 +1,14 @@
-<html layout:decorate="~{layout_admin}" xmlns="http://www.w3.org/1999/html">
+<!DOCTYPE>
+<html layout:decorate="~{layout_admin}" lang="ko" xml:lang="ko" xmlns="http://www.w3.org/1999/html">
+<head>
+    <title>ebook</title>
+</head>
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
         <h2 class="mb-3 mt-3">정산데이터 목록</h2>
 
     <div class="px-2 pt-4">
         <h1 class="font-bold text-lg">
-            <i class="fa-solid fa-sack-dollar"></i>
+            <span class="fa-solid fa-sack-dollar"></span>
             정산
         </h1>
 
@@ -27,6 +31,7 @@
         <div class="overflow-x-auto mt-2">
 
             <table class="table table-compact w-full">
+                <caption>출금 신청 목록</caption>
                 <thead>
                 <tr>
                     <th>
@@ -79,7 +84,7 @@
                 <input type="hidden" name="ids">
             </form>
             <button type="button" onclick="history.back();" class="btn btn-sm btn-default btn-outline ">
-                <i class="fa-solid fa-angle-left"></i>
+                <span class="fa-solid fa-angle-left"></span>
                 <span class="ml-1">취소</span>
             </button>
         </div>
