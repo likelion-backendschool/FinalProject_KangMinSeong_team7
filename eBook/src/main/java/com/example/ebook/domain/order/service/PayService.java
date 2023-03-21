@@ -30,7 +30,7 @@ public class PayService {
     private final ObjectMapper objectMapper;
     private final RestTemplate restTemplate;
     @Value("${custom.tossPayments.secretKey}")
-    private final String SECRET_KEY;
+    private String SECRET_KEY;
 
     @Transactional(readOnly = true)
     public ResponseEntity<JsonNode> confirmPayments(Map<String, String> data, long id, String username) {
