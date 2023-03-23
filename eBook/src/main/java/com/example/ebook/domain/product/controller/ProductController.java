@@ -1,7 +1,5 @@
 package com.example.ebook.domain.product.controller;
 
-import com.example.ebook.domain.postkeyword.entity.PostKeyword;
-import com.example.ebook.domain.postkeyword.service.PostKeywordService;
 import com.example.ebook.domain.product.dto.ProductCreateForm;
 import com.example.ebook.domain.product.dto.ProductDetailDto;
 import com.example.ebook.domain.product.dto.ProductDto;
@@ -26,7 +24,6 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final PostKeywordService postKeywordService;
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/product/list")
@@ -40,9 +37,7 @@ public class ProductController {
     @PreAuthorize("hasAnyRole(WRITER)")
     @GetMapping("/product/create")
     public String showCreateForm(Model model) {
-
-        List<PostKeyword> postKeywords = postKeywordService.findAll();
-        model.addAttribute("productCreateForm", new ProductCreateForm(postKeywords));
+        model.addAttribute("productCreateForm", new ProductCreateForm());
         return "product/create_product";
     }
 

@@ -15,7 +15,6 @@
                         <div th:onclick="|location.href='@{|/product/${mybook.productId}|}'|">
                             <h5 th:text="${mybook.productSubject}" class="card-title"></h5>
                             <h6 th:text="${mybook.productDescription}" style="max-height: 9.5rem;" class="card-subtitle string-cut mb-2 text-muted"></h6>
-                            <small th:text="|키워드 : ${mybook.productKeywordContent}|" class="card-text"></small><br>
                             <small th:text="|작성자 : ${mybook.productWriter}|" class="card-text"></small>
                         </div>
                     </div>

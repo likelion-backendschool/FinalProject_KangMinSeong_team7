@@ -19,5 +19,4 @@ public class MybookDto {
     private String productSubject;
     private String productDescription;
     private String productWriter;
-    private String productKeywordContent;
 }

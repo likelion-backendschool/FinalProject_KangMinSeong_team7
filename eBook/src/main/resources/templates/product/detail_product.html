@@ -5,7 +5,6 @@
 </head>
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
     <h2 class="border-bottom py-2" th:text="${productDetailDto.subject}"></h2>
-    <small th:text="${productDetailDto.getPostKeywordContent()}"></small>
     <div class="d-flex justify-content-end">
         <div>
             <div th:text="|생성날짜 : ${#temporals.format(productDetailDto.createDate, 'yyyy-MM-dd HH:mm')}|"></div>

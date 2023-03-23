@@ -17,5 +17,4 @@ public class ProductDetailDto {
     private String description;
     private String writer;
     private LocalDateTime createDate;
-    private String postKeywordContent;
 }
