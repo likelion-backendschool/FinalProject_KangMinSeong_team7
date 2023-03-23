@@ -5,7 +5,7 @@
 </head>
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
 
-    <h2 class="mb-3 mt-3">내 도서 목록</h2>
+    <h2 class="mb-3 mt-3">내 상품 목록</h2>
 
     <div class="container-fluid mt-5">
         <div class="row gx-3 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
@@ -15,7 +15,7 @@
                         <div th:onclick="|location.href='@{|/product/${mybook.productId}|}'|">
                             <h5 th:text="${mybook.productSubject}" class="card-title"></h5>
                             <h6 th:text="${mybook.productDescription}" style="max-height: 9.5rem;" class="card-subtitle string-cut mb-2 text-muted"></h6>
-                            <small th:text="|작성자 : ${mybook.productWriter}|" class="card-text"></small>
+                            <small th:text="|등록자 : ${mybook.productWriter}|" class="card-text"></small>
                         </div>
                     </div>
                 </div>

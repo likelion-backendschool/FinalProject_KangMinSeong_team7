@@ -23,7 +23,7 @@
         <h5 th:onclick="|location.href='@{|/order/${orderDetailDto.id}|}'|"><span class="bi bi-cart4"></span> [[${orderDetailDto.name}]]</h5>
         <h5 th:text="|${#numbers.formatInteger(orderDetailDto.calculatePayPrice(), 0, 'COMMA')} 원|"></h5>
         <br/>
-        <h5><span class="bi bi-book"></span> 도서 목록</h5>
+        <h5><span class="bi bi-book"></span> 상품 목록</h5>
         <div class="row gx-3 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
             <div th:each="orderItem : ${orderDetailDto.orderItemDtos}" class="col-4 mb-5">
                 <div class="card" style="width: 18rem; max-height: 19rem;">

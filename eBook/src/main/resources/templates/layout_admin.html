@@ -19,7 +19,7 @@
 </style>
 <nav sec:authorize="isAuthenticated() and hasAnyAuthority('ROLE_ADMIN')" class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-xl px-1">
-        <a class="navbar-brand" href="#!">Muk Books</a>
+        <a class="navbar-brand" href="#!">중고거래</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0 ms-lg-4">
@@ -28,7 +28,6 @@
                 <li class="nav-item"><a class="nav-link" th:href="@{/adm/rebate/makeData}"><span class="bi bi-calculator">&nbsp;정산생성</span></a></li>
                 <li class="nav-item" ><a class="nav-link" th:href="@{/adm/rebate/rebateOrderItemList}"><span class="bi bi-calculator">&nbsp;정산목록</span></a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/adm/withdraw/applyList}"><span class="bi bi-piggy-bank">&nbsp;출금목록</span></a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/member/logout}"><span class="bi bi-box-arrow-left">&nbsp;로그아웃</span></a></li>
                 <li class="nav-item">
                     <a class="nav-link" href="javascript:;" onclick="$(this).next().submit();">
                         <span class="bi bi-box-arrow-left">&nbsp;로그아웃</span></a>
