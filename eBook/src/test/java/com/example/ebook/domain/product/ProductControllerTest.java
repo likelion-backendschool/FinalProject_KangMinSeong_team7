@@ -2,8 +2,6 @@ package com.example.ebook.domain.product;
 
 import com.example.ebook.domain.member.entity.Member;
 import com.example.ebook.domain.member.repository.MemberRepository;
-import com.example.ebook.domain.postkeyword.entity.PostKeyword;
-import com.example.ebook.domain.postkeyword.repository.PostKeywordRepository;
 import com.example.ebook.domain.product.controller.ProductController;
 import com.example.ebook.domain.product.dto.ProductDetailDto;
 import com.example.ebook.domain.product.dto.ProductDto;
@@ -55,9 +53,6 @@ class ProductControllerTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private PostKeywordRepository postKeywordRepository;
-
     @Test
     @DisplayName("상품목록조회")
     @WithMockUser(username = "test_username", password = "1234", roles = "USER")
@@ -67,13 +62,10 @@ class ProductControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-
         List<Product> productList = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             productList.add(Product.builder()
                     .member(member)
-                    .postKeyword(postKeyword)
                     .subject("subject %s".formatted(i))
                     .description("description %s".formatted(i))
                     .price(i * 1000)
@@ -101,7 +93,6 @@ class ProductControllerTest {
         mockMvc.perform(get("/product/create"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("product/create_product"))
-                .andExpect(model().attributeExists("productCreateForm"))
                 .andDo(print());
     }
 
@@ -137,8 +128,7 @@ class ProductControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         // when then
         ResultActions resultActions = mockMvc.perform(get("/product/%s".formatted(product.getId())))
@@ -153,8 +143,7 @@ class ProductControllerTest {
                 () -> assertThat(result.getSubject()).isEqualTo("subject"),
                 () -> assertThat(result.getDescription()).isEqualTo("description"),
                 () -> assertThat(result.getPrice()).isEqualTo(1000),
-                () -> assertThat(result.getWriter()).isEqualTo("test_username"),
-                () -> assertThat(result.getPostKeywordContent()).isEqualTo(postKeyword.getContent())
+                () -> assertThat(result.getWriter()).isEqualTo("test_username")
         );
     }
 
@@ -167,8 +156,7 @@ class ProductControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         // when then
         ResultActions resultActions = mockMvc.perform(get("/product/%s/modify".formatted(product.getId())))
@@ -195,8 +183,7 @@ class ProductControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         // when then
         mockMvc.perform(post("/product/%s/modify".formatted(product.getId()))
@@ -227,8 +214,7 @@ class ProductControllerTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product((long) 1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product((long) 1L, member, "subject", "description", 1000));
 
         // when then
         mockMvc.perform(get("/product/%s/delete".formatted(product.getId())))

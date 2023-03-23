@@ -18,7 +18,6 @@ public interface MybookMapper {
     @Mapping(target = "productSubject", source = "product.subject")
     @Mapping(target = "productDescription", source = "product.description")
     @Mapping(target = "productWriter", source = "product.member.nickname")
-    @Mapping(target = "productKeywordContent", source = "product.postKeyword.content")
     MybookDto entityToMybookDto(Mybook mybook);
 
 

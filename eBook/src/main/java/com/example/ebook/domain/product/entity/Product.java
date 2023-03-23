@@ -23,10 +23,6 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_keyword_id")
-    private PostKeyword postKeyword;
-
     private String subject;
     @Lob
     private String description;

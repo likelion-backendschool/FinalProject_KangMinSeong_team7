@@ -2,8 +2,6 @@ package com.example.ebook.domain.product;
 
 import com.example.ebook.domain.member.entity.Member;
 import com.example.ebook.domain.member.repository.MemberRepository;
-import com.example.ebook.domain.postkeyword.entity.PostKeyword;
-import com.example.ebook.domain.postkeyword.repository.PostKeywordRepository;
 import com.example.ebook.domain.product.dto.ProductCreateForm;
 import com.example.ebook.domain.product.dto.ProductDetailDto;
 import com.example.ebook.domain.product.dto.ProductModifyForm;
@@ -44,9 +42,6 @@ class ProductServiceTest {
     @Autowired
     private ProductRepository productRepository;
 
-    @Autowired
-    private PostKeywordRepository postKeywordRepository;
-
     @Test
     @DisplayName("상품목록조회")
     void findAll() {
@@ -55,13 +50,10 @@ class ProductServiceTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-
         List<Product> productList = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             productList.add(Product.builder()
                             .member(member)
-                            .postKeyword(postKeyword)
                             .subject("subject %s".formatted(i))
                             .description("description %s".formatted(i))
                             .price(i * 1000)
@@ -83,15 +75,11 @@ class ProductServiceTest {
         // given
         memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
-        postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(2L, "#keyword2"));
 
         ProductCreateForm productCreateForm = ProductCreateForm.builder()
                 .subject("new subject")
                 .price(1000)
                 .description("new description")
-                .postKeywordList(postKeywordRepository.findAll())
-                .postKeyword(postKeyword)
                 .build();
 
         // when
@@ -112,8 +100,7 @@ class ProductServiceTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         // when
         ProductDetailDto productDetail = productService.getProductDetail(product.getId());
@@ -122,8 +109,7 @@ class ProductServiceTest {
         assertAll(
                 () -> assertThat(productDetail.getSubject()).isEqualTo("subject"),
                 () -> assertThat(productDetail.getPrice()).isEqualTo(1000),
-                () -> assertThat(productDetail.getDescription()).isEqualTo("description"),
-                () -> assertThat(productDetail.getPostKeywordContent()).isEqualTo("#keyword1")
+                () -> assertThat(productDetail.getDescription()).isEqualTo("description")
         );
     }
 
@@ -135,8 +121,7 @@ class ProductServiceTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         // when
         ProductModifyForm productModifyForm = productService.getProductModifyForm(product.getId());
@@ -157,8 +142,7 @@ class ProductServiceTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         ProductModifyForm productModifyForm = ProductModifyForm.builder()
                 .subject("modify subject")
@@ -187,8 +171,7 @@ class ProductServiceTest {
         Member member = memberRepository.save(new Member(1L, "test_username", passwordEncoder.encode("1234"),
                 "test_nickname", "test@email.com", 3L, LocalDateTime.now(), 0));
 
-        PostKeyword postKeyword = postKeywordRepository.save(new PostKeyword(1L, "#keyword1"));
-        Product product = productRepository.save(new Product(1L, member, postKeyword, "subject", "description", 1000));
+        Product product = productRepository.save(new Product(1L, member, "subject", "description", 1000));
 
         // when
         productService.delete(product.getId());

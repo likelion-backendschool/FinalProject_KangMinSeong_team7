@@ -5,7 +5,7 @@
 </head>
 <div layout:fragment="content" class="container justify-content-center align-items-center h-75 mt-5">
 
-    <script src="https://js.tosspayments.com/v1" integrity="sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K/uxy9rx7HNQlGYl1kPzQho1wx4JwY8wC"></script>
+    <script src="https://js.tosspayments.com/v1"></script>
 
     <script th:inline="javascript">
         const orderId = /*[[ ${orderDetailDto.id} ]]*/ null;
@@ -23,7 +23,7 @@
         <h5 th:onclick="|location.href='@{|/order/${orderDetailDto.id}|}'|"><span class="bi bi-cart4"></span> [[${orderDetailDto.name}]]</h5>
         <h5 th:text="|${#numbers.formatInteger(orderDetailDto.calculatePayPrice(), 0, 'COMMA')} 원|"></h5>
         <br/>
-        <h5><span class="bi bi-book"></span> 도서 목록</h5>
+        <h5><span class="bi bi-book"></span> 상품 목록</h5>
         <div class="row gx-3 gx-lg-4 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-start">
             <div th:each="orderItem : ${orderDetailDto.orderItemDtos}" class="col-4 mb-5">
                 <div class="card" style="width: 18rem; max-height: 19rem;">

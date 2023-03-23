@@ -22,7 +22,7 @@ class CartItemMapperTest {
         CartItem cartItem = CartItem.builder()
                 .id(1L)
                 .member(member)
-                .product(new Product(1L, member, null, "test_subject", "test_description", 1000))
+                .product(new Product(1L, member, "test_subject", "test_description", 1000))
                 .build();
 
         CartItemDto cartItemDto = CartItemMapper.INSTANCE.entityToCartItemDto(cartItem);

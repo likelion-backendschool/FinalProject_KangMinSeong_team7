@@ -25,7 +25,6 @@ public interface ProductMapper {
     Product productCreateFormToEntity(ProductCreateForm productCreateForm);
 
     @Mapping(target = "writer", source = "member.username")
-    @Mapping(target = "postKeywordContent", source = "postKeyword.content")
     ProductDetailDto entityToProductDetailDto(Product product);
 
     ProductModifyForm entityToProductModifyForm(Product product);
