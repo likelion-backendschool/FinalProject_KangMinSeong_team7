@@ -20,8 +20,7 @@ class MybookMapperTest {
         Mybook mybook = Mybook.builder()
                 .id(1L)
                 .member(new Member())
-                .product(Product.builder().id(1L).subject("product_subject").description("product_description").postKeyword(
-                        PostKeyword.builder().id(1L).content("postKey_content").build())
+                .product(Product.builder().id(1L).subject("product_subject").description("product_description")
                         .price(1000)
                         .member(Member.builder().nickname("member_nickname").build())
                         .build())
@@ -34,8 +33,7 @@ class MybookMapperTest {
                 () -> assertThat(mybookDto.getProductId()).isEqualTo(mybook.getProduct().getId()),
                 () -> assertThat(mybookDto.getProductSubject()).isEqualTo(mybook.getProduct().getSubject()),
                 () -> assertThat(mybookDto.getProductDescription()).isEqualTo(mybook.getProduct().getDescription()),
-                () -> assertThat(mybookDto.getProductWriter()).isEqualTo(mybook.getProduct().getMember().getNickname()),
-                () -> assertThat(mybookDto.getProductKeywordContent()).isEqualTo(mybook.getProduct().getPostKeyword().getContent())
+                () -> assertThat(mybookDto.getProductWriter()).isEqualTo(mybook.getProduct().getMember().getNickname())
         );
     }
 }

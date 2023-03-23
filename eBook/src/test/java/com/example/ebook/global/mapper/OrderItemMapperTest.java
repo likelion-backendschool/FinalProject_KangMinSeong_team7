@@ -23,7 +23,7 @@ class OrderItemMapperTest {
         OrderItem orderItem = OrderItem.builder()
                 .id(1L)
                 .order(new Order())
-                .product(new Product(1L, new Member(), new PostKeyword(), "test_subject", "test_description", 1000))
+                .product(new Product(1L, new Member(), "test_subject", "test_description", 1000))
                 .payDate(LocalDateTime.now())
                 .price(1000)
                 .salePrice(1000)
