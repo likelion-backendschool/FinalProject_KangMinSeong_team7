@@ -15,6 +15,9 @@ import com.example.ebook.domain.postkeyword.service.PostKeywordService;
 import com.example.ebook.global.mapper.PostMapper;
 import com.example.ebook.global.util.markdown.MarkdownUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +38,13 @@ public class PostService {
     @Transactional(readOnly = true)
     public List<PostDto> findRecentTop100() {
         return PostMapper.INSTANCE.entitiesToPostDtos(postRepository.findTop100ByOrderByCreateDateDesc());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<PostDto> findByPageable(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+
+        return postRepository.findAll(pageable).map(PostMapper.INSTANCE::entityToPostDto);
     }
 
     @Transactional(readOnly = true)

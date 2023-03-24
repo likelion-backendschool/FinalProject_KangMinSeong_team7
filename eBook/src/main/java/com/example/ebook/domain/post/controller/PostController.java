@@ -10,6 +10,7 @@ import com.example.ebook.domain.post.dto.PostModifyForm;
 import com.example.ebook.domain.post.dto.PostWriteForm;
 import com.example.ebook.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +31,15 @@ public class PostController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/post/list")
+    public String showAllPostList(@RequestParam(value="page", defaultValue="0") int page, Model model) {
+        Page<PostDto> postList = postService.findByPageable(page);
+        model.addAttribute("postList", postList);
+
+        return "post/list_all_post";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/mypost/list")
     public String showPostList(@RequestParam(value = "keyword", required = false) String keyword,
                                Model model, Principal principal) {
         Member member = memberService.findByUsername(principal.getName());
