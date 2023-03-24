@@ -46,6 +46,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.jeasy:easy-random-core:5.0.0'
 
 	// queryDsl settings
 	implementation 'com.querydsl:querydsl-jpa'

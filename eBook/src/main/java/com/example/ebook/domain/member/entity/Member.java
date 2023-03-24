@@ -40,7 +40,7 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private LocalDateTime lastLoginTime;
 
-    private int restCash;
+    private Integer restCash;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
