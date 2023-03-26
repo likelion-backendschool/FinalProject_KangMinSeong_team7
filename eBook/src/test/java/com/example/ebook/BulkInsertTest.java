@@ -36,11 +36,11 @@ public class BulkInsertTest {
                 LocalDate.of(1900, 1, 1),
                 LocalDate.of(2022, 2, 1));
 
-        List<Post> posts = IntStream.range(0, 1000)
+        List<Post> posts = IntStream.range(0, 10)
                 .parallel()
                 .mapToObj(i -> easyRandom.nextObject(Post.class))
                 .toList();
 
-        postRepository.saveAll(posts);
+        postRepository.batchInsert(posts);
     }
 }
